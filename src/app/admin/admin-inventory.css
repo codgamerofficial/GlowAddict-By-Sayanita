@@ -1,0 +1,458 @@
+/* ============================================================
+   🔥 SAYANITA'S GLOW CONTROL PORTAL — OPERATING SYSTEM STYLES
+   Futuristic, Gemini-Powered, Luxury Glassmorphism SaaS UI
+   ============================================================ */
+
+/* ---- CORE DESIGN TOKENS ---- */
+:root {
+  --page-bg: #140019;
+  --primary-surface: #1E0629;
+  --secondary-surface: #2B083A;
+  --elevated-card: #351049;
+  --hover-surface: #43135A;
+  --border-subtle: rgba(255, 255, 255, 0.14);
+
+  --text-primary: #FFFFFF;
+  --text-secondary: #D3B6FF;
+  --text-muted: #9F7AC2;
+  --text-disabled: #6E4E85;
+
+  --accent-pink: #D946EF;
+  --accent-purple: #A855F7;
+  --accent-success: #10B981;
+  --accent-warning: #F59E0B;
+  --accent-danger: #EF4444;
+
+  --font-serif: 'Playfair Display', Georgia, serif;
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+/* ---- RESET & GLOBAL ADMIN SURFACE ---- */
+.admin-portal-wrapper {
+  background-color: var(--page-bg) !important;
+  color: var(--text-primary) !important;
+  font-family: var(--font-sans);
+}
+
+/* ---- FORCE VISIBILITY ON ADMIN PAGE ---- 
+   Ensure border-white/* classes are visible by increasing
+   the alpha when inside the admin wrapper */
+.admin-portal-wrapper [class*="border-white/"] {
+  border-color: rgba(255, 255, 255, 0.16) !important;
+}
+
+/* ---- PREMIUM SCROLLBARS FOR CHROME/SAFARI/FIREFOX ---- */
+.admin-scrollable-form, 
+.admin-custom-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent-purple) var(--primary-surface);
+}
+.admin-scrollable-form::-webkit-scrollbar,
+.admin-custom-scroll::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.admin-scrollable-form::-webkit-scrollbar-track,
+.admin-custom-scroll::-webkit-scrollbar-track {
+  background: var(--primary-surface);
+  border-radius: 8px;
+}
+.admin-scrollable-form::-webkit-scrollbar-thumb,
+.admin-custom-scroll::-webkit-scrollbar-thumb {
+  background: rgba(168, 85, 247, 0.4);
+  border-radius: 8px;
+  border: 1px solid var(--border-subtle);
+}
+.admin-scrollable-form::-webkit-scrollbar-thumb:hover,
+.admin-custom-scroll::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-pink);
+}
+
+/* ---- DUST-PROOF LAYERED SURFACES & ELEVATION ---- */
+.admin-glass-panel {
+  background: rgba(30, 6, 41, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.admin-card-elevated {
+  background: var(--elevated-card);
+  border: 1px solid var(--border-subtle);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.admin-card-elevated:hover {
+  background: var(--hover-surface);
+  transform: translateY(-2px);
+  border-color: rgba(217, 70, 239, 0.35);
+  box-shadow: 0 15px 40px rgba(217, 70, 239, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+}
+
+/* ---- STAT CARD VISIBILITY ---- */
+.admin-stat-card {
+  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.admin-stat-card:hover {
+  transform: translateY(-2px);
+  border-color: rgba(217, 70, 239, 0.3) !important;
+  box-shadow: 0 8px 30px rgba(217, 70, 239, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+/* ---- UPLOAD HERO DROPZONE & PULSING GLOWS ---- */
+.admin-hero-dropzone {
+  border: 2px dashed rgba(217, 70, 239, 0.35);
+  background: linear-gradient(135deg, rgba(43, 8, 58, 0.6) 0%, rgba(53, 16, 73, 0.5) 100%);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px;
+}
+.admin-hero-dropzone:hover {
+  border-color: var(--accent-pink);
+  background: linear-gradient(135deg, rgba(43, 8, 58, 0.8) 0%, rgba(53, 16, 73, 0.7) 100%);
+  box-shadow: 0 0 30px rgba(217, 70, 239, 0.2), inset 0 0 15px rgba(217, 70, 239, 0.05);
+}
+.admin-hero-dropzone.drag-active {
+  border-color: var(--accent-pink);
+  background: rgba(53, 16, 73, 0.85);
+  box-shadow: 0 0 45px rgba(217, 70, 239, 0.35), inset 0 0 25px rgba(217, 70, 239, 0.15);
+  transform: scale(1.01);
+}
+
+/* ---- GEMINI SCAN-LINE ANIMATION ---- */
+.admin-scan-container {
+  position: relative;
+}
+.admin-scan-line {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, var(--accent-pink), var(--accent-purple), transparent);
+  box-shadow: 0 0 15px var(--accent-pink);
+  animation: scanningEffect 2.8s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+  z-index: 10;
+}
+@keyframes scanningEffect {
+  0% { top: 0%; opacity: 0.1; }
+  10% { opacity: 1; }
+  90% { opacity: 1; }
+  100% { top: 100%; opacity: 0.1; }
+}
+
+/* ---- HIGH-CONTRAST GLASS INPUT ---- */
+.admin-glass-input {
+  width: 100%;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: var(--secondary-surface);
+  color: var(--text-primary);
+  outline: none;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+.admin-glass-input::placeholder {
+  color: var(--text-muted);
+}
+.admin-glass-input:hover {
+  border-color: rgba(211, 182, 255, 0.4);
+  background: var(--elevated-card);
+}
+.admin-glass-input:focus {
+  border-color: var(--accent-pink);
+  background: var(--elevated-card);
+  box-shadow: 0 0 0 3px rgba(217, 70, 239, 0.2), 0 4px 20px rgba(0, 0, 0, 0.35);
+}
+.admin-glass-input:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+/* ---- SELECT DROPDOWN FIX ---- */
+.admin-glass-input option {
+  background: var(--elevated-card);
+  color: var(--text-primary);
+}
+
+/* ---- PREMIUM GRADIENT SHIMMER BUTTONS ---- */
+.admin-gradient-btn {
+  background: linear-gradient(135deg, var(--accent-purple) 0%, var(--accent-pink) 100%);
+  color: #FFFFFF;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  border: none;
+  box-shadow: 0 4px 20px rgba(217, 70, 239, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+}
+.admin-gradient-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 6px 25px rgba(217, 70, 239, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+.admin-gradient-btn:active {
+  transform: translateY(1px) scale(0.98);
+}
+.admin-gradient-btn:disabled {
+  background: rgba(255, 255, 255, 0.06) !important;
+  color: rgba(255, 255, 255, 0.25) !important;
+  box-shadow: none !important;
+  transform: none !important;
+  cursor: not-allowed !important;
+  pointer-events: none !important;
+}
+.admin-gradient-btn:disabled::after {
+  display: none !important;
+}
+.admin-gradient-btn::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -50%;
+  width: 200%;
+  height: 100%;
+  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.15), transparent);
+  transform: skewX(-20deg);
+  transition: 0.75s;
+}
+.admin-gradient-btn:hover::after {
+  left: 120%;
+}
+
+/* ---- ACCESSIBLE SCROLLABLE TABS ---- */
+.admin-scrollable-tabs {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x mandatory;
+}
+.admin-scrollable-tabs::-webkit-scrollbar {
+  display: none;
+}
+.admin-scrollable-tabs button {
+  scroll-snap-align: start;
+  flex: 0 0 auto;
+  white-space: nowrap;
+}
+
+/* ---- STICKY BLUR HEADER & DOCK ---- */
+.admin-sticky-header {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: rgba(20, 0, 25, 0.8);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+/* ---- Floating Glass Mobile Bottom Nav ---- */
+.admin-mobile-dock {
+  position: fixed;
+  bottom: 16px;
+  left: 16px;
+  right: 16px;
+  height: 64px;
+  background: rgba(30, 6, 41, 0.9);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.15);
+  z-index: 49;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 0 10px;
+  padding-bottom: env(safe-area-inset-bottom, 0);
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.admin-dock-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  height: 100%;
+  color: var(--text-muted);
+  font-size: 9px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  border-radius: 12px;
+}
+.admin-dock-item:active {
+  transform: scale(0.95);
+}
+.admin-dock-item.active {
+  color: #FFFFFF;
+}
+.admin-dock-item.active .icon-wrapper {
+  color: var(--accent-pink);
+  transform: translateY(-3px);
+  filter: drop-shadow(0 0 6px rgba(217, 70, 239, 0.6));
+}
+.admin-dock-item .icon-wrapper {
+  margin-bottom: 3px;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---- CARD GLOW INDICATORS ---- */
+.admin-glow-purple {
+  box-shadow: 0 4px 20px rgba(168, 85, 247, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.admin-glow-green {
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.admin-glow-amber {
+  box-shadow: 0 4px 20px rgba(245, 158, 11, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.admin-glow-red {
+  box-shadow: 0 4px 20px rgba(239, 68, 68, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+.admin-glow-pink {
+  box-shadow: 0 4px 20px rgba(217, 70, 239, 0.08), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* ---- TAG PILLS (used in extraction preview) ---- */
+.admin-tag-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 10px;
+  font-size: 10px;
+  font-weight: 700;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.12);
+  color: var(--text-secondary);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+}
+
+/* ---- LOADING SHIMMER ---- */
+.admin-shimmer {
+  background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%);
+  background-size: 200% 100%;
+  animation: shimmerSlide 1.5s ease-in-out infinite;
+  border-radius: 6px;
+}
+@keyframes shimmerSlide {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ---- AUTOSAVE BLINK DOT ---- */
+.autosave-blink {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: var(--accent-success);
+  animation: autosavePulse 2s ease-in-out infinite;
+}
+@keyframes autosavePulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ---- CLAMP FLUID TYPOGRAPHY ---- */
+.fluid-h1 {
+  font-size: clamp(20px, 4vw, 32px);
+  line-height: 1.2;
+}
+.fluid-h2 {
+  font-size: clamp(16px, 3.2vw, 24px);
+  line-height: 1.25;
+}
+.fluid-metric {
+  font-size: clamp(24px, 4.5vw, 36px);
+  line-height: 1.1;
+  font-weight: 800;
+}
+
+/* ---- ACCESSIBLE CONTRAST HELPER ---- */
+.high-contrast-text {
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- STAGGERED SKELETON LOADERS ---- */
+.admin-pulse-glow {
+  animation: pulseGlowEffect 2s infinite ease-in-out;
+}
+@keyframes pulseGlowEffect {
+  0% { opacity: 0.65; box-shadow: 0 0 8px rgba(168, 85, 247, 0.1); }
+  50% { opacity: 1; box-shadow: 0 0 18px rgba(168, 85, 247, 0.25); }
+  100% { opacity: 0.65; box-shadow: 0 0 8px rgba(168, 85, 247, 0.1); }
+}
+
+/* ---- FLOATING BOTTOM NAV OVERLAP FIX ---- */
+body:has(.admin-modal-backdrop) .admin-mobile-dock {
+  display: none !important;
+}
+
+/* ---- TAB PILL HIGHLIGHTS ---- */
+.admin-tab-pill {
+  padding: 8px 16px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-muted);
+  border: 1px solid transparent;
+  border-radius: 10px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+.admin-tab-pill:hover {
+  color: #FFFFFF;
+  background: var(--hover-surface);
+}
+.admin-tab-pill.active {
+  color: #FFFFFF;
+  background: var(--hover-surface);
+  border-color: var(--accent-pink);
+  box-shadow: 0 0 15px rgba(217, 70, 239, 0.2);
+}
+
+/* ---- FORCE BRIGHTER BORDERS AND SURFACES ON ADMIN COMPONENTS ---- */
+.admin-portal-wrapper .bg-\[\#1E0629\] {
+  background-color: #250A32 !important;
+  border-color: rgba(255, 255, 255, 0.16) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08) !important;
+}
+.admin-portal-wrapper .bg-\[\#2B083A\] {
+  background-color: #351049 !important;
+  border-color: rgba(255, 255, 255, 0.18) !important;
+}
+
+/* ---- CUSTOM PREMIUM SCROLLBAR FOR ADMIN SYSTEM ---- */
+.custom-scrollbar::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: rgba(20, 0, 25, 0.2);
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(217, 70, 239, 0.35) !important;
+  border-radius: 999px;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(217, 70, 239, 0.6) !important;
+  border: 2px solid transparent;
+  background-clip: padding-box;
+}
