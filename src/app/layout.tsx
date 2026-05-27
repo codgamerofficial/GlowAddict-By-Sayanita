@@ -1,8 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ShopProvider } from "@/context/ShopContext";
 import { MobileBottomNav } from "@/components/MobileBottomNav";
 import { ThemeInit } from "@/components/ThemeInit";
+
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: "Glow Addict by Sayanita | 100% Authentic Premium Skincare",

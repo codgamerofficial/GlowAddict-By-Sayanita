@@ -5,6 +5,9 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useShop, UserAddress, UserPaymentMethod, Order } from "@/context/ShopContext";
+import { Header } from "@/components/Header";
+import { CartDrawer } from "@/components/CartDrawer";
+import { Footer } from "@/components/Footer";
 import { 
   LayoutDashboard, User, Sliders, Sparkles, Package, Heart, Shield, Award, 
   LogOut, Plus, Trash2, MapPin, CreditCard, Check, Bell, Lock, Key, AlertTriangle,
@@ -116,8 +119,10 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
   if (!user) {
     return (
       <div className="min-h-screen flex flex-col bg-[#120018] text-white relative font-sans">
+        <Header />
+        <CartDrawer />
         <div className="absolute inset-0 bg-radial-gradient from-[#E056FD]/5 via-transparent to-transparent pointer-events-none" />
-        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center z-10">
+        <div className="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 py-20">
           <div className="w-20 h-20 rounded-full bg-[#2A093D]/60 border border-[#C77DFF]/20 flex items-center justify-center text-[#FF8DC7] shadow-[0_0_20px_rgba(199,125,255,0.1)] mb-6 animate-pulse">
             <Lock size={32} />
           </div>
@@ -142,6 +147,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             </Link>
           </div>
         </div>
+        <Footer />
       </div>
     );
   }
@@ -258,10 +264,13 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
   const userOrders = orders.filter(o => o.shipping_address.email.toLowerCase() === user.email.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-[#120018] text-white flex flex-col font-sans select-none relative pb-16">
+    <div className="min-h-screen bg-[#120018] text-white flex flex-col font-sans relative">
+      <Header />
+      <CartDrawer />
       
-      {/* Editorial Profile Banner */}
-      <div className="w-full h-44 sm:h-64 relative bg-[#1E0629] overflow-hidden group">
+      <main className="flex-grow pb-16">
+        {/* Editorial Profile Banner */}
+        <div className="w-full h-44 sm:h-64 relative bg-[#1E0629] overflow-hidden group">
         <Image 
           src={user.cover_banner || "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&q=80&w=1200"} 
           alt="Editorial cover" 
@@ -1509,9 +1518,11 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
           </div>
         </div>
-
       </div>
 
+      </main>
+      
+      <Footer />
     </div>
   );
 }

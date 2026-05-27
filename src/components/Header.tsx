@@ -85,12 +85,12 @@ export const Header: React.FC = () => {
               <Sparkles size={11} className={isActive("/ai-skin-test") ? "text-[#E056FD]" : "text-brand-magenta"} />
               AI Skin Test
             </Link>
-            <Link href="/dashboard" className={linkClass("/dashboard")}>
+            <Link href="/profile" className={linkClass("/profile")}>
               <span className="flex items-center gap-1">
                 <User size={13} />
-                My Orders
+                My Account
               </span>
-              {dotIndicator("/dashboard")}
+              {dotIndicator("/profile")}
             </Link>
             <Link href="/admin" className={linkClass("/admin")}>
               <span className="flex items-center gap-1">
@@ -196,12 +196,12 @@ export const Header: React.FC = () => {
               My Wishlist ({wishlist.length})
             </Link>
             <Link
-              href="/dashboard"
+              href="/profile"
               onClick={() => setMobileMenuOpen(false)}
               className="text-foreground/90 hover:text-brand-magenta py-2 border-b border-brand-rose/10 flex items-center gap-1.5"
             >
               <User size={14} />
-              My Orders & Claims
+              My Account
             </Link>
             <Link
               href="/admin"

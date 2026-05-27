@@ -450,7 +450,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const [products, setProducts] = useState<Product[]>(INITIAL_PRODUCTS);
   
   const [adminUsers, setAdminUsers] = useState<UserProfile[]>(() => {
-    return [
+    const fallback = [
       {
         email: "saswatadey700@gmail.com",
         name: "Saswata Dey",
@@ -488,9 +488,24 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         skin_concerns: ["Redness"]
       }
     ];
+
+    if (typeof window === "undefined") return fallback;
+    try {
+      const stored = localStorage.getItem("glow_admin_users");
+      return stored ? JSON.parse(stored) : fallback;
+    } catch {
+      return fallback;
+    }
   });
 
   const [user, setUser] = useState<UserProfile | null>(null);
+
+  // Auto-sync user directory permanently
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("glow_admin_users", JSON.stringify(adminUsers));
+    }
+  }, [adminUsers]);
 
   const initializeUserProfile = (base: { email: string; name?: string; phone?: string; id?: string }, extraOnboarding?: Partial<UserProfile>): UserProfile => {
     const existing = adminUsers.find(u => u.email.toLowerCase() === base.email.toLowerCase());
@@ -572,17 +587,24 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
             phone: session.user.user_metadata?.phone || "",
             id: session.user.id
           });
-          setUser(profile);
+          const latest = adminUsers.find(u => u.email.toLowerCase() === profile.email.toLowerCase()) || profile;
+          setUser(latest);
+          localStorage.setItem("glow_session", JSON.stringify(latest));
+          sessionStorage.setItem("glow_session", JSON.stringify(latest));
         } else {
-          const mock = sessionStorage.getItem("glow_session");
+          const mock = localStorage.getItem("glow_session") || sessionStorage.getItem("glow_session");
           if (mock) {
-            setUser(JSON.parse(mock));
+            const parsed = JSON.parse(mock) as UserProfile;
+            const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
+            setUser(latest || parsed);
           }
         }
       } catch {
-        const mock = sessionStorage.getItem("glow_session");
+        const mock = localStorage.getItem("glow_session") || sessionStorage.getItem("glow_session");
         if (mock) {
-          setUser(JSON.parse(mock));
+          const parsed = JSON.parse(mock) as UserProfile;
+          const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
+          setUser(latest || parsed);
         }
       }
     };
@@ -596,11 +618,16 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           phone: session.user.user_metadata?.phone || "",
           id: session.user.id
         });
-        setUser(profile);
+        const latest = adminUsers.find(u => u.email.toLowerCase() === profile.email.toLowerCase()) || profile;
+        setUser(latest);
+        localStorage.setItem("glow_session", JSON.stringify(latest));
+        sessionStorage.setItem("glow_session", JSON.stringify(latest));
       } else {
-        const mock = sessionStorage.getItem("glow_session");
+        const mock = localStorage.getItem("glow_session") || sessionStorage.getItem("glow_session");
         if (mock) {
-          setUser(JSON.parse(mock));
+          const parsed = JSON.parse(mock) as UserProfile;
+          const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
+          setUser(latest || parsed);
         } else {
           setUser(null);
         }
@@ -636,6 +663,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     if (!reachable) {
       console.warn("Supabase auth server is offline or unreachable. Using mock registration.");
       const mockUser = initializeUserProfile({ email, name, phone }, extraOnboarding);
+      localStorage.setItem("glow_session", JSON.stringify(mockUser));
       sessionStorage.setItem("glow_session", JSON.stringify(mockUser));
       setUser(mockUser);
       return { user: mockUser, isMock: true };
@@ -652,6 +680,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (error) throw error;
       if (data.user) {
         const mockUser = initializeUserProfile({ email, name, phone }, extraOnboarding);
+        localStorage.setItem("glow_session", JSON.stringify(mockUser));
         sessionStorage.setItem("glow_session", JSON.stringify(mockUser));
         setUser(mockUser);
       }
@@ -659,6 +688,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch (err) {
       console.warn("Supabase auth signup failed, falling back to mock mode:", err);
       const mockUser = initializeUserProfile({ email, name, phone }, extraOnboarding);
+      localStorage.setItem("glow_session", JSON.stringify(mockUser));
       sessionStorage.setItem("glow_session", JSON.stringify(mockUser));
       setUser(mockUser);
       return { user: mockUser, isMock: true };
@@ -669,7 +699,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const reachable = await isSupabaseReachable();
     if (!reachable) {
       console.warn("Supabase auth server is offline or unreachable. Checking local credentials.");
-      const mock = sessionStorage.getItem("glow_session");
+      const mock = localStorage.getItem("glow_session") || sessionStorage.getItem("glow_session");
       if (mock) {
         const parsed = JSON.parse(mock) as UserProfile;
         if (parsed.email.toLowerCase() === email.toLowerCase()) {
@@ -685,6 +715,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (registered.suspended) {
           throw new Error("This account has been temporarily suspended by Sayanita for security audits.");
         }
+        localStorage.setItem("glow_session", JSON.stringify(registered));
         sessionStorage.setItem("glow_session", JSON.stringify(registered));
         setUser(registered);
         return { user: registered, isMock: true };
@@ -724,6 +755,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         if (registered.suspended) {
           throw new Error("This account has been temporarily suspended by Sayanita for security audits.");
         }
+        localStorage.setItem("glow_session", JSON.stringify(registered));
         sessionStorage.setItem("glow_session", JSON.stringify(registered));
         setUser(registered);
         return { user: registered, isMock: true };
@@ -738,6 +770,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     } catch {
       // ignore
     }
+    localStorage.removeItem("glow_session");
     sessionStorage.removeItem("glow_session");
     setUser(null);
   };
@@ -747,6 +780,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const updated = { ...user, ...updates };
     setUser(updated);
     setAdminUsers(prev => prev.map(u => u.email.toLowerCase() === user.email.toLowerCase() ? updated : u));
+    localStorage.setItem("glow_session", JSON.stringify(updated));
     sessionStorage.setItem("glow_session", JSON.stringify(updated));
   };
 
