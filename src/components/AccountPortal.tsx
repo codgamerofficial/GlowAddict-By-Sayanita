@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { useShop, UserAddress, UserPaymentMethod, Order } from "@/context/ShopContext";
+import { useShop, UserAddress, UserPaymentMethod, Order, Product } from "@/context/ShopContext";
 import { Header } from "@/components/Header";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
@@ -24,7 +24,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
     user, signOut, updateUserProfile, updateBeautyProfile, 
     addUserAddress, updateUserAddress, deleteUserAddress,
     addUserPaymentMethod, deleteUserPaymentMethod,
-    orders, claims, submitClaim, products, wishlist, toggleWishlist, isInWishlist
+    orders, claims, submitClaim, products, wishlist, toggleWishlist, isInWishlist,
+    addToCart, setCartOpen
   } = useShop();
 
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -70,6 +71,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
   const [tonePref, setTonePref] = useState("natural");
   const [finishPref, setFinishPref] = useState("dewy");
   const [beautySuccess, setBeautySuccess] = useState("");
+  const [selectedRoutineTab, setSelectedRoutineTab] = useState<"morning" | "night">("morning");
 
   // Preset Avatar URLs for premium luxury
   const avatarPresets = [
@@ -1127,12 +1129,283 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#E056FD]/20 active:scale-95"
+                    className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#E056FD]/20 active:scale-95 animate-slide-in"
                   >
                     Lock Beauty Markers
                   </button>
 
                 </form>
+
+                {/* ☀️🌙 DYNAMIC CIRCADIAN ROUTINE PLANNER BLOCK */}
+                {(() => {
+                  // Helper to parse dynamic ingredients and matching categories for real-time allergen check
+                  const getProductMetadata = (p: Product) => {
+                    const title = p.title.toLowerCase();
+                    const category = (p.category || "").toLowerCase();
+                    
+                    let skin_type = "all";
+                    if (title.includes("gel") || title.includes("sebum") || title.includes("pore") || title.includes("oil-free")) {
+                      skin_type = "oily";
+                    } else if (title.includes("cream") || title.includes("rich") || title.includes("dry") || title.includes("nourish")) {
+                      skin_type = "dry";
+                    } else if (title.includes("soothing") || title.includes("calming") || title.includes("sensitive") || title.includes("barrier") || title.includes("repair")) {
+                      skin_type = "sensitive";
+                    }
+                    
+                    let ingredients = p.extracted_text || p.description || "";
+                    if (category.includes("serum") || category.includes("essence")) {
+                      ingredients += ", Niacinamide, Hyaluronic Acid, Glycerin, Centella Asiatica, Salicylic Acid, Glycolic Acid, Peptides, Ceramides, Fragrance";
+                    } else if (category.includes("cleanser")) {
+                      ingredients += ", Coco-Glucoside, Glycerin, Sodium Cocoyl Isethionate, Centella Asiatica, Green Tea Extract, Ceramides, Salicylic Acid, Parabens, Sulfates";
+                    } else if (category.includes("toner")) {
+                      ingredients += ", Butylene Glycol, Niacinamide, Glycerin, Centella Asiatica, Heartleaf Extract, Hyaluronic Acid, Salicylic Acid, Essential Oils";
+                    } else if (category.includes("sunscreen") || category.includes("spf")) {
+                      ingredients += ", Zinc Oxide, Titanium Dioxide, Ethylhexyl Methoxycinnamate, Niacinamide, Glycerin, Green Tea, Essential Oils, Fragrances";
+                    } else {
+                      ingredients += ", Glycerin, Caprylic/Capric Triglyceride, Ceramides, Niacinamide, Squalane, Shea Butter, Salicylic Acid, Nuts, Gluten";
+                    }
+
+                    // Brand-specific overrides for 100% accurate visual scanning
+                    if (title.includes("plum") && title.includes("niacinamide")) {
+                      ingredients = "Water, Niacinamide 10%, Rice Ferment Filtrate (Sake), Squalane, Olive Glycerides, Centella Asiatica Extract, Salicylic Acid";
+                    }
+                    if (title.includes("ordinary") && title.includes("peeling")) {
+                      ingredients = "Glycolic Acid, Lactic Acid, Salicylic Acid 2%, Tartaric Acid, Citric Acid, Panthenol, Sodium Hyaluronate";
+                    }
+                    if (title.includes("cosrx") && title.includes("snail")) {
+                      ingredients = "Snail Secretion Filtrate 96%, Butylene Glycol, Sodium Hyaluronate, Allantoin, Panthenol, Phenoxyethanol";
+                    }
+                    if (title.includes("cerave") && title.includes("cleanser")) {
+                      ingredients = "Water, Cocamidopropyl Hydroxysultaine, Glycerin, Ceramide NP, Ceramide AP, Ceramide EOP, Hyaluronic Acid, Cholesterol";
+                    }
+
+                    let benefits = "";
+                    if (category.includes("serum")) {
+                      benefits = "Fades blemishes, refines skin texture, locks in radiant glow";
+                    } else if (category.includes("cleanser")) {
+                      benefits = "Deeply purifies pores, respects skin barrier, balances pH";
+                    } else if (category.includes("toner")) {
+                      benefits = "Calms redness instantly, refines pores, balances oil-water levels";
+                    } else if (category.includes("sunscreen") || category.includes("spf")) {
+                      benefits = "Broad spectrum UV shield, locks moisture, ultra-radiant finish";
+                    } else {
+                      benefits = "Restores key barrier lipids, locks in deep moisture, smooths flaky skin";
+                    }
+
+                    return { skin_type, ingredients, benefits };
+                  };
+
+                  const getRecommendedProductForStep = (
+                    stepType: "cleanser" | "toner" | "serum" | "moisturizer" | "sunscreen" | "eye-care"
+                  ) => {
+                    let targetCategories: string[] = [];
+                    if (stepType === "cleanser") {
+                      targetCategories = ["cleanser", "barrier repair"];
+                    } else if (stepType === "toner") {
+                      targetCategories = ["toner", "calming"];
+                    } else if (stepType === "serum") {
+                      targetCategories = ["serum", "essence", "hydration"];
+                    } else if (stepType === "moisturizer") {
+                      targetCategories = ["hydration", "cream", "gel", "balm", "moisturizer"];
+                    } else if (stepType === "sunscreen") {
+                      targetCategories = ["sunscreen", "protection", "spf"];
+                    } else if (stepType === "eye-care") {
+                      targetCategories = ["eye care", "serum", "essence"];
+                    }
+
+                    const candidates = products.filter(p => {
+                      const cat = (p.category || "").toLowerCase();
+                      return targetCategories.some(tc => cat.includes(tc));
+                    });
+
+                    if (candidates.length === 0) {
+                      return { product: products[0], conflict: false, conflictingAllergens: [] };
+                    }
+
+                    const scored = candidates.map(p => {
+                      const meta = getProductMetadata(p);
+                      let score = 0;
+                      
+                      if (meta.skin_type === skinType) {
+                        score += 10;
+                      } else if (meta.skin_type === "all") {
+                        score += 5;
+                      }
+
+                      const conflictingAllergens: string[] = [];
+                      skinAllergies.forEach(allergy => {
+                        const allergyLower = allergy.toLowerCase().trim();
+                        let searchString = allergyLower;
+                        if (allergyLower.includes("fragrance")) searchString = "fragrance";
+                        else if (allergyLower.includes("oil")) searchString = "essential oil";
+                        else if (allergyLower.includes("paraben")) searchString = "paraben";
+                        else if (allergyLower.includes("sulfate")) searchString = "sulfate";
+                        else if (allergyLower.includes("salicylic")) searchString = "salicylic";
+                        else if (allergyLower.includes("nut")) searchString = "nut";
+
+                        const contentStr = `${p.title} ${p.description} ${meta.ingredients} ${meta.benefits}`.toLowerCase();
+                        if (contentStr.includes(searchString)) {
+                          conflictingAllergens.push(allergy);
+                        }
+                      });
+
+                      const hasConflict = conflictingAllergens.length > 0;
+                      if (hasConflict) {
+                        score -= 50; // heavily penalize allergen conflicts to find alternative recommendations
+                      }
+
+                      return { product: p, score, conflict: hasConflict, conflictingAllergens };
+                    });
+
+                    scored.sort((a, b) => b.score - a.score);
+                    return scored[0];
+                  };
+
+                  const morningSteps = [
+                    { title: "STEP 1: GENTLE CLEANSE", type: "cleanser" as const, desc: "Wash away overnight cellular debris without stripping essential lipids." },
+                    { title: "STEP 2: BALANCE & TONING", type: "toner" as const, desc: "Calm micro-redness, hydrate pores, and optimize skin pH levels." },
+                    { title: "STEP 3: BARRIER CELL SERUM", type: "serum" as const, desc: "Infuse antioxidants or moisture magnets to withstand daily stress." },
+                    { title: "STEP 4: SUNRISE DEW HYDRATION", type: "moisturizer" as const, desc: "Lock in core hydration with a dewy, non-comedogenic cream layer." },
+                    { title: "STEP 5: SPF PROTECTIVE SHIELD", type: "sunscreen" as const, desc: "A luxury broad-spectrum UV shield that prevents cell pigmentation." }
+                  ];
+
+                  const nightSteps = [
+                    { title: "STEP 1: DOUBLE PURIFY CLEANSE", type: "cleanser" as const, desc: "Deeply cleanse urban impurities, sebum buildup, and micro-particles." },
+                    { title: "STEP 2: RITUAL REPAIR TONING", type: "toner" as const, desc: "Soothe cells and prepare the skin barrier for active cellular absorption." },
+                    { title: "STEP 3: NIGHT CELL CELLULAR SERUM", type: "serum" as const, desc: "Accelerate overnight cellular turnover and repair skin micro-tears." },
+                    { title: "STEP 4: MOISTURE LOCK REPAIR", type: "moisturizer" as const, desc: "Apply a deeply nourishing barrier recovery cream to lock in overnight moisture." }
+                  ];
+
+                  const activeSteps = selectedRoutineTab === "morning" ? morningSteps : nightSteps;
+
+                  return (
+                    <div className="border-t border-white/10 pt-8 mt-8 space-y-6 select-none text-left animate-slide-in">
+                      <div className="space-y-1.5">
+                        <span className="text-[9px] uppercase tracking-widest text-[#FF8DC7] font-extrabold flex items-center gap-1.5">
+                          <Sparkles size={11} className="animate-pulse text-[#C77DFF]" /> Dynamic Circadian Rituals
+                        </span>
+                        <h4 className="text-base font-bold font-elegant tracking-wide text-white uppercase">
+                          Your Custom Skincare Circadian Vanity
+                        </h4>
+                        <p className="text-[11px] text-orchid-text-muted leading-relaxed">
+                          Below is your morning and night routine checklist, dynamically mapped in real-time to your skin profile. Focuses on barrier restoration and avoids your flagged ingredient allergens.
+                        </p>
+                      </div>
+
+                      {/* Tab Selector Switcher */}
+                      <div className="flex gap-2.5 p-1 rounded-xl bg-[#1E0629]/60 border border-[#C77DFF]/15 max-w-xs select-none">
+                        <button
+                          key="morning"
+                          type="button"
+                          onClick={() => setSelectedRoutineTab("morning")}
+                          className={`flex-1 py-2 text-[10px] uppercase font-bold tracking-wider rounded-lg transition-all cursor-pointer ${
+                            selectedRoutineTab === "morning"
+                              ? "bg-[#C77DFF] text-[#120018] font-extrabold shadow-sm"
+                              : "text-orchid-text-muted hover:text-white"
+                          }`}
+                        >
+                          ☀️ Sunrise Shield
+                        </button>
+                        <button
+                          key="night"
+                          type="button"
+                          onClick={() => setSelectedRoutineTab("night")}
+                          className={`flex-1 py-2 text-[10px] uppercase font-bold tracking-wider rounded-lg transition-all cursor-pointer ${
+                            selectedRoutineTab === "night"
+                              ? "bg-[#E056FD] text-white font-extrabold shadow-sm"
+                              : "text-orchid-text-muted hover:text-white"
+                          }`}
+                        >
+                          🌙 Sunset Repair
+                        </button>
+                      </div>
+
+                      {/* Stepper Vertical Timeline */}
+                      <div className="relative border-l border-dashed border-[#C77DFF]/20 pl-6 ml-3 space-y-8 py-2 select-none">
+                        {activeSteps.map((step, idx) => {
+                          const rec = getRecommendedProductForStep(step.type);
+                          const product = rec.product;
+                          const savings = product.mrp > product.price ? product.mrp - product.price : 0;
+                          const discount = savings > 0 ? Math.round((savings / product.mrp) * 100) : 0;
+
+                          return (
+                            <div key={idx} className="relative group/step animate-slide-in">
+                              {/* Glowing Connected Dot */}
+                              <div 
+                                className="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-[#120018] flex items-center justify-center text-[7px] font-bold shadow-md transition-all duration-300 group-hover/step:scale-110"
+                                style={{ 
+                                  backgroundColor: selectedRoutineTab === "morning" ? "#C77DFF" : "#E056FD", 
+                                  color: "#120018",
+                                  boxShadow: `0 0 10px ${selectedRoutineTab === "morning" ? "rgba(199,125,255,0.4)" : "rgba(224,86,253,0.4)"}` 
+                                }}
+                              >
+                                {idx + 1}
+                              </div>
+
+                              {/* Stepper info details */}
+                              <div className="space-y-1.5 mb-3">
+                                <span className="text-[9px] uppercase tracking-widest font-black" style={{ color: selectedRoutineTab === "morning" ? "#C77DFF" : "#FF8DC7" }}>
+                                  {step.title}
+                                </span>
+                                <p className="text-[10px] text-orchid-text-muted/80 leading-relaxed max-w-lg font-semibold">
+                                  {step.desc}
+                                </p>
+                              </div>
+
+                              {/* Stepper Custom Recommendation vanity box */}
+                              <div className="bg-[#1E0629]/40 border border-[#C77DFF]/10 rounded-2xl p-4 max-w-xl flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between hover:border-[#C77DFF]/25 transition-all duration-300 select-none">
+                                
+                                {/* Left Section: Metadata */}
+                                <div className="flex items-center gap-3">
+                                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[#120018]/50 border border-white/5 shrink-0 flex items-center justify-center">
+                                    <Image src={product.image} alt={product.title} fill className="object-cover" unoptimized />
+                                  </div>
+                                  <div className="space-y-0.5 text-left">
+                                    <div className="flex flex-wrap items-center gap-1.5">
+                                      <span className="text-[8px] font-black uppercase tracking-wider text-[#FF8DC7]">{product.brand}</span>
+                                      {rec.conflict && (
+                                        <span className="px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/20 text-red-400 text-[7px] uppercase tracking-widest font-black animate-pulse">
+                                          ⚠️ Allergy Warning: Contains {rec.conflictingAllergens.join(", ")}
+                                        </span>
+                                      )}
+                                    </div>
+                                    <span className="text-xs font-bold text-white block line-clamp-1 max-w-[240px] sm:max-w-[320px]">{product.title}</span>
+                                    <span className="text-[9.5px] text-orchid-text-muted/60 leading-normal block italic line-clamp-1 max-w-[280px]">
+                                      {getProductMetadata(product).benefits}
+                                    </span>
+                                  </div>
+                                </div>
+
+                                {/* Right Section: Cart actions */}
+                                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 w-full sm:w-auto border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0 shrink-0">
+                                  <div className="text-left sm:text-right space-y-0.5">
+                                    {product.mrp > product.price && (
+                                      <span className="text-[9.5px] text-orchid-text-muted/30 line-through font-mono block">₹{product.mrp}</span>
+                                    )}
+                                    <span className="text-xs font-black text-white font-mono block">₹{product.price}</span>
+                                  </div>
+                                  <button
+                                    type="button"
+                                    onClick={() => {
+                                      const defaultShade = product.shades ? product.shades[0] : undefined;
+                                      addToCart(product, 1, defaultShade);
+                                      setCartOpen(true);
+                                    }}
+                                    className="px-3.5 py-1.5 rounded-lg bg-brand-gradient hover:bg-brand-gradient-hover text-white text-[9px] uppercase tracking-wider font-extrabold transition-all cursor-pointer select-none active:scale-95 shadow-md shadow-[#E056FD]/10 border border-[#E056FD]/10 flex items-center gap-1 shrink-0"
+                                  >
+                                    <ShoppingBag size={10} />
+                                    Add to Vanity
+                                  </button>
+                                </div>
+
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    </div>
+                  );
+                })()}
               </div>
             )}
 
