@@ -157,6 +157,9 @@ export interface UserProfile {
   addresses?: UserAddress[];
   payment_methods?: UserPaymentMethod[];
   active_sessions?: UserSession[];
+  wishlist?: string[];
+  cart?: any[];
+  is_mock?: boolean;
 }
 
 interface ShopSettings {
@@ -531,8 +534,11 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       skin_concerns: ["Dehydration", "Dullness"],
       skin_allergies: [],
       sensitivities: [],
-      tone_preference: "dewy",
-      finish_preference: "radiant",
+      tone_preference: "natural",
+      finish_preference: "dewy",
+      wishlist: [],
+      cart: [],
+      is_mock: true,
       skincare_goals: ["Skin Barrier Repair", "Glow Restoration"],
       addresses: [
         {
@@ -588,6 +594,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
             id: session.user.id
           });
           const latest = adminUsers.find(u => u.email.toLowerCase() === profile.email.toLowerCase()) || profile;
+          latest.is_mock = false; // Production account verified
           setUser(latest);
           localStorage.setItem("glow_session", JSON.stringify(latest));
           sessionStorage.setItem("glow_session", JSON.stringify(latest));
@@ -595,8 +602,16 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           const mock = localStorage.getItem("glow_session") || sessionStorage.getItem("glow_session");
           if (mock) {
             const parsed = JSON.parse(mock) as UserProfile;
-            const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
-            setUser(latest || parsed);
+            const reachable = await isSupabaseReachable();
+            if (parsed.is_mock || !reachable) {
+              const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
+              setUser(latest || parsed);
+            } else {
+              // Real Supabase session has expired or failed. Clear it.
+              localStorage.removeItem("glow_session");
+              sessionStorage.removeItem("glow_session");
+              setUser(null);
+            }
           }
         }
       } catch {
@@ -619,6 +634,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
           id: session.user.id
         });
         const latest = adminUsers.find(u => u.email.toLowerCase() === profile.email.toLowerCase()) || profile;
+        latest.is_mock = false; // Production account verified
         setUser(latest);
         localStorage.setItem("glow_session", JSON.stringify(latest));
         sessionStorage.setItem("glow_session", JSON.stringify(latest));
@@ -626,8 +642,15 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
         const mock = localStorage.getItem("glow_session") || sessionStorage.getItem("glow_session");
         if (mock) {
           const parsed = JSON.parse(mock) as UserProfile;
-          const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
-          setUser(latest || parsed);
+          if (parsed.is_mock) {
+            const latest = adminUsers.find(u => u.email.toLowerCase() === parsed.email.toLowerCase());
+            setUser(latest || parsed);
+          } else {
+            // Real Supabase session has expired or failed. Clear it.
+            localStorage.removeItem("glow_session");
+            sessionStorage.removeItem("glow_session");
+            setUser(null);
+          }
         } else {
           setUser(null);
         }
