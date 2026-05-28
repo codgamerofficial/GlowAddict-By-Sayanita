@@ -55,6 +55,15 @@ export default function Checkout() {
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isDevFallback, setIsDevFallback] = useState(false);
+  const [fallbackCode, setFallbackCode] = useState("");
+
+  // Pincode checking states (Myntra/Nykaa style!)
+  const [zipChecking, setZipChecking] = useState(false);
+  const [zipChecked, setZipChecked] = useState(false);
+  const [zipMessage, setZipMessage] = useState("");
+  const [zipStatus, setZipStatus] = useState<"success" | "warning" | "error" | null>(null);
+  const [isZipCodSupported, setIsZipCodSupported] = useState(true);
+  const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState("");
 
   // Post-order success states
   const [createdOrder, setCreatedOrder] = useState<Order | null>(null);
@@ -209,6 +218,101 @@ ${freebiesText}
     window.open(waUrl, "_blank");
   };
 
+  // Pincode validation & auto-population (Myntra/Nykaa style)
+  const checkPincode = useCallback(async (pincode: string) => {
+    const cleanPin = pincode.replace(/\D/g, "").slice(0, 6);
+    if (cleanPin.length < 6) {
+      setZipChecked(false);
+      setZipMessage("");
+      setZipStatus(null);
+      setIsZipCodSupported(true);
+      setEstimatedDeliveryDate("");
+      return;
+    }
+
+    setZipChecking(true);
+    setZipMessage("Checking delivery availability...");
+    setZipStatus(null);
+
+    // Simulated network verification delay for rich tactile loading feel
+    await new Promise((resolve) => setTimeout(resolve, 600));
+
+    setZipChecking(false);
+    setZipChecked(true);
+
+    // Map prefix to key tier cities & states for 0-click auto-fill
+    let autoCity = "";
+    let autoState = "";
+    let codAllowed = true;
+    let days = 3;
+
+    if (cleanPin.startsWith("700")) {
+      autoCity = "Kolkata";
+      autoState = "West Bengal";
+      days = 2;
+    } else if (cleanPin.startsWith("751")) {
+      autoCity = "Bhubaneswar";
+      autoState = "Odisha";
+      days = 3;
+    } else if (cleanPin.startsWith("110")) {
+      autoCity = "New Delhi";
+      autoState = "Delhi";
+      days = 2;
+    } else if (cleanPin.startsWith("400")) {
+      autoCity = "Mumbai";
+      autoState = "Maharashtra";
+      days = 2;
+    } else if (cleanPin.startsWith("560")) {
+      autoCity = "Bengaluru";
+      autoState = "Karnataka";
+      days = 2;
+    } else if (cleanPin.startsWith("600")) {
+      autoCity = "Chennai";
+      autoState = "Tamil Nadu";
+      days = 3;
+    } else if (cleanPin.startsWith("380")) {
+      autoCity = "Ahmedabad";
+      autoState = "Gujarat";
+      days = 3;
+    } else if (cleanPin.startsWith("201") || cleanPin.startsWith("208")) {
+      autoCity = "Noida / Kanpur";
+      autoState = "Uttar Pradesh";
+      days = 3;
+    }
+
+    // Auto-fill City & State in state form
+    if (autoCity && autoState) {
+      setAddressForm((prev) => ({
+        ...prev,
+        city: prev.city || autoCity,
+        state: prev.state || autoState,
+      }));
+    }
+
+    // Remote delivery zones: block COD
+    if (
+      cleanPin.startsWith("19") || 
+      cleanPin.startsWith("79") || 
+      cleanPin === "700144" || 
+      cleanPin === "110099"
+    ) {
+      codAllowed = false;
+      setIsZipCodSupported(false);
+      setZipStatus("warning");
+      setZipMessage(`⚠️ COD is currently restricted for remote location pincode: ${cleanPin}. Please use Prepaid UPI (FREE Delivery & free gifts!) to check out.`);
+      setPaymentMethod("UPI"); // Auto fallback to UPI
+    } else {
+      setIsZipCodSupported(true);
+      setZipStatus("success");
+      setZipMessage(`✓ COD & Express Shipping Available! Delivered in ${days} days.`);
+      
+      const date = new Date();
+      date.setDate(date.getDate() + days);
+      const options: Intl.DateTimeFormatOptions = { weekday: "long", month: "short", day: "numeric" };
+      setEstimatedDeliveryDate(date.toLocaleDateString("en-IN", options));
+    }
+  }, []);
+
   // Mask email for display: pri***@gmail.com
   const getMaskedEmail = useCallback(() => {
     const email = addressForm.email.trim();
@@ -241,8 +345,12 @@ ${freebiesText}
       }
       if (data.devFallback) {
         setIsDevFallback(true);
+        if (data.code) {
+          setFallbackCode(data.code);
+        }
       } else {
         setIsDevFallback(false);
+        setFallbackCode("");
       }
       return true;
     } catch {
@@ -746,16 +854,45 @@ ${freebiesText}
                     className="w-full px-3 py-2.5 rounded-lg border border-brand-rose/30 focus:border-brand-magenta outline-hidden bg-[#fdfafb]"
                   />
                 </div>
-                <div>
+                <div className="relative">
                   <label className="font-semibold text-foreground/75 block mb-1">ZIP / Postal Code *</label>
-                  <input
-                    type="text"
-                    required
-                    placeholder="e.g. 700001"
-                    value={addressForm.zipCode}
-                    onChange={(e) => setAddressForm({ ...addressForm, zipCode: e.target.value })}
-                    className="w-full px-3 py-2.5 rounded-lg border border-brand-rose/30 focus:border-brand-magenta outline-hidden bg-[#fdfafb]"
-                  />
+                  <div className="relative">
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. 700001"
+                      value={addressForm.zipCode}
+                      onChange={(e) => {
+                        const val = e.target.value.replace(/\D/g, "").slice(0, 6);
+                        setAddressForm({ ...addressForm, zipCode: val });
+                        checkPincode(val);
+                      }}
+                      className="w-full px-3 py-2.5 rounded-lg border border-brand-rose/30 focus:border-brand-magenta outline-hidden bg-[#fdfafb] font-bold tracking-wide text-amethyst"
+                    />
+                    {zipChecking && (
+                      <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center">
+                        <div className="w-4 h-4 border-2 border-brand-magenta/30 border-t-brand-magenta rounded-full animate-spin" />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Pincode response banners */}
+                  {zipChecked && zipMessage && (
+                    <div className={`mt-1.5 p-2.5 rounded-xl border text-[10px] font-semibold leading-relaxed animate-slide-in ${
+                      zipStatus === "success"
+                        ? "bg-green-500/5 border-green-500/20 text-green-600 dark:text-green-400"
+                        : zipStatus === "warning"
+                        ? "bg-amber-500/5 border-amber-500/20 text-amber-600 dark:text-amber-400"
+                        : "bg-red-500/5 border-red-500/20 text-red-500"
+                    }`}>
+                      {zipMessage}
+                      {zipStatus === "success" && estimatedDeliveryDate && (
+                        <div className="mt-0.5 text-[9px] text-foreground/50">
+                          Estimated Delivery: <strong className="font-bold text-amethyst">{estimatedDeliveryDate}</strong>
+                        </div>
+                      )}
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -797,10 +934,10 @@ ${freebiesText}
                 {/* COD option (Condition-based) */}
                 <button
                   type="button"
-                  disabled={!mounted || !settings.codEnabled}
+                  disabled={!mounted || !settings.codEnabled || !isZipCodSupported}
                   onClick={() => setPaymentMethod("COD")}
                   className={`p-4 rounded-xl border-2 text-left flex items-start gap-3 transition-all duration-300 ${
-                    mounted && !settings.codEnabled
+                    mounted && (!settings.codEnabled || !isZipCodSupported)
                       ? "opacity-50 cursor-not-allowed border-gray-100 bg-gray-50/50"
                       : paymentMethod === "COD"
                       ? "border-brand-magenta bg-brand-cream/40"
@@ -813,10 +950,13 @@ ${freebiesText}
                     {paymentMethod === "COD" && <div className="h-2 w-2 rounded-full bg-brand-magenta" />}
                   </div>
                   <div>
-                    <span className="text-xs font-bold text-amethyst block flex items-center gap-1">
+                    <span className="text-xs font-bold text-amethyst block flex items-center gap-1 flex-wrap">
                       Cash on Delivery (COD)
                       {mounted && !settings.codEnabled && (
-                        <span className="text-[8px] font-extrabold text-foreground/45 bg-gray-200 px-1.5 py-0.5 rounded-full border border-gray-300">Disabled</span>
+                        <span className="text-[8px] font-extrabold text-foreground/45 bg-gray-200 px-1.5 py-0.5 rounded-full border border-gray-300">Disabled by Store</span>
+                      )}
+                      {mounted && settings.codEnabled && !isZipCodSupported && (
+                        <span className="text-[8px] font-extrabold text-red-500 bg-red-100 px-1.5 py-0.5 rounded-full border border-red-200">Restricted Pincode</span>
                       )}
                     </span>
                     <span className="text-[10px] text-foreground/50 leading-relaxed block mt-0.5">
@@ -1113,12 +1253,20 @@ ${freebiesText}
                         {otpError}
                       </p>
                     ) : isDevFallback ? (
-                      <p className="text-[10px] text-amber-500 font-medium flex flex-col items-center justify-center gap-0.5 max-w-[280px] mx-auto leading-normal">
-                        <span className="flex items-center gap-1 font-bold text-amber-600 dark:text-amber-400">
-                          ⚠️ Sandbox Mode Active
+                      <div className="p-3 bg-amber-500/10 border border-amber-500/25 rounded-2xl text-[10px] text-amber-600 dark:text-amber-400 font-medium flex flex-col items-center justify-center gap-1 max-w-[280px] mx-auto leading-normal animate-slide-in">
+                        <span className="flex items-center gap-1 font-bold">
+                          ⚠️ Sandbox Mode (SMTP Offline)
                         </span>
-                        <span>SMTP offline. Code logged to terminal, or enter master code <strong className="font-bold text-amethyst dark:text-brand-lilac">0909</strong>.</span>
-                      </p>
+                        <span>
+                          Use Master Bypass Code: <strong className="font-extrabold text-amethyst dark:text-brand-lilac text-xs">0909</strong>
+                        </span>
+                        {fallbackCode && (
+                          <div className="mt-1 px-3 py-1 bg-brand-gradient hover:scale-105 transition-all text-white font-extrabold text-xs tracking-wider rounded-lg shadow-sm flex items-center gap-1">
+                            <span>Your OTP is:</span>
+                            <span className="font-mono text-sm tracking-widest">{fallbackCode}</span>
+                          </div>
+                        )}
+                      </div>
                     ) : null}
                   </div>
 

@@ -144,6 +144,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       devFallback: true,
+      code: code,
       message: "SMTP failed. Running in developer fallback mode. Your verification code is logged to the server terminal, or use master bypass code 0909!"
     });
   }

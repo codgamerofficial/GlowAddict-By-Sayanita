@@ -300,7 +300,7 @@ const getAdminApiKey = () => {
 };
 
 const DEFAULT_SETTINGS: ShopSettings = {
-  codEnabled: false,
+  codEnabled: true,
   codFee: 50,
   backendMode: "mock",
 };
