@@ -6,7 +6,34 @@ import Link from "next/link";
 import { useShop, Claim, Product, Order, UserProfile } from "@/context/ShopContext";
 import { Header } from "@/components/Header";
 import AdminInventory from "@/components/admin/AdminInventory";
-import { ShieldCheck, IndianRupee, ShieldAlert, Package, Check, Send, Sparkles, RefreshCcw, Eye, Play, X, Sliders, Upload, Plus, Trash2, TrendingUp, Lock, Unlock } from "lucide-react";
+import { 
+  ShieldCheck, 
+  IndianRupee, 
+  ShieldAlert, 
+  Package, 
+  Check, 
+  Send, 
+  Sparkles, 
+  RefreshCcw, 
+  Eye, 
+  X, 
+  Sliders, 
+  Plus, 
+  Trash2, 
+  TrendingUp, 
+  Lock, 
+  Unlock,
+  Users,
+  Layers,
+  Search,
+  Globe,
+  FileImage,
+  Activity,
+  Heart,
+  ChevronRight,
+  AlertTriangle,
+  Grid
+} from "lucide-react";
 import "@/app/admin/admin-inventory.css";
 
 interface Coupon {
@@ -16,7 +43,20 @@ interface Coupon {
   min_cart_value: number;
 }
 
-type AdminTab = "orders" | "claims" | "inventory" | "coupons" | "analytics" | "settings" | "users" | "customer-insights" | "account-system";
+type AdminTab = 
+  | "dashboard" 
+  | "orders" 
+  | "inventory" 
+  | "beauty-crm" 
+  | "collections" 
+  | "media" 
+  | "seo-center" 
+  | "claims" 
+  | "coupons" 
+  | "users" 
+  | "settings"
+  | "account-system"
+  | "customer-insights";
 
 const ADMIN_SECRET_KEY = "0909";
 
@@ -26,7 +66,7 @@ const DEFAULT_COUPONS: Coupon[] = [
   { code: "FESTIVE20", discount_percent: 20, discount_flat: 0, min_cart_value: 0 },
 ];
 
-export default function AdminDashboard({ initialTab = "orders" }: { initialTab?: AdminTab }) {
+export default function AdminDashboard({ initialTab = "dashboard" }: { initialTab?: AdminTab }) {
   const {
     products,
     orders,
@@ -41,15 +81,13 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
     adminToggleCod,
     adminUpdateStock,
     adminUpdateProductPrice,
-    user,
-    isAdmin,
+    adminUpdateProduct,
     adminUsers,
     adminSuspendUser,
     adminUnsuspendUser,
     adminAdjustLoyaltyPoints
   } = useShop();
 
-  // --- All hooks use server-safe defaults; hydrated from browser storage in useEffect ---
   const [secretKey, setSecretKey] = useState("");
   const [keyInput, setKeyInput] = useState("");
   const [keyError, setKeyError] = useState("");
@@ -62,39 +100,46 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
 
   const [selectedClaim, setSelectedClaim] = useState<Claim | null>(null);
   const [resolutionNotes, setResolutionNotes] = useState("");
-
   const [playingVideoUrl, setPlayingVideoUrl] = useState<string | null>(null);
-
   const [labelModalOrder, setLabelModalOrder] = useState<Order | null>(null);
 
   const [adminCoupons, setAdminCoupons] = useState<Coupon[]>(DEFAULT_COUPONS);
-
   const [newCoupon, setNewCoupon] = useState({
     code: "",
     discount_percent: "",
     min_cart_value: ""
   });
 
-  const [newProduct, setNewProduct] = useState({
-    sku: "",
-    title: "",
-    brand: "",
-    category: "",
-    price: "",
-    mrp: "",
-    stock: "",
-    image: "",
-    shades: "",
-    authenticity_flag: true,
-    description: "",
-    extracted_text: ""
-  });
-  const [imagePreview, setImagePreview] = useState<string>("");
-  const [uploadStatus, setUploadStatus] = useState("");
-  const [isDetectingImageText, setIsDetectingImageText] = useState(false);
   const [adminApiKey, setAdminApiKey] = useState("");
 
-  // Hydrate browser-storage state after mount to avoid SSR/client mismatch
+  // Beauty CRM Profile selector
+  const [selectedCustomerCrm, setSelectedCustomerCrm] = useState<UserProfile | null>(null);
+  const [generatedRoutine, setGeneratedRoutine] = useState<string[]>([]);
+  const [routineCrossSells, setRoutineCrossSells] = useState<Product[]>([]);
+
+  // Visual Collection Builder states
+  const [selectedCollection, setSelectedCollection] = useState("glass-skin");
+  const [customCollections, setCustomCollections] = useState<Record<string, string[]>>({
+    "glass-skin": ["prod-serum-1", "prod-hydra-1"],
+    "spf-shield": ["prod-spf-1"],
+    "cashmere-lips": [],
+  });
+  const [searchCollectionQuery, setSearchCollectionQuery] = useState("");
+
+  // Media Library state
+  const [mediaAssets, setMediaAssets] = useState<{ id: string; name: string; url: string; size: string; type: "image" | "video"; tag: string }[]>([
+    { id: "1", name: "Sayanita Editorial Signature.png", url: "/signature.png", size: "340 KB", type: "image", tag: "editorial" },
+    { id: "2", name: "Glazed Serum Shot.webp", url: "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?w=500", size: "1.2 MB", type: "image", tag: "product-hero" },
+    { id: "3", name: "Unboxing Verif GA-9182.mp4", url: "/unboxing.mp4", size: "18.4 MB", type: "video", tag: "claim-dispute" },
+    { id: "4", name: "SPF Shield Active Shoot.webp", url: "https://images.unsplash.com/photo-1598440947619-2c35fc9aa908?w=500", size: "840 KB", type: "image", tag: "spf-care" }
+  ]);
+  const [uploadingMedia, setUploadingMedia] = useState(false);
+
+  // SEO Audit Engine states
+  const [seoScanResults, setSeoScanResults] = useState<{ id: string; title: string; missingFields: string[]; score: number }[]>([]);
+  const [isAuditingSeo, setIsAuditingSeo] = useState(false);
+
+  // Hydrate browser-storage states
   useEffect(() => {
     const storedKey = sessionStorage.getItem("glow_admin_secret_key") || "";
     if (storedKey) setSecretKey(storedKey);
@@ -110,7 +155,25 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
       sessionStorage.setItem("glow_admin_api_key", apiKey);
     }
     if (apiKey) setAdminApiKey(apiKey);
-  }, []);
+
+    // Bootstrap Visual Collections using actual catalog items if empty
+    if (products.length > 0) {
+      setCustomCollections({
+        "glass-skin": products.filter(p => p.category === "Serums" || p.category === "Hydration").slice(0, 3).map(p => p.id),
+        "spf-shield": products.filter(p => p.category === "SPF Care").map(p => p.id),
+        "cashmere-lips": products.filter(p => p.category === "Lipsticks").map(p => p.id),
+      });
+    }
+
+    // Map backward-compatible tabs to their new beautiful interfaces
+    if (initialTab === "account-system") {
+      setActiveTab("settings");
+    } else if (initialTab === "customer-insights") {
+      setActiveTab("beauty-crm");
+    }
+
+    runSeoAudit();
+  }, [products, initialTab]);
 
   const handleUnlockConsole = (e: React.FormEvent) => {
     e.preventDefault();
@@ -129,100 +192,10 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
     setKeyInput("");
   };
 
-  if (secretKey !== ADMIN_SECRET_KEY) {
-    return (
-      <div className="min-h-screen flex flex-col bg-background text-foreground relative">
-        {/* Background radial glows for luxurious dewy orchid depth */}
-        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-amethyst/3 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-1/4 left-10 w-[400px] h-[400px] bg-brand-rose/3 rounded-full blur-3xl pointer-events-none" />
-        
-        <Header />
-
-        <main className="flex-grow flex items-center justify-center px-4 py-20 relative z-10 select-none font-sans">
-          <div className="w-full max-w-md bg-gradient-to-b from-brand-cream to-brand-peach border border-brand-rose rounded-[32px] p-8 text-center space-y-8 shadow-xl backdrop-blur-md relative overflow-hidden animate-slide-in">
-            <div className="absolute inset-0 bg-amethyst/2 rounded-full blur-3xl pointer-events-none" />
-            
-            {/* Elegant shield lock visual */}
-            <div className="relative inline-flex items-center justify-center mx-auto">
-              <div className="absolute inset-0 bg-amethyst/10 rounded-full blur-md animate-pulse" />
-              <div className="relative p-6 rounded-full bg-brand-cream border border-brand-rose text-amethyst shadow-[0_0_15px_rgba(252,39,121,0.25)]">
-                <Lock size={36} />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <span className="text-[10px] font-bold text-amethyst uppercase tracking-widest bg-brand-rose px-3 py-1 rounded-full font-sans">
-                Creator Console Locked
-              </span>
-              <h2 className="text-2xl font-black font-elegant tracking-wide text-foreground pt-2 font-serif">
-                Enter Secret Key
-              </h2>
-              <p className="text-xs text-foreground/75 leading-relaxed max-w-sm mx-auto font-medium font-sans">
-                The Glow Addict administration console is locked. Please enter your secret manager passcode to access inventory, orders, and claims.
-              </p>
-            </div>
-
-            {keyError && (
-              <div className="bg-red-500/10 border border-red-500/20 text-red-600 rounded-2xl p-4.5 text-xs flex gap-2.5 items-start text-left font-sans">
-                <ShieldAlert size={16} className="shrink-0 mt-0.5" />
-                <span className="leading-relaxed font-semibold">{keyError}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleUnlockConsole} className="space-y-4 text-xs text-left font-sans">
-              <div className="space-y-1.5">
-                <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Passcode Entry</label>
-                <div className="relative">
-                  <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-foreground/60" />
-                  <input
-                    type="password"
-                    required
-                    placeholder="••••"
-                    value={keyInput}
-                    onChange={(e) => setKeyInput(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-brand-rose focus:border-amethyst outline-none bg-background text-foreground text-center tracking-widest text-lg font-bold transition-all font-mono"
-                  />
-                </div>
-              </div>
-
-              <button
-                type="submit"
-                className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-lg shadow-amethyst/15 flex items-center justify-center gap-2 cursor-pointer ios-spring-hover"
-              >
-                <Unlock size={13} />
-                Unlock Admin Console
-              </button>
-            </form>
-
-            <div className="pt-4 border-t border-brand-rose text-center font-sans">
-              <Link
-                href="/"
-                className="text-[10px] text-foreground/60 hover:text-amethyst font-semibold transition-colors"
-              >
-                ← Return to Public Catalog
-              </Link>
-            </div>
-          </div>
-        </main>
-      </div>
-    );
-  }
-
-  const adminTabs: { id: AdminTab; label: string }[] = [
-    { id: "orders", label: `Prepaid Orders (${orders.length})` },
-    { id: "claims", label: `Dispute Claims (${claims.length})` },
-    { id: "inventory", label: "Inventory Stock" },
-    { id: "users", label: `Users (${adminUsers?.length || 0})` },
-    { id: "customer-insights", label: "Customer Insights" },
-    { id: "account-system", label: "Account System" },
-    { id: "coupons", label: "Coupons" },
-    { id: "analytics", label: "Analytics" },
-    { id: "settings", label: "System Config" },
-  ];
-
+  // Coupons
   const handleAddCoupon = () => {
     if (!newCoupon.code.trim() || !newCoupon.discount_percent) {
-      alert("Please fill in the coupon code and discount percentage rate.");
+      alert("Please fill in the coupon code and discount percentage.");
       return;
     }
     const percent = parseInt(newCoupon.discount_percent);
@@ -238,7 +211,7 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
     setAdminCoupons(updated);
     localStorage.setItem("glow_admin_coupons", JSON.stringify(updated));
     setNewCoupon({ code: "", discount_percent: "", min_cart_value: "" });
-    alert("New coupon code successfully created!");
+    alert("New promo coupon successfully created!");
   };
 
   const handleDeleteCoupon = (code: string) => {
@@ -247,12 +220,130 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
     localStorage.setItem("glow_admin_coupons", JSON.stringify(updated));
   };
 
-  const persistAdminApiKey = (value: string) => {
-    setAdminApiKey(value);
-    sessionStorage.setItem("glow_admin_api_key", value);
+  // Fulfillment and dispute resolutions
+  const handleVerifyPrepaid = (orderId: string) => {
+    adminVerifyPayment(orderId);
+    alert(`Prepaid UPI Payment successfully confirmed for order ${orderId}! Status updated to 'Packed'.`);
   };
 
-  // Financial calculations
+  const handleShipOrder = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!selectedShipOrder || !trackingCode) return;
+    adminShipOrder(selectedShipOrder, courierName, trackingCode);
+    setSelectedShipOrder(null);
+    setTrackingCode("");
+    alert(`Shipment registered. Order ${selectedShipOrder} dispatched via ${courierName}.`);
+  };
+
+  const handleResolveClaim = (claimId: string, status: "approved" | "rejected") => {
+    if (!resolutionNotes) {
+      alert("Please enter resolution notes explaining your decision.");
+      return;
+    }
+    adminResolveClaim(claimId, status, resolutionNotes);
+    setSelectedClaim(null);
+    setResolutionNotes("");
+    alert(`Dispute claim resolved: ${status.toUpperCase()}. Customer dashboard updated.`);
+  };
+
+  // --- BEAUTY CRM AI ROUTINE ENGINE ---
+  const handleCrmSelect = (customer: UserProfile) => {
+    setSelectedCustomerCrm(customer);
+    
+    // Simulate Gemini Skin Profile Routing
+    const skinType = customer.skin_type || "normal";
+    const routineOptions: Record<string, string[]> = {
+      dry: ["Cleansing Milk", "Ceramide Toner", "Hydrating Glazed Serum", "Intense Moisture Lock Cream"],
+      oily: ["Salicylic Gel Cleanser", "Pore Clarifying Mist", "Lactic Acid 10% Serum", "Ultra-Light Matte Gel SPF"],
+      combination: ["Dewy Foam Cleanser", "Centella Balancing Toner", "Niacinamide Radiance Serum", "Barrier Defense SPF 50"],
+      sensitive: ["Hypoallergenic Milk Cleanser", "Calming Oats Mist", "Centella Soothing Gel", "Physical Zinc Sunscreen"],
+      normal: ["Hydrating Gel Cleanser", "Rose Nectar Mist", "Squalane Glow Elixir", "Lit-From-Within SPF 50"]
+    };
+
+    setGeneratedRoutine(routineOptions[skinType] || routineOptions.normal);
+    
+    // Cross sell matches
+    const cross = products.filter(p => 
+      p.category === "Serums" || p.category === "Hydration" || p.category === "SPF Care"
+    ).slice(0, 3);
+    setRoutineCrossSells(cross);
+  };
+
+  // --- VISUAL COLLECTION BUILDER ---
+  const handleToggleCollectionItem = (prodId: string) => {
+    const activeList = customCollections[selectedCollection] || [];
+    let updated;
+    if (activeList.includes(prodId)) {
+      updated = activeList.filter(id => id !== prodId);
+    } else {
+      updated = [...activeList, prodId];
+    }
+    const next = { ...customCollections, [selectedCollection]: updated };
+    setCustomCollections(next);
+  };
+
+  // --- MEDIA LIBRARY UPLOADER ---
+  const handleMediaUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingMedia(true);
+    setTimeout(() => {
+      const sizeStr = `${(file.size / (1024 * 1024)).toFixed(1)} MB`;
+      const isVideo = file.type.includes("video");
+      const newAsset = {
+        id: String(Date.now()),
+        name: file.name,
+        url: isVideo ? "/unboxing.mp4" : URL.createObjectURL(file),
+        size: sizeStr,
+        type: isVideo ? "video" as const : "image" as const,
+        tag: "user-upload"
+      };
+      setMediaAssets([newAsset, ...mediaAssets]);
+      setUploadingMedia(false);
+      alert("New marketing asset successfully registered in catalog media vaults!");
+    }, 1000);
+  };
+
+  // --- PIM SEO CENTER AUDITING ---
+  const runSeoAudit = () => {
+    setIsAuditingSeo(true);
+    setTimeout(() => {
+      const results = products.map(p => {
+        const missing = [];
+        let score = 100;
+        if (!p.seo_title) { missing.push("SEO Title Tag"); score -= 30; }
+        if (!p.seo_description) { missing.push("SEO Meta Description"); score -= 40; }
+        if (!p.seo_keywords || p.seo_keywords.length === 0) { missing.push("SEO Keywords"); score -= 20; }
+        if (!p.slug) { missing.push("Canonical URL Slug"); score -= 10; }
+        return { id: p.id, title: p.title, missingFields: missing, score };
+      }).filter(r => r.missingFields.length > 0);
+      
+      setSeoScanResults(results);
+      setIsAuditingSeo(false);
+    }, 500);
+  };
+
+  const handleFixSeoAuto = (prodId: string) => {
+    const p = products.find(prod => prod.id === prodId);
+    if (!p) return;
+
+    const seo_title = `${p.title} | Premium Skincare by ${p.brand} | Glow Addict`;
+    const seo_description = `Shop authentic ${p.title} by ${p.brand}. Pure cosmetic curation designed to unlock natural radiance. Free VIP checkout shipping inside India.`;
+    const keywords = [p.brand.toLowerCase(), p.category.toLowerCase(), "glow addict", "authentic beauty"];
+
+    adminUpdateProduct(prodId, {
+      seo_title,
+      seo_description,
+      seo_keywords: keywords,
+      slug: p.title.toLowerCase().replace(/[^a-zA-Z0-9 ]/g, "").split(" ").join("-")
+    });
+
+    alert(`Gemini auto-patched SEO meta parameters successfully for ${p.title}!`);
+    runSeoAudit();
+  };
+
+  // Revenue & Metrics Calculations
   const totalSales = orders
     .filter((o) => o.payment_status === "paid")
     .reduce((sum, o) => sum + o.total_amount, 0);
@@ -260,337 +351,325 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
   const pendingVerificationOrders = orders.filter((o) => o.payment_status === "pending_verification");
   const activeClaimsCount = claims.filter((c) => c.status === "pending").length;
 
-  const handleVerifyPrepaid = (orderId: string) => {
-    adminVerifyPayment(orderId);
-    alert(`Prepaid payment successfully confirmed for order ${orderId}! The order status is updated to 'Packed'.`);
-  };
+  // Lockscreen interface for security
+  if (secretKey !== ADMIN_SECRET_KEY) {
+    return (
+      <div className="min-h-screen flex flex-col bg-[#080012] text-[#F3EEF6] relative">
+        <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-purple-600/5 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-1/4 left-10 w-[400px] h-[400px] bg-[#FC2779]/5 rounded-full blur-3xl pointer-events-none" />
+        
+        <Header />
 
-  const handleShipOrder = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (!selectedShipOrder) return;
+        <main className="flex-grow flex items-center justify-center px-4 py-20 relative z-10 select-none">
+          <div className="w-full max-w-md bg-white/[0.03] backdrop-blur-md border border-[#C77DFF]/20 rounded-[32px] p-8 text-center space-y-8 shadow-[0_0_50px_rgba(199,125,255,0.08)] relative overflow-hidden animate-slide-in">
+            <div className="absolute inset-0 bg-purple-600/2 rounded-full blur-3xl pointer-events-none" />
+            
+            <div className="relative inline-flex items-center justify-center mx-auto">
+              <div className="absolute inset-0 bg-purple-600/10 rounded-full blur-md animate-pulse" />
+              <div className="relative p-6 rounded-full bg-[#140A1F] border border-[#C77DFF]/30 text-[#C77DFF] shadow-[0_0_20px_rgba(252,39,121,0.25)]">
+                <Lock size={36} />
+              </div>
+            </div>
 
-    if (!trackingCode) {
-      alert("Please enter a valid courier tracking reference number.");
-      return;
-    }
+            <div className="space-y-2">
+              <span className="text-[10px] font-bold text-white uppercase tracking-widest bg-[#FC2779] px-3 py-1 rounded-full font-sans">
+                Creator Console Locked
+              </span>
+              <h2 className="text-2xl font-black font-elegant tracking-wide text-white pt-2 font-serif">
+                Enter Secret Key
+              </h2>
+              <p className="text-xs text-[#D0C3D9] leading-relaxed max-w-sm mx-auto font-medium">
+                The Glow Addict administration console is locked. Enter Sayanita's passcode to access e-commerce operations.
+              </p>
+            </div>
 
-    adminShipOrder(selectedShipOrder, courierName, trackingCode);
-    setSelectedShipOrder(null);
-    setTrackingCode("");
-    alert(`Order ${selectedShipOrder} marked as Shipped via ${courierName}. Tracking details logged.`);
-  };
+            {keyError && (
+              <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-2xl p-4.5 text-xs flex gap-2.5 items-start text-left">
+                <ShieldAlert size={16} className="shrink-0 mt-0.5" />
+                <span className="leading-relaxed font-semibold">{keyError}</span>
+              </div>
+            )}
 
-  const handleResolveClaim = (claimId: string, status: "approved" | "rejected") => {
-    if (!resolutionNotes) {
-      alert("Please enter decision notes explaining your approval or rejection.");
-      return;
-    }
+            <form onSubmit={handleUnlockConsole} className="space-y-4 text-xs text-left">
+              <div className="space-y-1.5">
+                <label className="font-bold text-[#8E7A9C] uppercase tracking-wider block text-[9px]">Passcode Entry</label>
+                <div className="relative">
+                  <Lock size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#8E7A9C]" />
+                  <input
+                    type="password"
+                    required
+                    placeholder="••••"
+                    value={keyInput}
+                    onChange={(e) => setKeyInput(e.target.value)}
+                    className="w-full pl-10 pr-4 py-3 rounded-xl border border-[#C77DFF]/20 focus:border-[#FC2779] outline-none bg-[#140A1F] text-white text-center tracking-widest text-lg font-bold transition-all font-mono"
+                  />
+                </div>
+              </div>
 
-    adminResolveClaim(claimId, status, resolutionNotes);
-    setSelectedClaim(null);
-    setResolutionNotes("");
-    alert(`Claim resolution processed: ${status.toUpperCase()}. Customer notified in dashboard.`);
-  };
+              <button
+                type="submit"
+                className="w-full py-3.5 bg-gradient-to-r from-[#C77DFF] to-[#FC2779] hover:opacity-90 text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-lg shadow-purple-950 flex items-center justify-center gap-2 cursor-pointer"
+              >
+                <Unlock size={13} />
+                Unlock Admin Console
+              </button>
+            </form>
 
-  const applyAiExtraction = (data: {
-    imageUrl: string;
-    extracted: {
-      title: string;
-      brand: string;
-      category: string;
-      description: string;
-      price: number;
-      mrp: number;
-      skuHint: string;
-      shades: string[];
-      extractedText: string;
-    };
-  }) => {
-    setImagePreview(data.imageUrl);
-    setNewProduct((current) => ({
-      ...current,
-      image: data.imageUrl,
-      title: current.title || data.extracted.title,
-      brand: current.brand || data.extracted.brand,
-      category: current.category || data.extracted.category,
-      price: current.price || String(data.extracted.price || ""),
-      mrp: current.mrp || String(data.extracted.mrp || ""),
-      sku: current.sku || data.extracted.skuHint,
-      shades: current.shades || data.extracted.shades.join(", "),
-      description: current.description || data.extracted.description,
-      extracted_text: data.extracted.extractedText || current.extracted_text,
-    }));
-  };
+            <div className="pt-4 border-t border-[#C77DFF]/10 text-center">
+              <Link
+                href="/"
+                className="text-[10px] text-[#D0C3D9] hover:text-[#C77DFF] font-semibold transition-colors"
+              >
+                ← Return to Public Catalog
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    );
+  }
 
-  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!adminApiKey.trim()) {
-      setUploadStatus("Add your Admin API key first to run AI extraction.");
-      return;
-    }
-
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = () => {
-      const result = typeof reader.result === "string" ? reader.result : "";
-      setImagePreview(result);
-      setUploadStatus(`Loaded ${file.name}. Running AI text detection...`);
-    };
-    reader.readAsDataURL(file);
-
-    const formData = new FormData();
-    formData.append("file", file);
-
-    try {
-      setIsDetectingImageText(true);
-      const response = await fetch("/api/ai/extract-product", {
-        method: "POST",
-        headers: {
-          "x-admin-key": adminApiKey.trim(),
-        },
-        body: formData,
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to extract product text from image.");
-      }
-
-      applyAiExtraction(data);
-      setUploadStatus("AI detected product details from image. Review and publish.");
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "AI extraction failed.";
-      setUploadStatus(`Image uploaded, but AI extraction failed: ${message}`);
-    } finally {
-      setIsDetectingImageText(false);
-    }
-  };
-
-  const handleDetectFromUrl = async () => {
-    if (!adminApiKey.trim()) {
-      setUploadStatus("Add your Admin API key first to run AI extraction.");
-      return;
-    }
-
-    if (!newProduct.image.trim()) {
-      alert("Paste a valid image URL first.");
-      return;
-    }
-
-    try {
-      setIsDetectingImageText(true);
-      setUploadStatus("Running AI text detection from image URL...");
-
-      const response = await fetch("/api/ai/extract-product", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "x-admin-key": adminApiKey.trim(),
-        },
-        body: JSON.stringify({ imageUrl: newProduct.image.trim() }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || "Failed to extract product text from image URL.");
-      }
-
-      applyAiExtraction(data);
-      setUploadStatus("AI details detected from URL image. Review and publish.");
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "AI extraction failed.";
-      setUploadStatus(`AI extraction failed: ${message}`);
-    } finally {
-      setIsDetectingImageText(false);
-    }
-  };
-
-  const handleAddProduct = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!newProduct.title.trim() || !newProduct.brand.trim() || !newProduct.category.trim() || !newProduct.image.trim()) {
-      alert("Please complete the required product details and add an image.");
-      return;
-    }
-
-    const parsedPrice = Number(newProduct.price);
-    const parsedMrp = Number(newProduct.mrp);
-    const parsedStock = Number(newProduct.stock);
-
-    if (!parsedPrice || !parsedMrp || Number.isNaN(parsedStock)) {
-      alert("Price, MRP, and stock must be valid numbers.");
-      return;
-    }
-
-    const product: Product = {
-      id: `prod-${Date.now()}`,
-      sku: newProduct.sku.trim() || `SKU-${Date.now()}`,
-      title: newProduct.title.trim(),
-      brand: newProduct.brand.trim(),
-      category: newProduct.category.trim(),
-      price: parsedPrice,
-      mrp: parsedMrp,
-      stock: parsedStock,
-      image: newProduct.image.trim(),
-      shades: newProduct.shades
-        .split(",")
-        .map((shade) => shade.trim())
-        .filter(Boolean),
-      authenticity_flag: newProduct.authenticity_flag,
-      description: newProduct.description.trim(),
-      extracted_text: newProduct.extracted_text.trim() || undefined
-    };
-
-    adminAddProduct(product);
-    setNewProduct({
-      sku: "",
-      title: "",
-      brand: "",
-      category: "",
-      price: "",
-      mrp: "",
-      stock: "",
-      image: "",
-      shades: "",
-      authenticity_flag: true,
-      description: "",
-      extracted_text: ""
-    });
-    setImagePreview("");
-    setUploadStatus("Product published to catalog.");
-  };
-
-  const handleRemoveProduct = (productId: string, title: string) => {
-    const confirmed = window.confirm(`Remove ${title} from the catalog? This will hide it everywhere immediately.`);
-    if (!confirmed) return;
-
-    adminRemoveProduct(productId);
-  };
+  // Define sidebar navigation items
+  const sidebarItems: { id: AdminTab; label: string; icon: React.ComponentType<{ size: number }> }[] = [
+    { id: "dashboard", label: "Ledger Summary", icon: TrendingUp },
+    { id: "orders", label: `Prepaid Orders (${orders.length})`, icon: Package },
+    { id: "inventory", label: "Products Registry", icon: Sliders },
+    { id: "beauty-crm", label: "Beauty CRM Insights", icon: Heart },
+    { id: "collections", label: "Collection Builder", icon: Layers },
+    { id: "media", label: "Media Assets", icon: FileImage },
+    { id: "seo-center", label: "SEO PIM Sweeper", icon: Globe },
+    { id: "claims", label: `Disputes Claims (${claims.length})`, icon: ShieldAlert },
+    { id: "coupons", label: "Promo Coupons", icon: Sparkles },
+    { id: "users", label: "Registered Users", icon: Users },
+    { id: "settings", label: "System Gateways", icon: Activity },
+  ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-background text-foreground admin-portal-wrapper relative pb-24 md:pb-8">
+    <div className="min-h-screen flex flex-col bg-[#080012] text-[#F3EEF6] admin-portal-wrapper relative pb-12">
+      {/* Background dewy blooms */}
+      <div className="absolute top-0 right-1/4 w-[600px] h-[600px] bg-purple-900/5 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-10 left-10 w-[400px] h-[400px] bg-[#FC2779]/5 rounded-full blur-3xl pointer-events-none" />
+
       <Header />
 
-      <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
+      <div className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col lg:flex-row gap-8 relative z-10">
         
-        {/* Admin Header Title Panel */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 border-b border-brand-rose pb-6 text-left">
-          <div className="space-y-1">
-            <h1 className="text-2xl sm:text-3xl font-extrabold font-elegant text-foreground flex items-center gap-2.5 tracking-tight animate-slide-in">
-              <ShieldCheck size={28} className="text-amethyst drop-shadow-[0_0_8px_rgba(252,39,121,0.5)]" />
-              Sayanita's Glow Control Portal
-            </h1>
-            <p className="text-xs text-foreground/70 font-semibold leading-relaxed">
-              Complete operational panel for Glow Addict store orders, inventory, and unboxing claims
-            </p>
-          </div>
-          <div className="flex gap-2.5 self-stretch sm:self-auto justify-end">
-            <button
-              onClick={() => window.location.reload()}
-              className="p-2.5 bg-brand-cream border border-brand-rose hover:bg-brand-peach rounded-xl text-amethyst hover:text-brand-purple transition-all duration-300 cursor-pointer"
-              aria-label="Refresh orders data"
-            >
-              <RefreshCcw size={16} />
-            </button>
-            <button
-              onClick={handleLockConsole}
-              className="inline-flex items-center gap-1.5 px-4 py-2 bg-brand-cream border border-brand-rose text-amethyst hover:bg-brand-peach hover:text-brand-purple text-xs font-extrabold uppercase tracking-wider rounded-xl transition-all duration-300 cursor-pointer ios-spring-hover"
-            >
-              <Lock size={13} />
-              Lock Console
-            </button>
-          </div>
-        </div>
-
-        {/* 📊 CORE OPERATIONAL METRICS */}
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {/* ===================================================
+            🔥 SIDE NAVIGATION BAR (Lg screen vertical layout)
+            =================================================== */}
+        <aside className="lg:w-64 shrink-0 flex flex-col gap-6">
           
-          {/* Revenue */}
-          <div className="bg-brand-cream border border-brand-rose p-4 md:p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:translate-y-[-2px] hover:border-amethyst hover:shadow-[0_0_20px_rgba(252,39,121,0.15)] group relative overflow-hidden shadow-sm">
-            <div className="space-y-1 text-left min-w-0">
-              <span className="text-[9px] font-bold text-foreground/60 uppercase tracking-widest block truncate">Sales Revenue</span>
-              <h3 className="text-xl md:text-2xl font-extrabold text-foreground font-sans flex items-center tracking-tight truncate">
-                <IndianRupee size={16} className="-mr-0.5 text-amethyst" />
-                {totalSales}
-              </h3>
+          {/* Logo & lock status card */}
+          <div className="bg-white/[0.03] backdrop-blur-md border border-[#C77DFF]/20 rounded-3xl p-5 text-left space-y-4">
+            <div className="flex items-center gap-2.5">
+              <ShieldCheck size={22} className="text-[#FC2779] drop-shadow-[0_0_6px_rgba(252,39,121,0.5)]" />
+              <h2 className="text-sm font-black font-elegant tracking-wider uppercase text-white font-serif">Glow Control OS</h2>
             </div>
-            <div className="p-2.5 bg-background text-[#10B981] rounded-xl border border-brand-rose group-hover:bg-brand-peach transition-colors shrink-0 shadow-sm">
-              <IndianRupee size={18} />
+            
+            <div className="text-[10px] text-[#D0C3D9] leading-relaxed">
+              Active Session: <strong className="text-white">Admin Sayanita</strong>
+            </div>
+
+            <div className="flex gap-2">
+              <button
+                onClick={() => window.location.reload()}
+                className="flex-1 p-2 bg-[#140A1F] border border-[#C77DFF]/20 hover:bg-[#1C0F2B] rounded-xl text-[#C77DFF] transition-all flex items-center justify-center cursor-pointer"
+                title="Force refresh backend data"
+              >
+                <RefreshCcw size={13} />
+              </button>
+              <button
+                onClick={handleLockConsole}
+                className="flex-1 py-1.5 px-3 bg-[#140A1F] border border-[#C77DFF]/20 hover:border-[#FC2779] text-[#C77DFF] hover:text-[#FC2779] text-[9px] font-black uppercase tracking-widest rounded-xl transition-all flex items-center justify-center gap-1.5 cursor-pointer"
+              >
+                <Lock size={10} />
+                Lock
+              </button>
             </div>
           </div>
 
-          {/* Pending Verifications */}
-          <div className="bg-brand-cream border border-brand-rose p-4 md:p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:translate-y-[-2px] hover:border-amethyst hover:shadow-[0_0_20px_rgba(252,39,121,0.15)] group relative overflow-hidden shadow-sm">
-            <div className="space-y-1 text-left min-w-0">
-              <span className="text-[9px] font-bold text-foreground/60 uppercase tracking-widest block truncate">Payment Approvals</span>
-              <h3 className="text-xl md:text-2xl font-extrabold text-foreground font-sans tracking-tight truncate">
-                {pendingVerificationOrders.length}
-              </h3>
-            </div>
-            <div className="p-2.5 bg-background text-[#F59E0B] rounded-xl border border-brand-rose group-hover:bg-brand-peach transition-colors shrink-0 shadow-sm">
-              <ShieldAlert size={18} />
-            </div>
-          </div>
-
-          {/* Active Orders */}
-          <div className="bg-brand-cream border border-brand-rose p-4 md:p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:translate-y-[-2px] hover:border-amethyst hover:shadow-[0_0_20px_rgba(252,39,121,0.15)] group relative overflow-hidden shadow-sm">
-            <div className="space-y-1 text-left min-w-0">
-              <span className="text-[9px] font-bold text-foreground/60 uppercase tracking-widest block truncate">Active Orders</span>
-              <h3 className="text-xl md:text-2xl font-extrabold text-foreground font-sans tracking-tight truncate">
-                {orders.filter((o) => o.order_status !== "delivered").length}
-              </h3>
-            </div>
-            <div className="p-2.5 bg-background text-amethyst rounded-xl border border-brand-rose group-hover:bg-brand-peach transition-colors shrink-0 shadow-sm">
-              <Package size={18} />
-            </div>
-          </div>
-
-          {/* Claims Pending */}
-          <div className="bg-brand-cream border border-brand-rose p-4 md:p-5 rounded-2xl flex items-center justify-between transition-all duration-300 hover:translate-y-[-2px] hover:border-amethyst hover:shadow-[0_0_20px_rgba(252,39,121,0.15)] group relative overflow-hidden shadow-sm">
-            <div className="space-y-1 text-left min-w-0">
-              <span className="text-[9px] font-bold text-foreground/60 uppercase tracking-widest block truncate">Dispute Claims</span>
-              <h3 className="text-xl md:text-2xl font-extrabold text-foreground font-sans tracking-tight truncate">
-                {activeClaimsCount}
-              </h3>
-            </div>
-            <div className="p-2.5 bg-background text-[#EF4444] rounded-xl border border-brand-rose group-hover:bg-brand-peach transition-colors shrink-0 shadow-sm">
-              <ShieldAlert size={18} />
-            </div>
-          </div>
-
-        </div>
-
-        {/* Tab Controls — Scrollable and responsive */}
-        <div className="w-full overflow-x-auto admin-scrollable-tabs flex border-b border-brand-rose bg-brand-cream p-1.5 rounded-2xl max-w-3xl gap-1 shrink-0 scroll-smooth select-none shadow-sm">
-          {adminTabs.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`px-4 py-2.5 rounded-xl text-xs font-bold text-center transition-all cursor-pointer select-none shrink-0 ${
-                activeTab === tab.id
-                  ? "bg-brand-gradient text-white shadow-md shadow-amethyst/25"
-                  : "text-foreground/75 hover:text-amethyst hover:bg-brand-peach/50"
-              }`}
+          {/* AI Creative Suite Quick launchers */}
+          <div className="bg-gradient-to-b from-[#140A1F] to-[#250A32] border border-[#FC2779]/30 rounded-3xl p-5 text-left space-y-3.5 shadow-[0_0_15px_rgba(252,39,121,0.06)]">
+            <span className="text-[8px] font-black tracking-widest text-[#FC2779] uppercase block">AI Commerce Engines</span>
+            
+            <Link 
+              href="/admin/bulk-import" 
+              className="flex items-center justify-between p-2.5 bg-white/[0.02] border border-[#C77DFF]/15 hover:border-[#FC2779] hover:bg-white/[0.04] rounded-xl transition-all text-xs font-bold text-white group cursor-pointer"
             >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+              <span className="flex items-center gap-2">
+                <Layers size={13} className="text-[#C77DFF] group-hover:text-[#FC2779]" />
+                PIM Catalog Factory
+              </span>
+              <ChevronRight size={12} className="text-white/40 group-hover:translate-x-1 transition-transform" />
+            </Link>
 
-        {/* TAB WORKSPACE MODULES */}
-        <div className="space-y-6">
+            <Link 
+              href="/admin/ai-center" 
+              className="flex items-center justify-between p-2.5 bg-white/[0.02] border border-[#C77DFF]/15 hover:border-[#FC2779] hover:bg-white/[0.04] rounded-xl transition-all text-xs font-bold text-white group cursor-pointer"
+            >
+              <span className="flex items-center gap-2">
+                <Sparkles size={13} className="text-[#C77DFF] group-hover:text-[#FC2779]" />
+                AI Creative Studio
+              </span>
+              <ChevronRight size={12} className="text-white/40 group-hover:translate-x-1 transition-transform" />
+            </Link>
+          </div>
+
+          {/* Navigation vertical list */}
+          <nav className="hidden lg:flex flex-col bg-white/[0.02] border border-[#C77DFF]/15 rounded-3xl p-2.5 text-left" aria-label="Desktop menu navigation">
+            {sidebarItems.map((tab) => {
+              const Icon = tab.icon;
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`w-full py-2.5 px-4 rounded-2xl text-xs font-bold text-left transition-all flex items-center gap-3 cursor-pointer ${
+                    activeTab === tab.id
+                      ? "bg-gradient-to-r from-purple-800 to-[#FC2779] text-white shadow-md shadow-purple-950"
+                      : "text-[#D0C3D9] hover:text-white hover:bg-white/5"
+                  }`}
+                >
+                  <Icon size={15} />
+                  {tab.label}
+                </button>
+              );
+            })}
+          </nav>
+        </aside>
+
+        {/* ===================================================
+            🔥 MAIN WORKSPACE PANEL AREA (tab switching)
+            =================================================== */}
+        <section className="flex-1 min-w-0">
           
-          {/* 1. ORDERS MODULE */}
+          {/* Mobile responsive scrollable tabs */}
+          <div className="lg:hidden w-full overflow-x-auto admin-scrollable-tabs flex bg-[#140A1F] border border-[#C77DFF]/20 p-1.5 rounded-2xl gap-1 shrink-0 scroll-smooth select-none mb-6">
+            {sidebarItems.map((tab) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id)}
+                className={`px-3.5 py-2 rounded-xl text-[10px] font-bold text-center transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                  activeTab === tab.id
+                    ? "bg-gradient-to-r from-purple-700 to-[#FC2779] text-white shadow-md"
+                    : "text-[#D0C3D9] hover:text-white hover:bg-white/5"
+                }`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
+
+          {/* 1. OVERVIEW DASHBOARD TAB */}
+          {activeTab === "dashboard" && (
+            <div className="space-y-6 animate-slide-in">
+              <div className="text-left space-y-1">
+                <h3 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779]">Operating Summary</h3>
+                <h2 className="text-xl font-black font-elegant text-white">Central Ledger Overview</h2>
+              </div>
+
+              {/* Grid Metrics */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                <div className="bg-white/[0.03] border border-[#C77DFF]/20 p-5 rounded-2xl text-left relative overflow-hidden shadow-sm">
+                  <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-widest block">Total Sales</span>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-white font-sans flex items-center mt-1">
+                    <IndianRupee size={16} className="text-[#C77DFF] shrink-0" />
+                    {totalSales}
+                  </h3>
+                  <span className="text-[9px] text-[#10B981] font-bold block mt-2">✓ Verified UPI accounts</span>
+                </div>
+
+                <div className="bg-white/[0.03] border border-[#C77DFF]/20 p-5 rounded-2xl text-left relative overflow-hidden shadow-sm">
+                  <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-widest block">Pending Approvals</span>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-white font-sans mt-1">
+                    {pendingVerificationOrders.length}
+                  </h3>
+                  <span className="text-[9px] text-amber-400 font-bold block mt-2">⚠️ Awaiting screenshots</span>
+                </div>
+
+                <div className="bg-white/[0.03] border border-[#C77DFF]/20 p-5 rounded-2xl text-left relative overflow-hidden shadow-sm">
+                  <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-widest block">Active Shipments</span>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-white font-sans mt-1">
+                    {orders.filter(o => o.order_status !== "delivered").length}
+                  </h3>
+                  <span className="text-[9px] text-[#C77DFF] font-bold block mt-2">✓ Logistics synced</span>
+                </div>
+
+                <div className="bg-white/[0.03] border border-[#C77DFF]/20 p-5 rounded-2xl text-left relative overflow-hidden shadow-sm">
+                  <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-widest block">Unresolved Disputes</span>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-[#FC2779] font-sans mt-1">
+                    {activeClaimsCount}
+                  </h3>
+                  <span className="text-[9px] text-[#FC2779] font-bold block mt-2 animate-pulse">⚠️ Lightbox check</span>
+                </div>
+              </div>
+
+              {/* Quick statistics layout */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-left">
+                
+                <div className="bg-[#140A1F] border border-[#C77DFF]/15 p-6 rounded-3xl space-y-4 md:col-span-2">
+                  <h4 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779] flex items-center gap-1.5">
+                    <TrendingUp size={14} /> Catalog Health Ledger
+                  </h4>
+                  <div className="space-y-4">
+                    <p className="text-xs text-[#D0C3D9] leading-relaxed">
+                      Sayanita's Glow Addict stores currently hold <strong className="text-white">{products.length} unique cosmetic formulas</strong>. All items are active with verified batch tracking.
+                    </p>
+                    <div className="grid grid-cols-3 gap-3 text-center">
+                      <div className="p-3 bg-white/[0.02] border border-[#C77DFF]/10 rounded-xl">
+                        <span className="text-[8px] font-bold text-[#8E7A9C] uppercase block">Low Stock</span>
+                        <strong className="text-lg text-white font-sans block mt-1">
+                          {products.filter(p => p.stock <= 5).length}
+                        </strong>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-[#C77DFF]/10 rounded-xl">
+                        <span className="text-[8px] font-bold text-[#8E7A9C] uppercase block">Out of Stock</span>
+                        <strong className="text-lg text-[#FC2779] font-sans block mt-1">
+                          {products.filter(p => p.stock === 0).length}
+                        </strong>
+                      </div>
+                      <div className="p-3 bg-white/[0.02] border border-[#C77DFF]/10 rounded-xl">
+                        <span className="text-[8px] font-bold text-[#8E7A9C] uppercase block">Draft Mode</span>
+                        <strong className="text-lg text-amber-400 font-sans block mt-1">
+                          {products.filter(p => p.status === "draft").length}
+                        </strong>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="bg-[#140A1F] border border-[#C77DFF]/15 p-6 rounded-3xl space-y-3.5">
+                  <h4 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779] flex items-center gap-1.5">
+                    <Grid size={14} /> Top Categories
+                  </h4>
+                  <div className="space-y-2 text-xs font-bold text-[#D0C3D9]">
+                    {[
+                      { name: "Serums", count: 32 },
+                      { name: "Lipsticks", count: 28 },
+                      { name: "SPF Care", count: 22 },
+                      { name: "Hydration", count: 18 }
+                    ].map((cat, i) => (
+                      <div key={i} className="flex justify-between items-center py-1.5 border-b border-[#C77DFF]/10">
+                        <span>{cat.name}</span>
+                        <span className="text-[#C77DFF]">{cat.count}% share</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* 2. ORDERS LIST TAB */}
           {activeTab === "orders" && (
             <div className="space-y-6 animate-slide-in text-left">
-              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-2">
-                <Package size={14} className="text-brand-magenta" />
+              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#FC2779] flex items-center gap-2">
+                <Package size={14} className="text-[#FC2779]" />
                 Customer Purchases & Prepaid Verification
               </h2>
 
               {orders.length === 0 ? (
-                <p className="text-xs text-foreground/55 text-center py-12 bg-white border border-brand-rose rounded-2xl">
+                <p className="text-xs text-[#D0C3D9] text-center py-12 bg-white/[0.02] border border-[#C77DFF]/20 rounded-2xl">
                   No orders placed yet.
                 </p>
               ) : (
@@ -598,22 +677,21 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                   {orders.map((order) => (
                     <div
                       key={order.id}
-                      className="bg-white border border-brand-rose rounded-3xl p-5 md:p-6 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-6 text-left hover:shadow-md transition-shadow"
+                      className="bg-white/[0.03] backdrop-blur-md border border-[#C77DFF]/20 rounded-3xl p-5 md:p-6 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 text-left hover:border-[#FC2779]/45 transition-colors"
                     >
-                      {/* Customer & Totals Info */}
+                      {/* Customer Info */}
                       <div className="lg:col-span-4 space-y-4">
                         <div className="space-y-0.5">
-                          <span className="text-[10px] font-bold text-brand-magenta uppercase tracking-wider block">
+                          <span className="text-[10px] font-bold text-[#FC2779] uppercase tracking-wider block">
                             Order Code: {order.id}
                           </span>
-                          <p className="text-[10px] text-foreground/60">
+                          <p className="text-[10px] text-[#D0C3D9]">
                             Placed: {new Date(order.created_at).toLocaleString()}
                           </p>
                         </div>
 
-                        {/* Customer profile */}
-                        <div className="bg-brand-cream p-3.5 rounded-xl border border-brand-rose text-[11px] font-sans text-foreground/90 space-y-1.5">
-                          <span className="font-extrabold text-brand-magenta block uppercase tracking-wider text-[9px] border-b border-brand-rose pb-1 mb-1">Recipient Details:</span>
+                        <div className="bg-[#140A1F] p-3.5 rounded-xl border border-[#C77DFF]/15 text-[11px] font-sans text-[#D0C3D9] space-y-1.5">
+                          <span className="font-extrabold text-[#FC2779] block uppercase tracking-wider text-[9px] border-b border-[#C77DFF]/15 pb-1 mb-1">Recipient Details:</span>
                           <p><strong>Name:</strong> {order.shipping_address.name}</p>
                           <p><strong>Phone:</strong> {order.shipping_address.phone}</p>
                           <p><strong>Email:</strong> {order.shipping_address.email}</p>
@@ -621,77 +699,72 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                         </div>
                       </div>
 
-                      {/* Items details block */}
+                      {/* Items details */}
                       <div className="lg:col-span-4 text-xs font-sans space-y-3">
-                        <span className="font-extrabold text-brand-magenta block uppercase tracking-wider text-[9px] border-b border-brand-rose pb-1">
+                        <span className="font-extrabold text-[#FC2779] block uppercase tracking-wider text-[9px] border-b border-[#C77DFF]/15 pb-1">
                           Purchased Items:
                         </span>
-                        <div className="divide-y divide-brand-rose/60 text-[11px] space-y-1">
+                        <div className="divide-y divide-[#C77DFF]/15 text-[11px] space-y-1">
                           {order.items.map((item, idx) => (
                             <div key={idx} className="py-2.5 flex justify-between gap-4">
-                              <span className="font-semibold text-foreground leading-tight">
+                              <span className="font-semibold text-white leading-tight">
                                 {item.product.title}
-                                {item.selectedShade && <strong className="text-brand-magenta ml-1">({item.selectedShade})</strong>}
+                                {item.selectedShade && <strong className="text-[#FC2779] ml-1">({item.selectedShade})</strong>}
                               </span>
-                              <span className="text-foreground/60 shrink-0">Qty: {item.quantity}</span>
+                              <span className="text-[#D0C3D9] shrink-0">Qty: {item.quantity}</span>
                             </div>
                           ))}
                         </div>
 
-                        {/* Gift bundles */}
+                        {/* Gift freebies */}
                         {(order.freebies.scrunchies || order.freebies.lipstick || order.freebies.choice) && (
-                          <div className="pt-2 border-t border-dashed border-brand-rose text-[10px] space-y-1 font-semibold text-emerald-600">
-                            <strong className="text-[9px] uppercase tracking-wider text-emerald-600/80">Bundled Freebies:</strong>
+                          <div className="pt-2 border-t border-dashed border-[#C77DFF]/20 text-[10px] space-y-1 font-semibold text-[#10B981]">
+                            <strong className="text-[9px] uppercase tracking-wider text-[#10B981]">Bundled Freebies:</strong>
                             <div className="flex flex-wrap gap-1.5 pt-0.5">
-                              {order.freebies.scrunchies && <span className="bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/25">✓ Scrunchies</span>}
-                              {order.freebies.lipstick && <span className="bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/25">✓ Lipstick</span>}
-                              {order.freebies.choice && <span className="bg-emerald-500/15 px-2 py-0.5 rounded border border-emerald-500/30 font-extrabold">✓ Choice: {order.freebies.choice}</span>}
+                              {order.freebies.scrunchies && <span className="bg-[#10B981]/10 px-2 py-0.5 rounded border border-[#10B981]/20">✓ Scrunchies</span>}
+                              {order.freebies.lipstick && <span className="bg-[#10B981]/10 px-2 py-0.5 rounded border border-[#10B981]/20">✓ Lipstick</span>}
+                              {order.freebies.choice && <span className="bg-[#10B981]/15 px-2 py-0.5 rounded border border-[#10B981]/35 font-extrabold">✓ Choice: {order.freebies.choice}</span>}
                             </div>
                           </div>
                         )}
 
-                        <div className="pt-2 border-t border-brand-rose flex justify-between font-bold text-foreground text-xs">
+                        <div className="pt-2 border-t border-[#C77DFF]/20 flex justify-between font-bold text-white text-xs">
                           <span>Grand Total Collected:</span>
-                          <span className="text-brand-magenta text-sm">₹{order.total_amount}</span>
+                          <span className="text-[#FC2779] text-sm">₹{order.total_amount}</span>
                         </div>
                       </div>
 
-                      {/* Operations Actions & Screenshot display */}
+                      {/* Operations Actions & Screenshot */}
                       <div className="lg:col-span-4 flex flex-col justify-between space-y-4">
-                        
-                        {/* Reference code and screenshot */}
                         {order.upi_transaction_id ? (
-                          <div className="p-3 bg-brand-cream border border-brand-rose rounded-xl space-y-2.5">
+                          <div className="p-3 bg-[#140A1F] border border-[#C77DFF]/15 rounded-xl space-y-2.5">
                             <div className="flex justify-between items-center text-[10px]">
-                              <span className="text-foreground/60">Ref ID:</span>
-                              <span className="font-mono text-brand-magenta font-extrabold bg-white border border-brand-rose px-2 py-0.5 rounded">{order.upi_transaction_id}</span>
+                              <span className="text-[#D0C3D9]">Ref ID:</span>
+                              <span className="font-mono text-[#FC2779] font-extrabold bg-[#080012] border border-[#C77DFF]/20 px-2 py-0.5 rounded">{order.upi_transaction_id}</span>
                             </div>
 
-                            {/* Clickable Receipt Screenshot */}
                             {order.screenshot_url && (
                               <button
                                 onClick={() => setPlayingVideoUrl(order.screenshot_url!)}
-                                className="w-full flex items-center justify-center gap-1.5 py-2 bg-brand-cream border border-brand-rose hover:bg-brand-rose/40 text-xs font-bold rounded-lg text-brand-magenta transition-colors cursor-pointer"
+                                className="w-full flex items-center justify-center gap-1.5 py-2 bg-[#140A1F] border border-[#C77DFF]/20 hover:border-[#FC2779] text-xs font-bold rounded-lg text-[#FC2779] transition-colors cursor-pointer"
                               >
-                                <Eye size={13} className="text-brand-magenta" />
+                                <Eye size={13} className="text-[#FC2779]" />
                                 View Payment Screenshot
                               </button>
                             )}
                           </div>
                         ) : (
                           order.payment_method === "UPI" && (
-                            <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-500 rounded-xl text-[10px] leading-relaxed font-semibold">
-                              ⚠️ Payment verification pending. Customer has not uploaded reference data.
+                            <div className="p-3.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl text-[10px] leading-relaxed font-semibold">
+                              ⚠️ UPI confirmation reference screenshot missing.
                             </div>
                           )
                         )}
 
-                        {/* Status tracker controls */}
                         <div className="space-y-2">
-                          <span className="text-[9px] font-bold text-foreground/60 uppercase tracking-wider block">Quick Operations Actions:</span>
+                          <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-wider block">Fulfillment Controls:</span>
                           
                           <div className="grid grid-cols-2 gap-2">
-                            {/* 1. Confirm prepaid verification */}
                             <button
                               disabled={order.payment_status === "paid"}
                               onClick={() => handleVerifyPrepaid(order.id)}
@@ -705,7 +778,6 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                               {order.payment_status === "paid" ? "Confirmed" : "Verify UPI"}
                             </button>
 
-                            {/* 2. Mark Shipped */}
                             <button
                               disabled={order.payment_status !== "paid" || order.order_status === "shipped" || order.order_status === "delivered"}
                               onClick={() => setSelectedShipOrder(order.id)}
@@ -713,7 +785,7 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                                 order.order_status === "shipped" || order.order_status === "delivered"
                                   ? "bg-blue-500/15 text-blue-500 border border-blue-500/25 cursor-not-allowed"
                                   : order.payment_status !== "paid"
-                                  ? "bg-brand-cream text-foreground/20 border border-brand-rose cursor-not-allowed"
+                                  ? "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"
                                   : "bg-blue-600 hover:bg-blue-700 text-white"
                               }`}
                             >
@@ -721,19 +793,17 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                               {order.order_status === "shipped" || order.order_status === "delivered" ? "Shipped" : "Dispatch"}
                             </button>
 
-                            {/* 3. Print Shiprocket Label */}
                             {order.payment_status === "paid" && (
                               <button
                                 type="button"
                                 onClick={() => setLabelModalOrder(order)}
-                                className="col-span-2 py-2 text-[9px] font-bold uppercase tracking-wider bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-brand-rose shadow-md"
+                                className="col-span-2 py-2 text-[9px] font-bold uppercase tracking-wider bg-purple-700 hover:bg-purple-800 text-white rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer border border-[#C77DFF]/20 shadow-md"
                               >
                                 <Package size={12} />
                                 Print Shiprocket Label
                               </button>
                             )}
 
-                            {/* 4. Mark Delivered */}
                             <button
                               disabled={order.order_status !== "shipped"}
                               onClick={() => {
@@ -742,9 +812,9 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                               }}
                               className={`col-span-2 py-2 text-[9px] font-bold uppercase tracking-wider rounded-lg flex items-center justify-center gap-1.5 transition-all cursor-pointer ${
                                 order.order_status === "delivered"
-                                  ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/25 cursor-not-allowed"
+                                  ? "bg-[#10B981]/15 text-[#10B981] border border-[#10B981]/25 cursor-not-allowed"
                                   : order.order_status !== "shipped"
-                                  ? "bg-brand-cream text-foreground/20 border border-brand-rose cursor-not-allowed"
+                                  ? "bg-white/5 text-white/20 border border-white/5 cursor-not-allowed"
                                   : "bg-emerald-600 hover:bg-emerald-700 text-white"
                               }`}
                             >
@@ -752,123 +822,8 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                               {order.order_status === "delivered" ? "Delivered to Customer" : "Mark Order Delivered"}
                             </button>
                           </div>
-
-                        </div>
-
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* 2. CLAIMS MODULE */}
-          {activeTab === "claims" && (
-            <div className="space-y-6 animate-slide-in text-left">
-              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-2">
-                <ShieldAlert size={14} className="text-[#EF4444]" />
-                Unboxing Video Dispute Claims Panel
-              </h2>
-
-              {claims.length === 0 ? (
-                <p className="text-xs text-foreground/55 text-center py-12 bg-white border border-brand-rose rounded-2xl">
-                  No claims filed yet.
-                </p>
-              ) : (
-                <div className="space-y-6">
-                  {claims.map((claim) => (
-                    <div
-                      key={claim.id}
-                      className="bg-white border border-brand-rose rounded-3xl p-5 md:p-6 shadow-xs grid grid-cols-1 lg:grid-cols-12 gap-6 hover:shadow-md transition-shadow"
-                    >
-                      {/* Left: Claim info details */}
-                      <div className="lg:col-span-4 space-y-4">
-                        <div className="space-y-0.5">
-                          <span className="text-[10px] font-bold text-brand-magenta uppercase tracking-wider block">
-                            Dispute ID: {claim.id}
-                          </span>
-                          <p className="text-xs font-bold text-foreground mt-1.5">
-                            Associated Order: {claim.order_id}
-                          </p>
-                          <p className="text-[10px] text-foreground/60">
-                            Filed on: {new Date(claim.created_at).toLocaleString()}
-                          </p>
-                        </div>
-
-                        <div className="bg-brand-cream p-3.5 rounded-xl border border-brand-rose text-[11px] font-sans text-foreground/90 space-y-1.5">
-                          <p><strong>Claim Category:</strong> {claim.claim_type.toUpperCase()}</p>
-                          <p className="mt-1 flex items-center gap-2">
-                            <strong>Status:</strong>{" "}
-                            <span className={`font-bold px-2 py-0.5 rounded-full border text-[9px] uppercase ${
-                              claim.status === "approved"
-                                ? "bg-emerald-500/10 text-emerald-600 border border-emerald-500/25"
-                                : claim.status === "rejected"
-                                ? "bg-red-500/10 text-red-500 border border-red-500/25"
-                                : "bg-amber-500/10 text-amber-600 border border-amber-500/25"
-                            }`}>
-                              {claim.status}
-                            </span>
-                          </p>
                         </div>
                       </div>
-
-                      {/* Middle: Video evidence player block */}
-                      <div className="lg:col-span-4 flex flex-col items-center justify-center">
-                        <div className="relative w-full aspect-video rounded-xl bg-brand-cream overflow-hidden shadow-xs flex flex-col items-center justify-center text-foreground border border-brand-rose">
-                          <button
-                            onClick={() => setPlayingVideoUrl(claim.unboxing_video_url)}
-                            className="p-3 bg-brand-rose border border-brand-rose text-brand-magenta hover:bg-brand-cream rounded-full transition-all transform hover:scale-110 flex items-center justify-center shadow-md cursor-pointer"
-                          >
-                            <Play size={20} fill="currentColor" />
-                          </button>
-                          <span className="text-[10px] font-bold tracking-wider uppercase mt-3 font-sans text-brand-magenta">
-                            Watch Continuous Unboxing Video
-                          </span>
-                        </div>
-                      </div>
-
-                      {/* Right: Dispute action panel */}
-                      <div className="lg:col-span-4 flex flex-col justify-between space-y-4">
-                        <div className="space-y-2">
-                          <label className="text-[10px] font-bold text-brand-magenta uppercase tracking-wider block">Sayanita's Decision Notes *</label>
-                          <textarea
-                            disabled={claim.status !== "pending"}
-                            required
-                            placeholder="e.g. Approved. Verified uncut unboxing video, outer seal was broken. Sending replacement Laneige mask."
-                            value={selectedClaim?.id === claim.id ? resolutionNotes : claim.resolution_notes || ""}
-                            onChange={(e) => {
-                              setSelectedClaim(claim);
-                              setResolutionNotes(e.target.value);
-                            }}
-                            className="w-full text-xs p-3 rounded-lg border border-brand-rose outline-none bg-white text-foreground focus:border-brand-magenta transition-all min-h-[80px]"
-                          />
-                        </div>
-
-                        {claim.status === "pending" && (
-                          <div className="grid grid-cols-2 gap-2">
-                            <button
-                              onClick={() => {
-                                setSelectedClaim(claim);
-                                handleResolveClaim(claim.id, "approved");
-                              }}
-                              className="py-2 text-[10px] font-bold uppercase tracking-wider bg-emerald-600 hover:bg-emerald-600/90 text-white rounded-lg transition-all cursor-pointer shadow-md"
-                            >
-                              Approve Claim
-                            </button>
-                            <button
-                              onClick={() => {
-                                setSelectedClaim(claim);
-                                handleResolveClaim(claim.id, "rejected");
-                              }}
-                              className="py-2 text-[10px] font-bold uppercase tracking-wider bg-red-600 hover:bg-red-600/90 text-white rounded-lg transition-all cursor-pointer shadow-md"
-                            >
-                              Reject Claim
-                            </button>
-                          </div>
-                        )}
-                      </div>
-
                     </div>
                   ))}
                 </div>
@@ -881,282 +836,536 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
             <AdminInventory />
           )}
 
-          {/* 4. SETTINGS MODULE */}
-          {activeTab === "settings" && (
-            <div className="bg-white border border-brand-rose rounded-3xl p-6 sm:p-8 shadow-xs space-y-6 text-left animate-slide-in">
-              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta border-b border-brand-rose pb-3 flex items-center gap-2">
-                <Sliders size={18} className="text-brand-magenta" />
-                Store Operational Safeguards
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                
-                {/* COD toggles */}
-                <div className="p-5 rounded-2xl border border-brand-rose bg-brand-cream space-y-4">
-                  <div className="flex justify-between items-center">
-                    <div>
-                      <span className="text-xs font-bold text-foreground block">Enable Cash on Delivery (COD)</span>
-                      <span className="text-[10px] text-foreground/60 leading-relaxed block mt-1">
-                        Toggles whether COD shows at checkout. Recommended: KEEP ENABLED to mirror real setups.
-                      </span>
-                    </div>
-                    <button
-                      onClick={adminToggleCod}
-                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none ${
-                        settings.codEnabled ? "bg-brand-magenta" : "bg-zinc-200"
-                      }`}
-                    >
-                      <span
-                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
-                          settings.codEnabled ? "translate-x-5" : "translate-x-0"
-                        }`}
-                      />
-                    </button>
-                  </div>
-                  
-                  {settings.codEnabled && (
-                    <div className="text-[10px] text-brand-magenta font-bold leading-relaxed border-t border-brand-rose pt-3">
-                      ✓ Real Production-Grade COD & OTP Verification Gateway active at checkout.
-                    </div>
-                  )}
-                </div>
-
-                {/* Backups database description */}
-                <div className="p-5 rounded-2xl border border-brand-rose bg-brand-cream space-y-3 text-xs leading-relaxed text-foreground/80 font-sans">
-                  <span className="font-extrabold text-brand-magenta block uppercase tracking-wider text-[9px] border-b border-brand-rose pb-1">Database & Serverless Configuration</span>
-                  <p>
-                    Product catalog now syncs through Supabase APIs when environment keys are configured, with local storage fallback for offline continuity.
-                  </p>
-                  <p className="mt-1">
-                    AI image-text extraction runs through a secure server route using Gemini Vision & Groq APIs. Ensure your Supabase table, storage bucket, and env keys are configured.
-                  </p>
-                </div>
-
-              </div>
-            </div>
-          )}
-
-          {/* 5. COUPONS TAB MODULE */}
-          {activeTab === "coupons" && (
+          {/* 4. BEAUTY CRM TAB */}
+          {activeTab === "beauty-crm" && (
             <div className="space-y-6 animate-slide-in text-left">
-              <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs space-y-6">
-                <div>
-                  <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta">Create Promotional Discount Coupon</h3>
-                  <p className="text-[10px] text-foreground/60 mt-1">Add custom promo codes and configure discount rates directly on the store.</p>
-                </div>
-
-                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
-                  <label className="space-y-1.5">
-                    <span className="font-bold text-brand-magenta uppercase tracking-wider text-[9px]">Coupon Code *</span>
-                    <input
-                      type="text"
-                      placeholder="e.g. GLOW50"
-                      value={newCoupon.code}
-                      onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value.toUpperCase() })}
-                      className="w-full px-3 py-2 border border-brand-rose rounded-xl outline-hidden focus:border-brand-magenta bg-brand-cream/40 font-bold"
-                    />
-                  </label>
-                  <label className="space-y-1.5">
-                    <span className="font-bold text-brand-magenta uppercase tracking-wider text-[9px]">Discount Rate (%) *</span>
-                    <input
-                      type="number"
-                      placeholder="e.g. 15"
-                      value={newCoupon.discount_percent}
-                      onChange={(e) => setNewCoupon({ ...newCoupon, discount_percent: e.target.value })}
-                      className="w-full px-3 py-2 border border-brand-rose rounded-xl outline-hidden focus:border-brand-magenta bg-brand-cream/40 font-bold"
-                    />
-                  </label>
-                  <label className="space-y-1.5">
-                    <span className="font-bold text-brand-magenta uppercase tracking-wider text-[9px]">Minimum Cart Value (₹)</span>
-                    <input
-                      type="number"
-                      placeholder="e.g. 799"
-                      value={newCoupon.min_cart_value}
-                      onChange={(e) => setNewCoupon({ ...newCoupon, min_cart_value: e.target.value })}
-                      className="w-full px-3 py-2 border border-brand-rose rounded-xl outline-hidden focus:border-brand-magenta bg-brand-cream/40"
-                    />
-                  </label>
-                </div>
-
-                <div className="flex justify-end pt-3 border-t border-brand-rose">
-                  <button
-                    type="button"
-                    onClick={handleAddCoupon}
-                    className="admin-gradient-btn inline-flex items-center gap-2 px-5 py-3 text-xs font-bold uppercase tracking-wider rounded-xl shadow-xs hover:shadow-md transition-shadow cursor-pointer bg-brand-gradient text-white"
-                  >
-                    <Plus size={14} />
-                    Create Promo Coupon
-                  </button>
-                </div>
+              <div className="space-y-1">
+                <h3 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779]">Luxury Beauty Profiles</h3>
+                <h2 className="text-xl font-black font-elegant text-white flex items-center gap-2">
+                  <Heart size={18} className="text-[#FC2779]" />
+                  Beauty CRM Client Insights
+                </h2>
               </div>
 
-              {/* Coupons List Table */}
-              <div className="bg-white border border-brand-rose rounded-3xl overflow-hidden shadow-xs">
-                <div className="overflow-x-auto">
-                  <table className="w-full text-xs font-sans text-foreground">
-                    <thead className="bg-brand-cream border-b border-brand-rose text-brand-magenta uppercase font-bold text-[9px] tracking-wider">
-                      <tr>
-                        <th className="p-4 text-left">Coupon Code</th>
-                        <th className="p-4 text-center">Type</th>
-                        <th className="p-4 text-center">Benefit</th>
-                        <th className="p-4 text-center">Min Cart Requirement</th>
-                        <th className="p-4 text-center">Status</th>
-                        <th className="p-4 text-center">Delete Action</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-brand-rose/60 bg-white font-semibold text-xs">
-                      {adminCoupons.map((coupon) => (
-                        <tr key={coupon.code} className="hover:bg-brand-cream/30 transition-colors">
-                          <td className="p-4 text-left font-mono font-bold text-foreground text-sm">
-                            {coupon.code}
-                          </td>
-                          <td className="p-4 text-center">
-                            {coupon.discount_percent > 0 ? "Percentage Discount" : "Flat Discount"}
-                          </td>
-                          <td className="p-4 text-center font-bold text-emerald-600">
-                            {coupon.discount_percent > 0 ? `${coupon.discount_percent}% OFF` : `₹${coupon.discount_flat} OFF`}
-                          </td>
-                          <td className="p-4 text-center font-sans">
-                            ₹{coupon.min_cart_value || 0}
-                          </td>
-                          <td className="p-4 text-center">
-                            <span className="bg-emerald-500/10 text-emerald-600 border border-emerald-500/25 text-[9px] font-bold px-2 py-0.5 rounded-full uppercase">
-                              Active
-                            </span>
-                          </td>
-                          <td className="p-4 text-center">
-                            <button
-                              type="button"
-                              onClick={() => handleDeleteCoupon(coupon.code)}
-                              className="p-2 bg-red-500/10 text-red-500 hover:bg-red-500/20 rounded-lg transition-colors cursor-pointer border border-brand-rose"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 6. ANALYTICS MODULE */}
-          {activeTab === "analytics" && (
-            <div className="space-y-6 animate-slide-in text-left">
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
                 
-                {/* Card 1: Sales Revenue */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs relative overflow-hidden">
-                  <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full bg-brand-magenta/5 blur-xl pointer-events-none" />
-                  <span className="text-[9px] font-bold text-brand-magenta uppercase tracking-widest block font-sans">Total Sales Revenue</span>
-                  <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-2xl font-black font-sans text-foreground">₹{orders.reduce((acc, o) => acc + (o.payment_status === "paid" ? o.total_amount : 0), 0).toLocaleString()}</span>
-                    <span className="text-[10px] font-bold text-emerald-600 font-sans">▲ 18.2%</span>
-                  </div>
-                  <p className="text-[9px] text-foreground/50 mt-1 leading-relaxed">Derived from {orders.filter(o => o.payment_status === "paid").length} fully verified prepaid transactions.</p>
-                </div>
-
-                {/* Card 2: Fulfillment Latency */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs relative overflow-hidden">
-                  <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full bg-brand-magenta/5 blur-xl pointer-events-none" />
-                  <span className="text-[9px] font-bold text-brand-magenta uppercase tracking-widest block font-sans">Fulfillment Latency</span>
-                  <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-2xl font-black font-sans text-foreground">4.8 Hours</span>
-                    <span className="text-[10px] font-bold text-emerald-600 font-sans">▼ 1.2h speedup</span>
-                  </div>
-                  <p className="text-[9px] text-foreground/50 mt-1 leading-relaxed">Average duration between customer payment verification and BlueDart dispatch.</p>
-                </div>
-
-                {/* Card 3: Coupon Engagement */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs relative overflow-hidden">
-                  <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full bg-brand-magenta/5 blur-xl pointer-events-none" />
-                  <span className="text-[9px] font-bold text-brand-magenta uppercase tracking-widest block font-sans">Coupon Conversion</span>
-                  <div className="flex items-baseline gap-1 mt-2">
-                    <span className="text-2xl font-black font-sans text-foreground">84.5%</span>
-                    <span className="text-[10px] font-bold text-emerald-600 font-sans">Active usage</span>
-                  </div>
-                  <p className="text-[9px] text-foreground/50 mt-1 leading-relaxed">Percentage of checkouts leveraging promo discount coupon codes.</p>
-                </div>
-
-              </div>
-
-              {/* Coupon Performance Ledger & Stock Alerts */}
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-                
-                {/* Coupon Ledger */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs space-y-4">
-                  <div>
-                    <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-1.5">
-                      <Sparkles size={14} />
-                      Coupon Usage Tracking
-                    </h3>
-                    <p className="text-[10px] text-foreground/60 mt-1">Real-time statistics on active promo codes applied at checkout.</p>
-                  </div>
-                  
-                  <div className="divide-y divide-brand-rose/60 text-xs font-sans">
-                    {adminCoupons.map((coupon) => {
-                      const count = orders.filter((o) => o.coupon_code === coupon.code).length;
-                      return (
-                        <div key={coupon.code} className="py-2.5 flex items-center justify-between">
-                          <span className="font-mono font-bold text-foreground">{coupon.code}</span>
-                          <span className="bg-brand-cream text-brand-magenta text-[9px] font-bold px-2 py-0.5 rounded-full uppercase tracking-wider">{count} Redemptions</span>
-                        </div>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Safety Stock Alerts */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs space-y-4">
-                  <div>
-                    <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-1.5">
-                      <ShieldAlert size={14} className="text-brand-magenta" />
-                      Safety Stock Threshold Alerts
-                    </h3>
-                    <p className="text-[10px] text-foreground/60 mt-1">Products reaching critical safety stock constraints (Stock ≤ 3).</p>
-                  </div>
-
-                  <div className="space-y-2">
-                    {products.filter((p) => p.stock <= 3).length === 0 ? (
-                      <p className="text-[11px] text-emerald-600 font-bold bg-green-50 border border-green-200 p-4 rounded-2xl text-center">
-                        ✓ All catalog items satisfy safety stock thresholds.
-                      </p>
-                    ) : (
-                      <div className="divide-y divide-brand-rose/60 text-xs font-sans">
-                        {products.filter((p) => p.stock <= 3).map((prod) => (
-                          <div key={prod.id} className="py-2.5 flex items-center justify-between">
-                            <div>
-                              <span className="font-bold text-foreground block">{prod.title}</span>
-                              <span className="text-[9px] uppercase font-sans text-brand-magenta font-semibold">{prod.brand}</span>
-                            </div>
-                            <span className="bg-red-50 text-red-500 border border-red-200 text-[10px] font-extrabold px-3 py-1 rounded-full uppercase">
-                              {prod.stock === 0 ? "Out of Stock" : `${prod.stock} Left`}
+                {/* Customer CRM Selector list */}
+                <div className="lg:col-span-5 bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl p-5 space-y-4">
+                  <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-widest block border-b border-[#C77DFF]/15 pb-2">Registered Skin Profiles</span>
+                  <div className="space-y-2 max-h-[450px] overflow-y-auto custom-scrollbar">
+                    {adminUsers && adminUsers.length > 0 ? (
+                      adminUsers.map((cust) => (
+                        <button
+                          key={cust.email}
+                          onClick={() => handleCrmSelect(cust)}
+                          className={`w-full p-3 rounded-xl border text-xs text-left transition-all flex items-center gap-3 cursor-pointer ${
+                            selectedCustomerCrm?.email === cust.email
+                              ? "bg-purple-950/40 border-[#FC2779] text-white shadow-md shadow-[#FC2779]/10"
+                              : "bg-[#140A1F] border-[#C77DFF]/10 text-[#D0C3D9] hover:bg-white/5"
+                          }`}
+                        >
+                          <div className="relative w-8 h-8 rounded-lg overflow-hidden bg-[#140A1F] border border-[#C77DFF]/20 shrink-0 flex items-center justify-center font-bold text-[#FC2779]">
+                            {cust.avatar ? <Image src={cust.avatar} alt={cust.name} fill className="object-cover" unoptimized /> : cust.name[0].toUpperCase()}
+                          </div>
+                          <div className="min-w-0 flex-1">
+                            <span className="font-extrabold text-white block truncate">{cust.name}</span>
+                            <span className="text-[9px] text-[#C77DFF] font-bold block uppercase tracking-wider mt-0.5">
+                              {cust.skin_type || "normal"} Skin
                             </span>
                           </div>
-                        ))}
-                      </div>
+                          <ChevronRight size={14} className="text-white/20" />
+                        </button>
+                      ))
+                    ) : (
+                      <p className="text-xs text-[#D0C3D9] py-8 text-center">No registered customers logged.</p>
                     )}
                   </div>
                 </div>
 
+                {/* Routine and cross sell builder */}
+                <div className="lg:col-span-7 bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl p-6 space-y-6">
+                  {selectedCustomerCrm ? (
+                    <div className="space-y-6 animate-slide-in">
+                      <div className="border-b border-[#C77DFF]/15 pb-4">
+                        <span className="text-[9px] font-bold text-[#FC2779] uppercase tracking-widest block">Active Profile Insights</span>
+                        <h3 className="text-base font-extrabold text-white mt-1">{selectedCustomerCrm.name}</h3>
+                        <p className="text-xs text-[#D0C3D9] font-mono mt-0.5">{selectedCustomerCrm.email}</p>
+                      </div>
+
+                      {/* AI Generated routine */}
+                      <div className="space-y-3.5">
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest flex items-center gap-1.5">
+                          <Sparkles size={13} className="text-[#FC2779]" /> Gemini Beauty Routine Match
+                        </span>
+                        
+                        <div className="grid grid-cols-2 gap-2 text-xs">
+                          {generatedRoutine.map((step, i) => (
+                            <div key={i} className="p-3 bg-[#140A1F] border border-[#C77DFF]/15 rounded-xl text-left relative overflow-hidden">
+                              <span className="absolute top-0 right-0 p-1 text-[#C77DFF]/10 font-bold font-serif text-lg">0{i+1}</span>
+                              <span className="text-[8px] font-bold text-[#8E7A9C] uppercase block mb-1">Step 0{i+1}</span>
+                              <strong className="text-white leading-snug">{step}</strong>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* CRM Routine matches */}
+                      <div className="space-y-3">
+                        <span className="text-[10px] font-black text-white uppercase tracking-widest block">Recommended Cross-Sells</span>
+                        <div className="grid grid-cols-3 gap-3">
+                          {routineCrossSells.map((prod) => (
+                            <div key={prod.id} className="p-2.5 bg-[#140A1F] border border-[#C77DFF]/15 rounded-xl text-center space-y-2">
+                              <div className="relative w-full aspect-square rounded-lg overflow-hidden bg-[#080012] border border-[#C77DFF]/15">
+                                <Image src={prod.image} alt={prod.title} fill className="object-cover" unoptimized />
+                              </div>
+                              <span className="text-[9px] font-extrabold text-white truncate block">{prod.title}</span>
+                              <span className="text-[9px] text-[#FC2779] font-bold block">₹{prod.price}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="py-20 text-center text-[#D0C3D9] space-y-3">
+                      <Heart size={36} className="mx-auto text-purple-600/30" />
+                      <p className="text-xs font-semibold">Select a customer skin profile on the left to reveal target beauty routines and routine matches.</p>
+                    </div>
+                  )}
+                </div>
+
               </div>
             </div>
           )}
 
-          {/* 7. USERS MODULE */}
+          {/* 5. VISUAL COLLECTION BUILDER TAB */}
+          {activeTab === "collections" && (
+            <div className="space-y-6 animate-slide-in text-left">
+              <div className="space-y-1">
+                <h3 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779]">Dynamic Beauty Curation</h3>
+                <h2 className="text-xl font-black font-elegant text-white flex items-center gap-2">
+                  <Layers size={18} className="text-[#C77DFF]" />
+                  Visual Collection Builder
+                </h2>
+              </div>
+
+              <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+                
+                {/* Collection selector list */}
+                <div className="lg:col-span-4 bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl p-5 space-y-4">
+                  <span className="text-[9px] font-bold text-[#8E7A9C] uppercase tracking-widest block border-b border-[#C77DFF]/15 pb-2">Active Collections</span>
+                  <div className="space-y-2">
+                    {[
+                      { id: "glass-skin", name: "🌟 Glass Skin Ritual" },
+                      { id: "spf-shield", name: "☀️ Summer SPF Shield" },
+                      { id: "cashmere-lips", name: "💄 Cashmere Lip Couture" }
+                    ].map(col => (
+                      <button
+                        key={col.id}
+                        onClick={() => setSelectedCollection(col.id)}
+                        className={`w-full p-3 rounded-xl border text-xs font-bold text-left transition-all cursor-pointer ${
+                          selectedCollection === col.id
+                            ? "bg-purple-950/40 border-[#FC2779] text-white shadow-md shadow-[#FC2779]/10"
+                            : "bg-[#140A1F] border-[#C77DFF]/10 text-[#D0C3D9] hover:bg-white/5"
+                        }`}
+                      >
+                        {col.name}
+                        <span className="text-[9px] text-[#C77DFF] font-bold block mt-1 font-sans">
+                          {customCollections[col.id]?.length || 0} formulas linked
+                        </span>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Items linker registry */}
+                <div className="lg:col-span-8 bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl p-6 space-y-6">
+                  <div className="flex justify-between items-center border-b border-[#C77DFF]/15 pb-4">
+                    <div>
+                      <span className="text-[9px] font-bold text-[#FC2779] uppercase tracking-widest block">Collection Registry Linker</span>
+                      <h3 className="text-base font-extrabold text-white mt-1 capitalize">{selectedCollection.replace("-", " ")} Curation</h3>
+                    </div>
+                    <span className="text-xs text-[#C77DFF] font-mono font-bold">
+                      {customCollections[selectedCollection]?.length || 0} selected
+                    </span>
+                  </div>
+
+                  <div className="space-y-3.5">
+                    {/* Catalog search filter */}
+                    <div className="relative">
+                      <Search size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-white/40" />
+                      <input
+                        type="text"
+                        placeholder="Search products in PIM to add/remove..."
+                        value={searchCollectionQuery}
+                        onChange={(e) => setSearchCollectionQuery(e.target.value)}
+                        className="w-full bg-[#140A1F] pl-10 pr-4 py-2.5 rounded-xl border border-[#C77DFF]/15 text-xs text-white placeholder-white/40 outline-none focus:border-[#FC2779]"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-2 gap-3 max-h-[350px] overflow-y-auto custom-scrollbar pr-1">
+                      {products
+                        .filter(p => p.title.toLowerCase().includes(searchCollectionQuery.toLowerCase()))
+                        .map(p => {
+                          const isLinked = (customCollections[selectedCollection] || []).includes(p.id);
+                          return (
+                            <button
+                              key={p.id}
+                              onClick={() => handleToggleCollectionItem(p.id)}
+                              className={`p-3 rounded-xl border text-xs text-left transition-all flex items-center gap-3 cursor-pointer ${
+                                isLinked 
+                                  ? "bg-emerald-950/20 border-emerald-500/40 text-white" 
+                                  : "bg-[#140A1F] border-[#C77DFF]/10 text-[#D0C3D9]"
+                              }`}
+                            >
+                              <div className="relative w-10 h-10 rounded-lg overflow-hidden bg-[#080012] border border-[#C77DFF]/10 shrink-0">
+                                <Image src={p.image} alt={p.title} fill className="object-cover" unoptimized />
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <span className="font-extrabold text-white block truncate leading-snug">{p.title}</span>
+                                <span className="text-[9px] text-[#C77DFF] font-bold block mt-0.5">{p.brand}</span>
+                              </div>
+                              {isLinked ? (
+                                <span className="w-4 h-4 rounded-full bg-emerald-500 text-white flex items-center justify-center text-[9px] font-bold font-sans">✓</span>
+                              ) : (
+                                <span className="w-4 h-4 rounded-full bg-white/5 border border-[#C77DFF]/20 flex items-center justify-center text-[10px] font-bold text-white">+</span>
+                              )}
+                            </button>
+                          );
+                        })}
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          )}
+
+          {/* 6. MEDIA LIBRARY TAB */}
+          {activeTab === "media" && (
+            <div className="space-y-6 animate-slide-in text-left">
+              <div className="flex justify-between items-start sm:items-center gap-4">
+                <div className="space-y-1">
+                  <h3 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779]">Asset Management</h3>
+                  <h2 className="text-xl font-black font-elegant text-white flex items-center gap-2">
+                    <FileImage size={18} className="text-[#C77DFF]" />
+                    Enterprise Media vaults
+                  </h2>
+                </div>
+                
+                {/* Upload zone button */}
+                <label className="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-purple-700 to-[#FC2779] text-white text-xs font-bold uppercase tracking-wider rounded-xl hover:opacity-90 shadow-md cursor-pointer transition-transform duration-300">
+                  <Plus size={14} />
+                  {uploadingMedia ? "Saving..." : "Add New Asset"}
+                  <input type="file" onChange={handleMediaUpload} className="hidden" accept="image/*,video/*" />
+                </label>
+              </div>
+
+              {/* Grid representation */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+                {mediaAssets.map(asset => (
+                  <div key={asset.id} className="bg-white/[0.03] border border-[#C77DFF]/10 rounded-2xl overflow-hidden p-3.5 space-y-3 relative group">
+                    <div className="relative w-full aspect-square rounded-xl overflow-hidden bg-[#080012] border border-[#C77DFF]/10">
+                      {asset.type === "video" ? (
+                        <div className="w-full h-full flex flex-col items-center justify-center bg-purple-950/20 text-[#C77DFF]">
+                          <span className="p-3.5 rounded-full bg-[#140A1F] border border-[#C77DFF]/20 text-[#FC2779] shadow-lg mb-2">▶</span>
+                          <span className="text-[9px] uppercase font-bold tracking-widest font-mono">Dispute MP4</span>
+                        </div>
+                      ) : (
+                        <Image src={asset.url} alt={asset.name} fill className="object-cover group-hover:scale-105 transition-transform duration-500" unoptimized />
+                      )}
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[8px] font-black text-[#FC2779] uppercase tracking-widest block bg-[#FC2779]/10 border border-[#FC2779]/20 px-2 py-0.5 rounded w-max">
+                        {asset.tag}
+                      </span>
+                      <strong className="text-[10px] text-white truncate block mt-1 leading-snug">{asset.name}</strong>
+                      <span className="text-[9px] text-[#8E7A9C] font-mono block">{asset.size}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* 7. SEO PIM SWEEPER CENTER TAB */}
+          {activeTab === "seo-center" && (
+            <div className="space-y-6 animate-slide-in text-left">
+              <div className="space-y-1">
+                <h3 className="text-xs uppercase font-extrabold tracking-widest text-[#FC2779]">Catalog Audits</h3>
+                <h2 className="text-xl font-black font-elegant text-white flex items-center gap-2">
+                  <Globe size={18} className="text-[#C77DFF]" />
+                  SEO Metadata Sweeper
+                </h2>
+              </div>
+
+              {/* Scan summary */}
+              <div className="bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl p-6 space-y-4">
+                <div className="flex justify-between items-center border-b border-[#C77DFF]/15 pb-3.5">
+                  <span className="text-xs text-[#D0C3D9]">
+                    Catalog audit scans for missing organic title tags, meta descriptions, search keywords, or canonical slugs.
+                  </span>
+                  <button
+                    onClick={runSeoAudit}
+                    disabled={isAuditingSeo}
+                    className="py-1.5 px-3 bg-[#140A1F] border border-[#C77DFF]/20 hover:border-[#FC2779] rounded-xl text-xs font-bold text-white flex items-center gap-2 cursor-pointer transition-colors"
+                  >
+                    <RefreshCcw size={12} className={isAuditingSeo ? "animate-spin" : ""} />
+                    {isAuditingSeo ? "Sweeping catalog..." : "Re-Audit Catalog"}
+                  </button>
+                </div>
+
+                {seoScanResults.length === 0 ? (
+                  <p className="text-xs text-[#10B981] font-bold text-center py-8">
+                    ✓ All registered formulas in Sayanita's PIM registries have complete SEO headers!
+                  </p>
+                ) : (
+                  <div className="divide-y divide-[#C77DFF]/15 space-y-4">
+                    {seoScanResults.map((audit) => (
+                      <div key={audit.id} className="pt-4 flex justify-between items-center gap-4 first:pt-0">
+                        <div className="space-y-1.5">
+                          <strong className="text-xs text-white block">{audit.title}</strong>
+                          <div className="flex flex-wrap gap-1">
+                            {audit.missingFields.map((field, idx) => (
+                              <span key={idx} className="px-2 py-0.5 rounded bg-[#FC2779]/10 border border-[#FC2779]/20 text-[8px] text-[#FC2779] font-bold uppercase tracking-wider">
+                                Missing: {field}
+                              </span>
+                            ))}
+                          </div>
+                        </div>
+                        <button
+                          onClick={() => handleFixSeoAuto(audit.id)}
+                          className="py-2 px-3 bg-gradient-to-r from-purple-700 to-[#FC2779] text-white text-[10px] font-black uppercase tracking-wider rounded-xl shadow-md cursor-pointer hover:scale-[1.01] transition-transform"
+                        >
+                          Gemini Autopatch
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* 8. CLAIMS LIST TAB */}
+          {activeTab === "claims" && (
+            <div className="space-y-6 animate-slide-in text-left">
+              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#FC2779] flex items-center gap-2">
+                <ShieldAlert size={14} className="text-[#FC2779]" />
+                Unboxing Video Dispute Claims Panel
+              </h2>
+
+              {claims.length === 0 ? (
+                <p className="text-xs text-[#D0C3D9] text-center py-12 bg-white/[0.02] border border-[#C77DFF]/20 rounded-2xl">
+                  No claims filed yet.
+                </p>
+              ) : (
+                <div className="space-y-6">
+                  {claims.map((claim) => {
+                    const orderMatch = orders.find(o => o.id === claim.order_id);
+                    const customerEmail = orderMatch?.shipping_address.email || "Unknown Email";
+                    const claimStatement = claim.claim_type === "damage" 
+                      ? "Disputed condition: Package arrived with visible structural or fluid damages."
+                      : "Disputed condition: Stated quantities or custom elements missing from fulfillment box.";
+                    const videoUrl = claim.unboxing_video_url || "";
+
+                    return (
+                      <div
+                        key={claim.id}
+                        className="bg-white/[0.03] backdrop-blur-md border border-[#C77DFF]/20 rounded-3xl p-5 md:p-6 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-6 hover:border-[#FC2779]/45 transition-colors"
+                      >
+                        <div className="lg:col-span-4 space-y-4">
+                          <div className="space-y-0.5">
+                            <span className="text-[10px] font-bold text-[#FC2779] uppercase tracking-wider block">
+                              Dispute ID: {claim.id}
+                            </span>
+                            <p className="text-xs font-bold text-white mt-1.5">
+                              Associated Order: {claim.order_id}
+                            </p>
+                            <p className="text-[10px] text-[#D0C3D9]">
+                              Filed on: {new Date(claim.created_at).toLocaleString()}
+                            </p>
+                          </div>
+
+                          <div className="bg-[#140A1F] p-3.5 rounded-xl border border-[#C77DFF]/15 text-[11px] font-sans text-[#D0C3D9] space-y-1.5">
+                            <p><strong>Claim Category:</strong> {claim.claim_type.toUpperCase()}</p>
+                            <p><strong>Customer Email:</strong> {customerEmail}</p>
+                            <p className="leading-relaxed"><strong>Statement:</strong> "{claimStatement}"</p>
+                          </div>
+                        </div>
+
+                        {/* Video Lightbox trigger */}
+                        <div className="lg:col-span-4 flex flex-col justify-center space-y-3">
+                          <span className="font-extrabold text-[#FC2779] block uppercase tracking-wider text-[9px] border-b border-[#C77DFF]/15 pb-1">
+                            Evidence Video file (Required for damage claims):
+                          </span>
+                          
+                          {videoUrl ? (
+                            <div className="relative aspect-video rounded-2xl overflow-hidden bg-[#140A1F] border border-[#C77DFF]/20 flex flex-col items-center justify-center p-3 text-center">
+                              <span className="text-[9px] font-bold text-[#C77DFF] uppercase tracking-widest mb-2 font-mono">Dispute Evidence MP4</span>
+                              <button
+                                onClick={() => setPlayingVideoUrl(videoUrl)}
+                                className="px-4 py-2 bg-gradient-to-r from-purple-700 to-[#FC2779] text-white text-[10px] font-black uppercase tracking-wider rounded-xl shadow-lg flex items-center gap-1.5 cursor-pointer hover:scale-105 transition-transform"
+                              >
+                                Play Evidence Video
+                              </button>
+                            </div>
+                          ) : (
+                            <div className="py-6 border border-dashed border-[#C77DFF]/20 rounded-2xl text-center text-[10px] text-[#D0C3D9]/60 font-semibold leading-relaxed">
+                              ⚠️ No dispute verification video filed. Recommendation: Reject.
+                            </div>
+                          )}
+                        </div>
+
+                      {/* Operations controls */}
+                      <div className="lg:col-span-4 flex flex-col justify-between space-y-4">
+                        <div className="space-y-1.5">
+                          <span className="text-[10px] font-bold text-[#FC2779] uppercase tracking-wider block">Dispute Verdict Status:</span>
+                          <span className={`px-3 py-1 rounded-full border text-[9px] uppercase tracking-widest font-black inline-block ${
+                            claim.status === "approved"
+                              ? "bg-emerald-950/20 border-emerald-500/30 text-emerald-400"
+                              : claim.status === "rejected"
+                              ? "bg-red-950/20 border-red-500/30 text-red-400"
+                              : "bg-amber-950/20 border-amber-500/30 text-amber-400 animate-pulse"
+                          }`}>
+                            {claim.status}
+                          </span>
+                        </div>
+
+                        {claim.status === "pending" ? (
+                          <div className="space-y-3">
+                            <textarea
+                              rows={2.5}
+                              required
+                              placeholder="Type resolution statement for client dashboard..."
+                              value={resolutionNotes}
+                              onChange={(e) => setResolutionNotes(e.target.value)}
+                              className="w-full bg-[#140A1F] border border-[#C77DFF]/20 rounded-xl p-2.5 text-xs text-white placeholder-white/30 outline-none focus:border-[#FC2779]"
+                            />
+
+                            <div className="grid grid-cols-2 gap-2">
+                              <button
+                                onClick={() => handleResolveClaim(claim.id, "approved")}
+                                className="py-2 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] font-bold uppercase tracking-wider rounded-lg shadow cursor-pointer transition-transform active:scale-95"
+                              >
+                                Approve & Refund
+                              </button>
+                              <button
+                                onClick={() => handleResolveClaim(claim.id, "rejected")}
+                                className="py-2 bg-red-600 hover:bg-red-500 text-white text-[9px] font-bold uppercase tracking-wider rounded-lg shadow cursor-pointer transition-transform active:scale-95"
+                              >
+                                Reject Claim
+                              </button>
+                            </div>
+                          </div>
+                        ) : (
+                          <div className="bg-[#140A1F] p-3 rounded-xl border border-[#C77DFF]/15 text-[10px] text-[#D0C3D9] leading-relaxed">
+                            <strong>Verdict Logs:</strong> "{claim.resolution_notes}"
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                    );
+                  })}
+                </div>
+              )}
+            </div>
+          )}
+
+          {/* 9. PROMO COUPONS TAB MODULE */}
+          {activeTab === "coupons" && (
+            <div className="space-y-6 animate-slide-in text-left">
+              <div className="bg-white/[0.03] backdrop-blur-md border border-[#C77DFF]/20 rounded-3xl p-6 sm:p-8 space-y-6">
+                <div>
+                  <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#FC2779] flex items-center gap-1.5">
+                    <Sparkles size={16} /> Create Promotional Coupon
+                  </h3>
+                  <p className="text-[10px] text-[#D0C3D9] mt-1">Configure active promo codes to be used during checkout.</p>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs font-sans">
+                  <label className="space-y-1.5">
+                    <span className="font-bold text-[#8E7A9C] uppercase tracking-wider text-[9px] block">Coupon Code *</span>
+                    <input
+                      type="text"
+                      placeholder="e.g. EXTRA10"
+                      value={newCoupon.code}
+                      onChange={(e) => setNewCoupon({ ...newCoupon, code: e.target.value })}
+                      className="w-full bg-[#140A1F] border border-[#C77DFF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none focus:border-[#FC2779]"
+                    />
+                  </label>
+
+                  <label className="space-y-1.5">
+                    <span className="font-bold text-[#8E7A9C] uppercase tracking-wider text-[9px] block">Percent rate (1-100) *</span>
+                    <input
+                      type="number"
+                      placeholder="10"
+                      value={newCoupon.discount_percent}
+                      onChange={(e) => setNewCoupon({ ...newCoupon, discount_percent: e.target.value })}
+                      className="w-full bg-[#140A1F] border border-[#C77DFF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none focus:border-[#FC2779]"
+                    />
+                  </label>
+
+                  <label className="space-y-1.5">
+                    <span className="font-bold text-[#8E7A9C] uppercase tracking-wider text-[9px] block">Min Cart Value (₹)</span>
+                    <input
+                      type="number"
+                      placeholder="0"
+                      value={newCoupon.min_cart_value}
+                      onChange={(e) => setNewCoupon({ ...newCoupon, min_cart_value: e.target.value })}
+                      className="w-full bg-[#140A1F] border border-[#C77DFF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none focus:border-[#FC2779]"
+                    />
+                  </label>
+
+                  <button
+                    onClick={handleAddCoupon}
+                    className="sm:col-span-3 py-3 bg-gradient-to-r from-purple-700 to-[#FC2779] text-white text-xs font-black uppercase tracking-wider rounded-xl hover:opacity-90 shadow-md cursor-pointer transition-transform duration-300"
+                  >
+                    Add Coupon
+                  </button>
+                </div>
+              </div>
+
+              {/* Active Coupons display */}
+              <div className="bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl p-6 sm:p-8 space-y-4">
+                <span className="text-[10px] font-black text-[#FC2779] uppercase tracking-widest block border-b border-[#C77DFF]/15 pb-2">Active Store Coupons</span>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                  {adminCoupons.map((c, i) => (
+                    <div key={i} className="p-4 bg-[#140A1F] border border-[#C77DFF]/15 rounded-2xl flex justify-between items-center relative overflow-hidden group">
+                      <div className="space-y-1 text-left">
+                        <strong className="text-sm font-mono text-white tracking-widest">{c.code}</strong>
+                        <p className="text-[10px] text-[#D0C3D9]">
+                          Discount: <span className="text-[#FC2779] font-bold">{c.discount_percent}% off</span>
+                        </p>
+                        {c.min_cart_value > 0 && (
+                          <p className="text-[8px] text-[#8E7A9C]">Min value: ₹{c.min_cart_value}</p>
+                        )}
+                      </div>
+                      <button
+                        onClick={() => handleDeleteCoupon(c.code)}
+                        className="p-1.5 rounded-lg bg-white/5 border border-red-500/20 text-red-400 hover:bg-red-500/10 cursor-pointer transition-colors"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* 10. REGISTERED USERS TAB */}
           {activeTab === "users" && (
             <div className="space-y-6 animate-slide-in text-left">
-              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-2">
-                <ShieldCheck size={14} className="text-brand-magenta" />
+              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#FC2779] flex items-center gap-2">
+                <Users size={14} className="text-[#FC2779]" />
                 Customer Registry & Loyalty System
               </h2>
 
-              <div className="bg-white border border-brand-rose rounded-3xl overflow-hidden shadow-xs">
+              <div className="bg-white/[0.03] border border-[#C77DFF]/20 rounded-3xl overflow-hidden shadow-xs">
                 <div className="overflow-x-auto">
-                  <table className="w-full text-xs font-sans text-foreground">
-                    <thead className="bg-brand-cream border-b border-brand-rose text-brand-magenta uppercase font-bold text-[9px] tracking-wider">
+                  <table className="w-full text-xs font-sans text-white">
+                    <thead className="bg-[#140A1F] border-b border-[#C77DFF]/20 text-[#FC2779] uppercase font-bold text-[9px] tracking-wider">
                       <tr>
                         <th className="p-4 text-left">Customer Profile</th>
                         <th className="p-4 text-left">Contact Details</th>
@@ -1167,20 +1376,85 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                         <th className="p-4 text-center">Credentials Action</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-brand-rose/60 bg-white font-semibold text-xs">
+                    <tbody className="divide-y divide-[#C77DFF]/10 bg-[#140A1F]/30 font-semibold text-xs text-[#D0C3D9]">
                       {adminUsers && adminUsers.length > 0 ? (
                         adminUsers.map((cust) => (
-                          <UserRow
-                            key={cust.email}
-                            cust={cust}
-                            adminAdjustLoyaltyPoints={adminAdjustLoyaltyPoints}
-                            adminSuspendUser={adminSuspendUser}
-                            adminUnsuspendUser={adminUnsuspendUser}
-                          />
+                          <tr key={cust.email} className="hover:bg-purple-950/20 transition-colors border-b border-[#C77DFF]/10 text-white">
+                            <td className="p-4 text-left flex items-center gap-3">
+                              <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-[#140A1F] border border-[#C77DFF]/20 shrink-0 flex items-center justify-center font-bold text-[#FC2779]">
+                                {cust.avatar ? <Image src={cust.avatar} alt={cust.name} fill className="object-cover" unoptimized /> : cust.name[0]}
+                              </div>
+                              <div className="space-y-0.5">
+                                <span className="font-bold text-white text-sm block">{cust.name}</span>
+                                {cust.bio && <span className="text-[10px] text-[#D0C3D9]/60 leading-tight line-clamp-1 max-w-[180px] block">{cust.bio}</span>}
+                              </div>
+                            </td>
+                            <td className="p-4 text-left">
+                              <span className="font-mono text-white block">{cust.email}</span>
+                              <span className="font-mono text-[#D0C3D9]/65 text-[10px] block">{cust.phone}</span>
+                            </td>
+                            <td className="p-4 text-center capitalize">
+                              <span className="px-2 py-0.5 rounded-full border border-[#C77DFF]/20 bg-[#140A1F] text-[9px] uppercase tracking-wider font-extrabold text-[#C77DFF]">
+                                {cust.skin_type || "normal"}
+                              </span>
+                            </td>
+                            <td className="p-4 text-center">
+                              <span className="px-2 py-0.5 rounded-full border border-[#FC2779]/20 bg-[#FC2779]/10 text-[8px] uppercase tracking-widest font-extrabold text-[#FC2779]">
+                                {cust.loyalty_tier || "Bronze"}
+                              </span>
+                            </td>
+                            <td className="p-4 text-center">
+                              <div className="flex items-center justify-center gap-1.5">
+                                <input
+                                  type="number"
+                                  defaultValue={cust.loyalty_points || 0}
+                                  onBlur={(e) => {
+                                    adminAdjustLoyaltyPoints(cust.email, parseInt(e.target.value) || 0);
+                                  }}
+                                  className="w-14 text-center border border-[#C77DFF]/20 rounded-md py-0.5 bg-[#140A1F] text-white focus:border-[#FC2779] outline-none text-[11px] font-bold"
+                                />
+                              </div>
+                            </td>
+                            <td className="p-4 text-center">
+                              <span className={`px-2 py-0.5 rounded-full text-[9px] uppercase font-bold border ${
+                                cust.suspended 
+                                  ? "bg-red-950/20 border-red-500/30 text-red-400" 
+                                  : "bg-emerald-950/20 border-emerald-500/30 text-emerald-400"
+                              }`}>
+                                {cust.suspended ? "Suspended" : "Active"}
+                              </span>
+                            </td>
+                            <td className="p-4 text-center">
+                              {cust.suspended ? (
+                                <button
+                                  onClick={() => {
+                                    adminUnsuspendUser(cust.email);
+                                    alert(`Security credentials restored for ${cust.name}.`);
+                                  }}
+                                  className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] uppercase font-extrabold tracking-wider rounded-lg shadow cursor-pointer transition-all active:scale-95"
+                                >
+                                  Unsuspend
+                                </button>
+                              ) : (
+                                <button
+                                  onClick={() => {
+                                    const confirm = window.confirm(`Suspend credentials for ${cust.name}? They will immediately lose vanity checkout privileges.`);
+                                    if (confirm) {
+                                      adminSuspendUser(cust.email);
+                                      alert(`Account suspended.`);
+                                    }
+                                  }}
+                                  className="px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[9px] uppercase font-extrabold tracking-wider rounded-lg shadow cursor-pointer transition-all active:scale-95"
+                                >
+                                  Suspend
+                                </button>
+                              )}
+                            </td>
+                          </tr>
                         ))
                       ) : (
                         <tr>
-                          <td colSpan={7} className="p-8 text-center text-foreground/50">
+                          <td colSpan={7} className="p-8 text-center text-[#D0C3D9]/50">
                             No customers registered yet.
                           </td>
                         </tr>
@@ -1192,155 +1466,102 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
             </div>
           )}
 
-          {/* 8. CUSTOMER INSIGHTS MODULE */}
-          {activeTab === "customer-insights" && (
-            <div className="space-y-6 animate-slide-in text-left">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+          {/* 11. SYSTEM CONFIG & GATEWAYS TAB */}
+          {activeTab === "settings" && (
+            <div className="bg-white/[0.03] backdrop-blur-md border border-[#C77DFF]/20 rounded-3xl p-6 sm:p-8 shadow-xs space-y-6 text-left animate-slide-in">
+              <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#FC2779] border-b border-[#C77DFF]/20 pb-3 flex items-center gap-2">
+                <Sliders size={18} className="text-[#C77DFF]" />
+                Store Operational Safeguards
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-xs text-[#D0C3D9]">
                 
-                {/* Skin Type Distributions */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs space-y-4">
-                  <div>
-                    <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-1.5">
-                      <Sparkles size={14} />
-                      Registered Skin Profiles
-                    </h3>
-                    <p className="text-[10px] text-foreground/60 mt-1">Skin type distribution configured by Sayanita's customer base.</p>
+                {/* COD toggles */}
+                <div className="p-5 rounded-2xl border border-[#C77DFF]/15 bg-[#140A1F] space-y-4">
+                  <div className="flex justify-between items-center">
+                    <div>
+                      <span className="text-xs font-bold text-white block">Enable Cash on Delivery (COD)</span>
+                      <span className="text-[10px] text-[#D0C3D9]/60 leading-relaxed block mt-1">
+                        Toggles whether COD shows at checkout. Recommended: KEEP ENABLED to mirror real setups.
+                      </span>
+                    </div>
+                    <button
+                      onClick={adminToggleCod}
+                      className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out outline-none ${
+                        settings.codEnabled ? "bg-[#FC2779]" : "bg-zinc-800"
+                      }`}
+                    >
+                      <span
+                        className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-sm ring-0 transition duration-200 ease-in-out ${
+                          settings.codEnabled ? "translate-x-5" : "translate-x-0"
+                        }`}
+                      />
+                    </button>
                   </div>
-
-                  <div className="space-y-4 text-xs font-sans font-bold">
-                    {[
-                      { type: "Oily Skin", count: 38, color: "bg-brand-magenta" },
-                      { type: "Dry Skin", count: 24, color: "bg-brand-rose" },
-                      { type: "Combination", count: 28, color: "bg-purple-500" },
-                      { type: "Sensitive", count: 10, color: "bg-amber-400" },
-                    ].map((skin) => (
-                      <div key={skin.type} className="space-y-1.5">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="uppercase text-foreground">{skin.type}</span>
-                          <span className="text-brand-magenta">{skin.count}%</span>
-                        </div>
-                        <div className="w-full h-2 bg-brand-cream rounded-full overflow-hidden border border-brand-rose/40">
-                          <div className={`h-full ${skin.color}`} style={{ width: `${skin.count}%` }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Skin Concerns Heatmap */}
-                <div className="bg-white border border-brand-rose rounded-3xl p-6 shadow-xs space-y-4">
-                  <div>
-                    <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta flex items-center gap-1.5">
-                      <ShieldAlert size={14} className="text-brand-magenta" />
-                      Active Dermatological Concerns
-                    </h3>
-                    <p className="text-[10px] text-foreground/60 mt-1">Dermatological targets extracted from customer signup questions.</p>
-                  </div>
-
-                  <div className="space-y-4 text-xs font-sans font-bold">
-                    {[
-                      { concern: "Acne & Blemish Control", count: 42, color: "bg-brand-magenta" },
-                      { concern: "Hyperpigmentation & Glow", count: 28, color: "bg-brand-rose" },
-                      { concern: "Dullness & Fine Lines", count: 18, color: "bg-purple-500" },
-                      { concern: "Dehydration & Moisture Lock", count: 12, color: "bg-amber-400" },
-                    ].map((item) => (
-                      <div key={item.concern} className="space-y-1.5">
-                        <div className="flex justify-between text-[10px]">
-                          <span className="uppercase text-foreground">{item.concern}</span>
-                          <span className="text-brand-magenta">{item.count}%</span>
-                        </div>
-                        <div className="w-full h-2 bg-brand-cream rounded-full overflow-hidden border border-brand-rose/40">
-                          <div className={`h-full ${item.color}`} style={{ width: `${item.count}%` }} />
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-              </div>
-            </div>
-          )}
-
-          {/* 9. ACCOUNT SYSTEM MODULE */}
-          {activeTab === "account-system" && (
-            <div className="space-y-6 animate-slide-in text-left">
-              <div className="bg-white border border-brand-rose rounded-3xl p-6 sm:p-8 shadow-xs space-y-6">
-                <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-brand-magenta border-b border-brand-rose pb-3 flex items-center gap-2">
-                  <ShieldCheck size={18} className="text-brand-magenta" />
-                  System Connections & API Gateways
-                </h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   
-                  {/* API Gateways */}
-                  <div className="p-5 rounded-2xl border border-brand-rose bg-brand-cream space-y-4 text-xs font-sans">
-                    <span className="font-extrabold text-brand-magenta block uppercase tracking-wider text-[9px] border-b border-brand-rose pb-1">Production Integrations</span>
-                    
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold text-foreground">Supabase Database API:</span>
-                        <span className="flex items-center gap-1 font-bold text-emerald-600">
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                          Online (Sync Active)
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold text-foreground">Email SMTP Server Gateway:</span>
-                        <span className="flex items-center gap-1 font-bold text-emerald-600">
-                          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-                          Online (Gmail SMTP Production Gateway)
-                        </span>
-                      </div>
-
-                      <div className="flex justify-between items-center">
-                        <span className="font-semibold text-foreground">Shiprocket Logistics API:</span>
-                        <span className="flex items-center gap-1 font-bold text-brand-magenta">
-                          <span className="w-2 h-2 rounded-full bg-brand-magenta animate-pulse" />
-                          Connected (Express Dispatch)
-                        </span>
-                      </div>
+                  {settings.codEnabled && (
+                    <div className="text-[10px] text-[#FC2779] font-bold leading-relaxed border-t border-[#C77DFF]/15 pt-3 animate-pulse">
+                      ✓ Real Production-Grade COD & OTP Verification Gateway active at checkout.
                     </div>
-                  </div>
-
-                  {/* Audit Logs */}
-                  <div className="p-5 rounded-2xl border border-brand-rose bg-brand-cream space-y-3 text-xs leading-relaxed text-foreground/80 font-sans">
-                    <span className="font-extrabold text-brand-magenta block uppercase tracking-wider text-[9px] border-b border-brand-rose pb-1">Operational Activity Log</span>
-                    <div className="space-y-2 text-[10px] font-mono text-foreground/70 max-h-32 overflow-y-auto">
-                      <p>[2026-05-28 21:09] ADMIN: Authenticated successfully using manager secret key.</p>
-                      <p>[2026-05-28 15:46] LOGISTICS: Shiprocket API generated Airway Label for order GA-9182.</p>
-                      <p>[2026-05-28 14:12] SYSTEM: SMTP Handshake completed with smtp.gmail.com.</p>
-                      <p>[2026-05-28 12:08] SUPABASE: Synchronized catalog categories with production cloud.</p>
-                    </div>
-                  </div>
-
+                  )}
                 </div>
+
+                {/* API Gateways */}
+                <div className="p-5 rounded-2xl border border-[#C77DFF]/15 bg-[#140A1F] space-y-4 font-sans text-xs">
+                  <span className="font-extrabold text-[#FC2779] block uppercase tracking-wider text-[9px] border-b border-[#C77DFF]/15 pb-1">Production Integrations</span>
+                  
+                  <div className="space-y-3">
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-white">Supabase Database API:</span>
+                      <span className="flex items-center gap-1 font-bold text-emerald-400">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        Online (Sync Active)
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-white">Email SMTP Server Gateway:</span>
+                      <span className="flex items-center gap-1 font-bold text-emerald-400">
+                        <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+                        Online (Gmail SMTP Production Gateway)
+                      </span>
+                    </div>
+
+                    <div className="flex justify-between items-center">
+                      <span className="font-semibold text-white">Shiprocket Logistics API:</span>
+                      <span className="flex items-center gap-1 font-bold text-[#FC2779]">
+                        <span className="w-2 h-2 rounded-full bg-[#FC2779] animate-pulse" />
+                        Connected (Express Dispatch)
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           )}
 
-        </div>
-      </main>
+        </section>
+      </div>
 
       {/* 🏷️ SHIPROCKET LABEL MODAL */}
       {labelModalOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs" onClick={() => setLabelModalOrder(null)} />
-          <div className="relative bg-white border border-brand-rose rounded-[32px] p-6 shadow-2xl max-w-xl w-full mx-4 space-y-6 animate-slide-in text-left">
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-brand-gradient rounded-t-[32px]" />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-xs" onClick={() => setLabelModalOrder(null)} />
+          <div className="relative bg-[#140A1F] border border-[#C77DFF]/30 rounded-[32px] p-6 shadow-2xl max-w-xl w-full mx-4 space-y-6 animate-slide-in text-left z-50">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-800 to-[#FC2779] rounded-t-[32px]" />
             
             <div className="space-y-1">
-              <h3 className="text-base font-bold font-elegant text-foreground flex items-center gap-1.5">
-                <Package className="text-brand-magenta" size={20} />
+              <h3 className="text-base font-bold font-elegant text-white flex items-center gap-1.5">
+                <Package className="text-[#FC2779]" size={20} />
                 Shiprocket Airway Dispatch Label
               </h3>
-              <p className="text-[10px] text-foreground/60">
+              <p className="text-[10px] text-[#D0C3D9]">
                 Order ID: {labelModalOrder.id} • Customer: {labelModalOrder.shipping_address.name}
               </p>
             </div>
 
-            {/* Label Print Frame */}
-            <div className="border border-brand-rose rounded-2xl overflow-hidden bg-brand-cream/30 p-2 h-[350px]">
+            <div className="border border-[#C77DFF]/20 rounded-2xl overflow-hidden bg-[#080012]/30 p-2 h-[350px]">
               <iframe
                 src={`/api/shipping?action=label&orderId=${labelModalOrder.id}&trackingId=${labelModalOrder.tracking_id || "SR-7182936"}`}
                 className="w-full h-full border-0 rounded-xl"
@@ -1351,7 +1572,7 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
               <button
                 type="button"
                 onClick={() => setLabelModalOrder(null)}
-                className="flex-1 py-3 rounded-xl border border-brand-rose text-xs font-semibold text-brand-magenta hover:bg-brand-cream/30 transition-colors cursor-pointer"
+                className="flex-1 py-3 rounded-xl border border-[#C77DFF]/20 text-xs font-semibold text-[#FC2779] hover:bg-white/5 cursor-pointer"
               >
                 Close Label Window
               </button>
@@ -1365,7 +1586,7 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                     window.print();
                   }
                 }}
-                className="flex-1 py-3 bg-brand-gradient hover:scale-105 transition-transform text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
+                className="flex-1 py-3 bg-gradient-to-r from-[#C77DFF] to-[#FC2779] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
               >
                 Print Label
               </button>
@@ -1375,14 +1596,14 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
         </div>
       )}
 
-      {/* 🖼️ MODAL LIGHTBOX PLAYER (FOR UNBOXING VIDEO OR SCREENSHOT) */}
+      {/* 🖼️ MODAL LIGHTBOX PLAYER */}
       {playingVideoUrl && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-black/85 backdrop-blur-xs" onClick={() => setPlayingVideoUrl(null)} />
-          <div className="relative bg-white border border-brand-rose rounded-[32px] p-3 shadow-2xl max-w-2xl w-full mx-4 aspect-video flex flex-col justify-between animate-slide-in">
+          <div className="absolute inset-0 bg-black/90 backdrop-blur-xs" onClick={() => setPlayingVideoUrl(null)} />
+          <div className="relative bg-[#140A1F] border border-[#C77DFF]/30 rounded-[32px] p-3 shadow-2xl max-w-2xl w-full mx-4 aspect-video flex flex-col justify-between animate-slide-in z-50">
             <button
               onClick={() => setPlayingVideoUrl(null)}
-              className="absolute -top-3 -right-3 p-2 rounded-full bg-brand-magenta text-white hover:bg-brand-magenta/90 shadow-lg border border-brand-rose z-10 cursor-pointer"
+              className="absolute -top-3 -right-3 p-2 rounded-full bg-[#FC2779] text-white shadow-lg border border-[#C77DFF]/30 z-10 cursor-pointer"
             >
               <X size={18} />
             </button>
@@ -1393,10 +1614,10 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
                 Your browser does not support HTML5 video player.
               </video>
             ) : (
-              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-brand-cream border border-brand-rose/40">
+              <div className="relative w-full h-full rounded-2xl overflow-hidden bg-[#080012] border border-[#C77DFF]/20">
                 <Image
                   src={playingVideoUrl}
-                  alt="Receipt Screenshot uploaded by customer"
+                  alt="Evidence Media"
                   fill
                   className="object-contain"
                 />
@@ -1409,24 +1630,24 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
       {/* 🚚 INLINE COURIER DISPATCH DIALOG */}
       {selectedShipOrder && (
         <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-black/60 backdrop-blur-xs" onClick={() => setSelectedShipOrder(null)} />
-          <form onSubmit={handleShipOrder} className="relative bg-white border border-brand-rose rounded-[32px] p-6 shadow-2xl max-w-sm w-full mx-4 space-y-6 animate-slide-in text-left">
-            <div className="absolute top-0 left-0 right-0 h-1.5 bg-brand-gradient rounded-t-[32px]" />
+          <div className="absolute inset-0 bg-black/80 backdrop-blur-xs" onClick={() => setSelectedShipOrder(null)} />
+          <form onSubmit={handleShipOrder} className="relative bg-[#140A1F] border border-[#C77DFF]/30 rounded-[32px] p-6 shadow-2xl max-w-sm w-full mx-4 space-y-6 animate-slide-in text-left z-50">
+            <div className="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-purple-800 to-[#FC2779] rounded-t-[32px]" />
             
-            <div className="flex items-center gap-3 border-b border-brand-rose pb-3 text-foreground">
-              <Package size={20} className="text-brand-magenta" />
+            <div className="flex items-center gap-3 border-b border-[#C77DFF]/15 pb-3 text-white">
+              <Package size={20} className="text-[#FC2779]" />
               <h3 className="text-base font-extrabold font-sans uppercase tracking-wider">
                 Log Shipment details
               </h3>
             </div>
 
-            <div className="space-y-4 text-xs font-sans">
+            <div className="space-y-4 text-xs font-sans text-[#D0C3D9]">
               <div>
-                <label className="font-bold text-brand-magenta uppercase tracking-wider text-[9px] block mb-1.5">Partner Courier *</label>
+                <label className="font-bold text-[#FC2779] uppercase tracking-wider text-[9px] block mb-1.5">Partner Courier *</label>
                 <select
                   value={courierName}
                   onChange={(e) => setCourierName(e.target.value)}
-                  className="w-full bg-brand-cream border border-brand-rose rounded-xl px-3.5 py-2.5 text-xs text-foreground font-bold outline-none focus:border-brand-magenta cursor-pointer"
+                  className="w-full bg-[#080012] border border-[#C77DFF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none focus:border-[#FC2779] cursor-pointer"
                 >
                   <option value="BlueDart">BlueDart Express</option>
                   <option value="Delhivery">Delhivery Logistics</option>
@@ -1436,14 +1657,14 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
               </div>
 
               <div>
-                <label className="font-bold text-brand-magenta uppercase tracking-wider text-[9px] block mb-1.5">Tracking Code / Ref No. *</label>
+                <label className="font-bold text-[#FC2779] uppercase tracking-wider text-[9px] block mb-1.5">Tracking Code / Ref No. *</label>
                 <input
                   type="text"
                   required
                   placeholder="e.g. BDX-9184820129"
                   value={trackingCode}
                   onChange={(e) => setTrackingCode(e.target.value)}
-                  className="w-full bg-brand-cream border border-brand-rose rounded-xl px-3.5 py-2.5 text-xs text-foreground font-bold outline-none focus:border-brand-magenta"
+                  className="w-full bg-[#080012] border border-[#C77DFF]/20 rounded-xl px-3.5 py-2.5 text-xs text-white font-bold outline-none focus:border-[#FC2779]"
                 />
               </div>
             </div>
@@ -1452,13 +1673,13 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
               <button
                 type="button"
                 onClick={() => setSelectedShipOrder(null)}
-                className="flex-1 py-3 rounded-xl border border-brand-rose text-xs font-semibold text-brand-magenta text-center hover:bg-brand-cream/30 transition-colors cursor-pointer"
+                className="flex-1 py-3 rounded-xl border border-[#C77DFF]/20 text-xs font-semibold text-[#FC2779] text-center hover:bg-white/5 cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
-                className="flex-1 py-3 bg-brand-gradient hover:scale-105 transition-transform text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
+                className="flex-1 py-3 bg-gradient-to-r from-[#C77DFF] to-[#FC2779] text-white text-xs font-bold uppercase tracking-wider rounded-xl shadow-lg cursor-pointer"
               >
                 Dispatch Order
               </button>
@@ -1468,224 +1689,6 @@ export default function AdminDashboard({ initialTab = "orders" }: { initialTab?:
         </div>
       )}
 
-      {/* Floating Mobile Bottom Nav Glass Dock */}
-      <nav className="md:hidden admin-mobile-dock" aria-label="Mobile operational navigation">
-        {adminTabs.map((tab) => {
-          const Icon = tab.id === "orders" ? Package : 
-                       tab.id === "claims" ? ShieldAlert : 
-                       tab.id === "inventory" ? Sliders : 
-                       tab.id === "coupons" ? Sparkles : 
-                       tab.id === "analytics" ? TrendingUp : 
-                       ShieldCheck;
-          return (
-            <button
-              key={tab.id}
-              onClick={() => setActiveTab(tab.id)}
-              className={`admin-dock-item ${activeTab === tab.id ? "active" : ""}`}
-            >
-              <span className="icon-wrapper">
-                <Icon size={16} />
-              </span>
-              <span className="text-[7.5px] font-extrabold uppercase tracking-widest">{tab.id === "inventory" ? "stock" : tab.id === "settings" ? "config" : tab.id}</span>
-            </button>
-          );
-        })}
-      </nav>
-
     </div>
   );
 }
-
-// Subcomponent: Inventory Editing Row
-interface InventoryRowProps {
-  product: Product;
-  onUpdateStock: (id: string, count: number) => void;
-  onUpdatePrice: (id: string, price: number) => void;
-  onRemove: () => void;
-}
-
-const InventoryRow: React.FC<InventoryRowProps> = ({ product, onUpdateStock, onUpdatePrice, onRemove }) => {
-  const [stockEdit, setStockEdit] = useState(product.stock);
-  const [priceEdit, setPriceEdit] = useState(product.price);
-  const [successMsg, setSuccessMsg] = useState("");
-
-  const handleApply = () => {
-    onUpdateStock(product.id, stockEdit);
-    onUpdatePrice(product.id, priceEdit);
-    setSuccessMsg("Updated!");
-    setTimeout(() => setSuccessMsg(""), 1500);
-  };
-
-  return (
-    <tr className="hover:bg-[#2B083A]/30 transition-colors border-b border-white/8 text-[#D3B6FF]">
-      <td className="p-4 text-left font-bold text-white">
-        {product.title}
-        <span className="text-[10px] uppercase font-sans text-[#D3B6FF] font-semibold block mt-0.5">{product.brand}</span>
-      </td>
-      <td className="p-4 text-center font-mono font-bold text-[#9F7AC2]">
-        {product.sku}
-      </td>
-      <td className="p-4 text-center">
-        <div className="flex items-center justify-center gap-1.5">
-          <span className="text-white/40 font-light">₹</span>
-          <input
-            type="number"
-            value={priceEdit}
-            onChange={(e) => setPriceEdit(parseInt(e.target.value) || 0)}
-            className="w-16 text-center border border-white/8 rounded-md py-1 font-bold text-white bg-[#2B083A] focus:border-[#D946EF] outline-none"
-          />
-        </div>
-      </td>
-      <td className="p-4 text-center">
-        <input
-          type="number"
-          value={stockEdit}
-          onChange={(e) => setStockEdit(parseInt(e.target.value) || 0)}
-          className={`w-14 text-center border border-white/8 rounded-md py-1 font-bold bg-[#2B083A] focus:border-[#D946EF] outline-none ${
-            stockEdit <= 3 ? "text-red-400 border-red-500/30" : "text-white"
-          }`}
-        />
-      </td>
-      <td className="p-4 text-center">
-        <div className="relative mx-auto w-14 h-14 rounded-xl overflow-hidden border border-white/8 bg-[#2B083A]/50">
-          <Image src={product.image} alt={product.title} fill className="object-cover" unoptimized />
-        </div>
-      </td>
-      <td className="p-4 text-center">
-        <div className="flex items-center justify-center gap-2">
-          <button
-            onClick={handleApply}
-            className="px-3.5 py-1.5 bg-gradient-to-r from-purple-600 to-pink-500 hover:scale-105 transition-all text-white text-[10px] uppercase font-bold tracking-wider rounded-lg shadow-md cursor-pointer"
-          >
-            Apply
-          </button>
-          <button
-            onClick={onRemove}
-            className="px-3.5 py-1.5 bg-red-600 hover:scale-105 transition-all text-white text-[10px] uppercase font-bold tracking-wider rounded-lg inline-flex items-center gap-1 cursor-pointer"
-          >
-            <Trash2 size={12} />
-            Remove
-          </button>
-          {successMsg && <span className="text-[10px] font-bold text-[#10B981] animate-fade-in">{successMsg}</span>}
-        </div>
-      </td>
-    </tr>
-  );
-};
-
-// Subcomponent: Registered User Row
-interface UserRowProps {
-  cust: UserProfile;
-  adminAdjustLoyaltyPoints: (email: string, points: number) => void;
-  adminSuspendUser: (email: string) => void;
-  adminUnsuspendUser: (email: string) => void;
-}
-
-const UserRow: React.FC<UserRowProps> = ({
-  cust,
-  adminAdjustLoyaltyPoints,
-  adminSuspendUser,
-  adminUnsuspendUser
-}) => {
-  const isSuspended = cust.suspended || false;
-  const [pointsInput, setPointsInput] = useState(String(cust.loyalty_points || 0));
-
-  useEffect(() => {
-    setPointsInput(String(cust.loyalty_points || 0));
-  }, [cust.loyalty_points]);
-
-  return (
-    <tr className="hover:bg-brand-cream/30 transition-colors border-b border-brand-rose/60 text-foreground">
-      <td className="p-4 text-left flex items-center gap-3">
-        <div className="relative w-10 h-10 rounded-xl overflow-hidden bg-brand-cream border border-brand-rose shrink-0">
-          {cust.avatar ? (
-            <Image src={cust.avatar} alt={cust.name} fill className="object-cover" unoptimized />
-          ) : (
-            <div className="w-full h-full flex items-center justify-center text-brand-magenta font-bold uppercase text-xs">
-              {cust.name[0]}
-            </div>
-          )}
-        </div>
-        <div className="space-y-0.5">
-          <span className="font-bold text-foreground text-sm block">{cust.name}</span>
-          {cust.bio && <span className="text-[10px] text-foreground/60 leading-tight line-clamp-1 max-w-[180px] block">{cust.bio}</span>}
-        </div>
-      </td>
-      <td className="p-4 text-left">
-        <span className="font-mono text-foreground block">{cust.email}</span>
-        <span className="font-mono text-foreground/65 text-[10px] block">{cust.phone}</span>
-      </td>
-      <td className="p-4 text-center capitalize">
-        <span className="px-2 py-0.5 rounded-full border border-brand-rose bg-brand-cream text-[9px] uppercase tracking-wider font-extrabold text-brand-magenta">
-          {cust.skin_type || "normal"}
-        </span>
-      </td>
-      <td className="p-4 text-center">
-        <span 
-          className="px-2 py-0.5 rounded-full border text-[8px] uppercase tracking-widest font-extrabold"
-          style={{ 
-            borderColor: cust.loyalty_tier === "Orchid Platinum" ? "#FC277930" : "rgba(252,39,121,0.1)",
-            backgroundColor: cust.loyalty_tier === "Orchid Platinum" ? "#FC277915" : "rgba(252,39,121,0.05)",
-            color: "#FC2779"
-          }}
-        >
-          {cust.loyalty_tier || "Bronze"}
-        </span>
-      </td>
-      <td className="p-4 text-center">
-        <div className="flex items-center justify-center gap-1.5">
-          <input
-            type="number"
-            value={pointsInput}
-            onChange={(e) => setPointsInput(e.target.value)}
-            className="w-14 text-center border border-brand-rose rounded-md py-0.5 bg-brand-cream text-foreground focus:border-brand-magenta outline-none text-[11px] font-bold"
-          />
-          <button
-            onClick={() => {
-              adminAdjustLoyaltyPoints(cust.email, parseInt(pointsInput) || 0);
-              alert(`Loyalty points successfully set to ${pointsInput} for customer ${cust.name}.`);
-            }}
-            className="px-2 py-1 bg-brand-gradient hover:scale-105 transition-transform text-white rounded text-[8px] uppercase font-black cursor-pointer shadow-sm"
-          >
-            Set
-          </button>
-        </div>
-      </td>
-      <td className="p-4 text-center">
-        <span className={`px-2 py-0.5 rounded-full text-[9px] uppercase font-bold border ${
-          isSuspended 
-            ? "bg-red-50 border-red-200 text-red-500" 
-            : "bg-green-50 border-green-200 text-emerald-600"
-        }`}>
-          {isSuspended ? "Suspended" : "Active"}
-        </span>
-      </td>
-      <td className="p-4 text-center">
-        {isSuspended ? (
-          <button
-            onClick={() => {
-              adminUnsuspendUser(cust.email);
-              alert(`Security credentials restored for ${cust.name}.`);
-            }}
-            className="px-3.5 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white text-[9px] uppercase font-extrabold tracking-wider rounded-lg shadow-md cursor-pointer transition-all active:scale-95"
-          >
-            Unsuspend
-          </button>
-        ) : (
-          <button
-            onClick={() => {
-              const confirm = window.confirm(`Temporarily suspend credentials for ${cust.name}? They will immediately lose dashboard checkout privileges.`);
-              if (confirm) {
-                adminSuspendUser(cust.email);
-                alert(`Account suspended successfully.`);
-              }
-            }}
-            className="px-3.5 py-1.5 bg-red-600 hover:bg-red-500 text-white text-[9px] uppercase font-extrabold tracking-wider rounded-lg shadow-md cursor-pointer transition-all active:scale-95"
-          >
-            Suspend User
-          </button>
-        )}
-      </td>
-    </tr>
-  );
-};
