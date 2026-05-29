@@ -165,15 +165,17 @@ export default function AdminDashboard({ initialTab = "dashboard" }: { initialTa
       });
     }
 
-    // Map backward-compatible tabs to their new beautiful interfaces
+    runSeoAudit();
+  }, [products]);
+
+  // Map backward-compatible tabs to their new beautiful interfaces
+  useEffect(() => {
     if (initialTab === "account-system") {
       setActiveTab("settings");
     } else if (initialTab === "customer-insights") {
       setActiveTab("beauty-crm");
     }
-
-    runSeoAudit();
-  }, [products, initialTab]);
+  }, [initialTab]);
 
   const handleUnlockConsole = (e: React.FormEvent) => {
     e.preventDefault();
