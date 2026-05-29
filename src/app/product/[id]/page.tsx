@@ -4,6 +4,7 @@ import React, { useState, use, useMemo, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useShop, Product } from "@/context/ShopContext";
+import ProductImage from "@/components/ProductImage";
 import { Header } from "@/components/Header";
 import { CartDrawer } from "@/components/CartDrawer";
 import {
@@ -204,14 +205,11 @@ export default function ProductDetails({ params }: ProductPageProps) {
             
             {/* Primary Large Display Frame */}
             <div className="relative aspect-square w-full rounded-2xl overflow-hidden bg-[#2A093D]/30 border border-[#C77DFF]/15 group">
-              <Image
+              <ProductImage
                 src={selectedImage || product.image}
                 alt={product.title}
-                fill
-                sizes="(max-w-768px) 100vw, 50vw"
-                className="object-cover group-hover:scale-[1.03] transition-transform duration-700"
+                brand={product.brand}
                 priority
-                unoptimized
               />
               
               {/* Authenticity Overlays */}
@@ -619,7 +617,7 @@ export default function ProductDetails({ params }: ProductPageProps) {
                 >
                   <div className="space-y-2 text-left">
                     <div className="relative aspect-square w-full rounded-xl overflow-hidden bg-[#120018]/50 border border-[#C77DFF]/8">
-                      <Image src={p.image} alt={p.title} fill className="object-cover" unoptimized />
+                      <ProductImage src={p.image} alt={p.title} brand={p.brand} />
                     </div>
                     <div className="space-y-0.5">
                       <span className="text-[7.5px] font-bold uppercase tracking-wider text-[#FF8DC7]">{p.brand}</span>
