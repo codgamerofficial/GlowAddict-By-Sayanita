@@ -8,6 +8,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { useShop, Product } from "@/context/ShopContext";
 import { Search, SlidersHorizontal, Heart, ShoppingBag, ShieldCheck, Star, Sparkles } from "lucide-react";
+import ProductImage from "@/components/ProductImage";
 
 export default function Shop() {
   const { products, addToCart, setCartOpen, wishlist, toggleWishlist, isInWishlist } = useShop();
@@ -356,13 +357,10 @@ export default function Shop() {
                     <div>
                       {/* Image & Badges Container */}
                       <div className="relative aspect-square w-full bg-brand-cream/30 dark:bg-[#3A142A]/20 overflow-hidden border-b border-brand-rose/60">
-                        <Image
+                        <ProductImage
                           src={product.image}
                           alt={product.title}
-                          fill
-                          sizes="(max-w-768px) 100vw, (max-w-1200px) 50vw, 25vw"
-                          className="object-cover group-hover:scale-105 transition-transform duration-500"
-                          unoptimized
+                          brand={product.brand}
                         />
                         
                         {/* Authenticity Flag */}
