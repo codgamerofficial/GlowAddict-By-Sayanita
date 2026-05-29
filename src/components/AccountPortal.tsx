@@ -8,6 +8,7 @@ import { useShop, UserAddress, UserPaymentMethod, Order, Product } from "@/conte
 import { Header } from "@/components/Header";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
+import ProductImage from "./ProductImage";
 import { 
   LayoutDashboard, User, Sliders, Sparkles, Package, Heart, Shield, Award, 
   LogOut, Plus, Trash2, MapPin, CreditCard, Check, Bell, Lock, Key, AlertTriangle,
@@ -120,30 +121,30 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
   if (!user) {
     return (
-      <div className="min-h-screen flex flex-col bg-[#120018] text-white relative font-sans">
+      <div className="min-h-screen flex flex-col bg-background text-foreground relative font-sans">
         <Header />
         <CartDrawer />
-        <div className="absolute inset-0 bg-radial-gradient from-[#E056FD]/5 via-transparent to-transparent pointer-events-none" />
+        <div className="absolute inset-0 bg-radial-gradient from-amethyst/5 via-transparent to-transparent pointer-events-none" />
         <div className="flex-1 flex flex-col items-center justify-center p-6 text-center z-10 py-20">
-          <div className="w-20 h-20 rounded-full bg-[#2A093D]/60 border border-[#C77DFF]/20 flex items-center justify-center text-[#FF8DC7] shadow-[0_0_20px_rgba(199,125,255,0.1)] mb-6 animate-pulse">
+          <div className="w-20 h-20 rounded-full bg-brand-cream border border-brand-rose flex items-center justify-center text-amethyst shadow-md mb-6 animate-pulse">
             <Lock size={32} />
           </div>
-          <h2 className="text-3xl font-extrabold font-elegant tracking-wide text-white mb-2">
+          <h2 className="text-3xl font-extrabold font-elegant tracking-wide text-foreground mb-2">
             Skincare Vault Protected
           </h2>
-          <p className="text-xs text-orchid-text-muted max-w-sm leading-relaxed mb-6 font-medium">
+          <p className="text-xs text-foreground/70 max-w-sm leading-relaxed mb-6 font-medium">
             Access to this premium dashboard requires account authentication. Please sign in to verify your identity.
           </p>
           <div className="flex gap-4">
             <Link 
               href="/login" 
-              className="px-6 py-2.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-md shadow-[#E056FD]/20 cursor-pointer"
+              className="px-6 py-2.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all duration-300 shadow-md shadow-amethyst/20 cursor-pointer"
             >
               Sign In
             </Link>
             <Link 
               href="/signup" 
-              className="px-6 py-2.5 border border-[#C77DFF]/25 hover:bg-white/5 text-[#C77DFF] hover:text-white text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer"
+              className="px-6 py-2.5 border border-brand-rose hover:bg-brand-cream text-amethyst hover:text-brand-purple text-[11px] font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer"
             >
               Register
             </Link>
@@ -266,13 +267,13 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
   const userOrders = orders.filter(o => o.shipping_address.email.toLowerCase() === user.email.toLowerCase());
 
   return (
-    <div className="min-h-screen bg-[#120018] text-white flex flex-col font-sans relative">
+    <div className="min-h-screen bg-background text-foreground flex flex-col font-sans relative">
       <Header />
       <CartDrawer />
       
       <main className="flex-grow pb-16">
         {/* Editorial Profile Banner */}
-        <div className="w-full h-44 sm:h-64 relative bg-[#1E0629] overflow-hidden group">
+        <div className="w-full h-44 sm:h-64 relative bg-brand-peach overflow-hidden group">
         <Image 
           src={user.cover_banner || "https://images.unsplash.com/photo-1617897903246-719242758050?auto=format&fit=crop&q=80&w=1200"} 
           alt="Editorial cover" 
@@ -280,10 +281,10 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
           className="object-cover opacity-60 transition-transform duration-700 group-hover:scale-105" 
           unoptimized
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-[#120018] via-transparent to-[#120018]/30" />
+        <div className="absolute inset-0 bg-gradient-to-t from-background via-transparent to-background/30" />
         
         {/* Dynamic theme banner tag */}
-        <div className="absolute bottom-4 right-6 hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-[10px] uppercase font-bold tracking-wider">
+        <div className="absolute bottom-4 right-6 hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-brand-cream border border-brand-rose backdrop-blur-md text-[10px] uppercase font-bold tracking-wider">
           <Sparkles size={11} style={{ color: userAccent }} />
           Theme: <span style={{ color: userAccent }}>{user.theme_preference || "Dewy Dark"}</span>
         </div>
@@ -291,19 +292,19 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
       {/* Profile Header Card */}
       <div className="max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 relative -mt-16 sm:-mt-24 z-20">
-        <div className="bg-gradient-to-r from-[#2A093D]/80 to-[#1D0226]/90 border border-[#C77DFF]/15 rounded-3xl p-6 sm:p-8 shadow-2xl backdrop-blur-md flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
+        <div className="bg-gradient-to-r from-brand-cream to-brand-peach border border-brand-rose rounded-3xl p-6 sm:p-8 shadow-xl backdrop-blur-md flex flex-col sm:flex-row items-center sm:items-end justify-between gap-6">
           <div className="flex flex-col sm:flex-row items-center sm:items-end gap-5 text-center sm:text-left">
             {/* Avatar block */}
-            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-white/10 shadow-xl bg-[#120018]/60 flex items-center justify-center">
+            <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-2xl overflow-hidden border-2 border-brand-rose shadow-xl bg-brand-cream flex items-center justify-center">
               {user.avatar ? (
                 <Image src={user.avatar} alt="User Avatar" fill className="object-cover" unoptimized />
               ) : (
-                <User size={48} className="text-white/20" />
+                <User size={48} className="text-foreground/20" />
               )}
               {/* Tier status indicator badge */}
               <div 
-                className="absolute bottom-1 right-1 w-4 h-4 rounded-full flex items-center justify-center border border-[#120018] text-[7px] font-bold"
-                style={{ backgroundColor: userAccent, color: "#120018" }}
+                className="absolute bottom-1 right-1 w-4 h-4 rounded-full flex items-center justify-center border border-brand-rose text-[7px] font-bold"
+                style={{ backgroundColor: userAccent, color: "#FFFFFF" }}
                 title={`${userTier} Tier`}
               >
                 {userTier[0]}
@@ -313,7 +314,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* Title / Description */}
             <div className="space-y-1.5 pb-2">
               <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2">
-                <h2 className="text-2xl font-black font-elegant tracking-wide text-white">
+                <h2 className="text-2xl font-black font-elegant tracking-wide text-foreground animate-slide-in">
                   {user.name}
                 </h2>
                 <span 
@@ -324,25 +325,25 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   {userTier} Member
                 </span>
               </div>
-              <p className="text-xs text-orchid-text-muted font-medium max-w-md">
+              <p className="text-xs text-foreground/75 font-medium max-w-md">
                 {user.bio || "No beauty bio defined. Customize your profile to complete your skincare legacy."}
               </p>
-              <p className="text-[10px] text-orchid-text-muted/60 font-semibold font-mono">
+              <p className="text-[10px] text-foreground/50 font-semibold font-mono">
                 {user.email}
               </p>
             </div>
           </div>
 
           {/* Quick Metrics */}
-          <div className="flex gap-4 sm:gap-6 border-t border-white/5 sm:border-t-0 pt-4 sm:pt-0 w-full sm:w-auto justify-around">
+          <div className="flex gap-4 sm:gap-6 border-t border-brand-rose sm:border-t-0 pt-4 sm:pt-0 w-full sm:w-auto justify-around">
             <div className="text-center space-y-1">
-              <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold block">Loyalty Points</span>
-              <span className="text-2xl font-extrabold font-elegant text-white block">{user.loyalty_points || 0}</span>
+              <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold block">Loyalty Points</span>
+              <span className="text-2xl font-extrabold font-elegant text-foreground block">{user.loyalty_points || 0}</span>
             </div>
-            <div className="w-px bg-white/10 self-stretch my-1" />
+            <div className="w-px bg-brand-rose self-stretch my-1" />
             <div className="text-center space-y-1">
-              <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold block">Vault Profile</span>
-              <span className="text-2xl font-extrabold font-elegant text-white block">{calculateCompletion()}%</span>
+              <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold block">Vault Profile</span>
+              <span className="text-2xl font-extrabold font-elegant text-foreground block">{calculateCompletion()}%</span>
             </div>
           </div>
         </div>
@@ -353,7 +354,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
         
         {/* SIDEBAR NAVIGATION */}
         <div className="col-span-1 lg:col-span-3 space-y-4">
-          <nav className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible gap-2 p-1.5 rounded-2xl bg-[#2A093D]/30 border border-[#C77DFF]/10 backdrop-blur-md scrollbar-none whitespace-nowrap lg:whitespace-normal">
+          <nav className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible gap-2 p-1.5 rounded-2xl bg-brand-cream border border-brand-rose backdrop-blur-md scrollbar-none whitespace-nowrap lg:whitespace-normal">
             
             {[
               { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -384,8 +385,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   }}
                   className={`flex items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl transition-all cursor-pointer select-none ${
                     active 
-                      ? "text-[#120018]" 
-                      : "text-orchid-text-muted hover:text-white hover:bg-white/5"
+                      ? "text-white" 
+                      : "text-foreground/75 hover:text-amethyst hover:bg-brand-cream/80"
                   }`}
                   style={active ? { backgroundColor: userAccent } : {}}
                 >
@@ -397,7 +398,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
             <button
               onClick={handleLogout}
-              className="flex lg:w-full items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl text-red-400 hover:text-red-300 hover:bg-red-500/5 transition-all mt-auto cursor-pointer"
+              className="flex lg:w-full items-center gap-3 px-4 py-3 text-xs font-bold uppercase tracking-wider rounded-xl text-red-500 hover:text-red-600 hover:bg-red-500/5 transition-all mt-auto cursor-pointer"
             >
               <LogOut size={14} className="shrink-0" />
               <span>Log Out</span>
@@ -405,8 +406,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
           </nav>
 
           {/* Quick Support Badge */}
-          <div className="hidden lg:block p-5 rounded-2xl bg-[#1E0629]/50 border border-[#C77DFF]/10 text-left space-y-2.5 text-xs font-sans text-orchid-text-muted select-none">
-            <h4 className="font-bold text-[#FF8DC7] uppercase tracking-wider block text-[9px]">Need Concierge Assistance?</h4>
+          <div className="hidden lg:block p-5 rounded-2xl bg-brand-cream border border-brand-rose text-left space-y-2.5 text-xs font-sans text-foreground/80 select-none">
+            <h4 className="font-bold text-amethyst uppercase tracking-wider block text-[9px]">Need Concierge Assistance?</h4>
             <p className="text-[10px] leading-relaxed">
               Our luxury beauty concierges are standing by. Get instant skincare suggestions or resolve order tracking queries.
             </p>
@@ -423,21 +424,21 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
         {/* ACTIVE CONTENT WORKSPACE */}
         <div className="col-span-1 lg:col-span-9">
-          <div className="bg-gradient-to-b from-[#2A093D]/40 to-[#1B0124]/80 border border-[#C77DFF]/15 rounded-[32px] p-6 sm:p-8 shadow-2xl backdrop-blur-md relative overflow-hidden transition-all duration-300 min-h-[500px]">
+          <div className="bg-gradient-to-b from-brand-cream/80 to-background border border-brand-rose rounded-[32px] p-6 sm:p-8 shadow-xl backdrop-blur-md relative overflow-hidden transition-all duration-300 min-h-[500px]">
             
             {/* 1. DASHBOARD TAB */}
             {activeTab === "dashboard" && (
               <div className="space-y-6">
                 {/* Welcome Editorial */}
-                <div className="space-y-1 bg-[#C77DFF]/5 border border-[#C77DFF]/10 rounded-2xl p-5 relative overflow-hidden select-none">
-                  <div className="absolute top-0 right-0 w-24 h-24 bg-[#C77DFF]/10 rounded-full blur-xl pointer-events-none" />
-                  <span className="text-[9px] uppercase tracking-widest text-[#FF8DC7] font-extrabold flex items-center gap-1">
+                <div className="space-y-1 bg-brand-cream border border-brand-rose rounded-2xl p-5 relative overflow-hidden select-none">
+                  <div className="absolute top-0 right-0 w-24 h-24 bg-amethyst/10 rounded-full blur-xl pointer-events-none" />
+                  <span className="text-[9px] uppercase tracking-widest text-amethyst font-extrabold flex items-center gap-1">
                     <Sparkles size={10} /> Skincare Intelligence Active
                   </span>
-                  <h3 className="text-xl font-bold font-elegant tracking-wide text-white">
+                  <h3 className="text-xl font-bold font-elegant tracking-wide text-foreground animate-slide-in">
                     Radiance Routine Status: Active
                   </h3>
-                  <p className="text-[11px] text-orchid-text-muted leading-relaxed max-w-xl">
+                  <p className="text-[11px] text-foreground/75 leading-relaxed max-w-xl">
                     Welcome back, {user.name.split(" ")[0]}. Your customized skincare routine is set. Your biological daily checklist is waiting inside.
                   </p>
                 </div>
@@ -445,72 +446,72 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                 {/* Progress Grid */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                   {/* Beauty completeness */}
-                  <div className="bg-[#1E0629]/50 border border-white/5 rounded-2xl p-5 text-center flex flex-col justify-between items-center space-y-4">
-                    <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold">Profile Integrity</span>
-                    <div className="relative w-20 h-20 flex items-center justify-center rounded-full border-4 border-white/5">
-                      <div className="absolute inset-0 rounded-full border-4 border-dashed border-[#C77DFF]/30 animate-spin-slow" />
-                      <span className="text-lg font-black text-white">{calculateCompletion()}%</span>
+                  <div className="bg-brand-cream border border-brand-rose rounded-2xl p-5 text-center flex flex-col justify-between items-center space-y-4 shadow-sm">
+                    <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold">Profile Integrity</span>
+                    <div className="relative w-20 h-20 flex items-center justify-center rounded-full border-4 border-brand-rose">
+                      <div className="absolute inset-0 rounded-full border-4 border-dashed border-amethyst/30 animate-spin-slow" />
+                      <span className="text-lg font-black text-foreground">{calculateCompletion()}%</span>
                     </div>
-                    <p className="text-[10px] text-orchid-text-muted/80">
+                    <p className="text-[10px] text-foreground/70">
                       Onboarding profile is {calculateCompletion()}% customized.
                     </p>
                   </div>
 
                   {/* Loyalty Spend Badges */}
-                  <div className="bg-[#1E0629]/50 border border-white/5 rounded-2xl p-5 text-center flex flex-col justify-between items-center space-y-4">
-                    <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold">Loyalty Level</span>
+                  <div className="bg-brand-cream border border-brand-rose rounded-2xl p-5 text-center flex flex-col justify-between items-center space-y-4 shadow-sm">
+                    <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold">Loyalty Level</span>
                     <div 
-                      className="w-16 h-16 rounded-2xl flex items-center justify-center text-white border shadow-lg"
-                      style={{ borderColor: `${userAccent}30`, backgroundColor: `${userAccent}15`, boxShadow: `0 0 15px ${userAccent}20` }}
+                      className="w-16 h-16 rounded-2xl flex items-center justify-center text-foreground border shadow-md bg-background"
+                      style={{ borderColor: `${userAccent}30`, boxShadow: `0 0 15px ${userAccent}20` }}
                     >
                       <Award size={32} style={{ color: userAccent }} />
                     </div>
                     <div className="space-y-0.5">
-                      <span className="text-xs font-bold text-white uppercase block">{userTier} Member</span>
-                      <span className="text-[9px] text-[#FF8DC7] font-semibold tracking-wide uppercase block">{user.loyalty_points || 0} GLOW POINTS</span>
+                      <span className="text-xs font-bold text-foreground uppercase block">{userTier} Member</span>
+                      <span className="text-[9px] text-amethyst font-semibold tracking-wide uppercase block">{user.loyalty_points || 0} GLOW POINTS</span>
                     </div>
                   </div>
 
                   {/* Active Chronobiology Routines */}
-                  <div className="bg-[#1E0629]/50 border border-white/5 rounded-2xl p-5 flex flex-col justify-between items-center text-center space-y-4">
-                    <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold">Active Ritual</span>
-                    <div className="w-16 h-16 rounded-2xl bg-[#E056FD]/10 border border-[#E056FD]/20 flex items-center justify-center text-[#E056FD]">
+                  <div className="bg-brand-cream border border-brand-rose rounded-2xl p-5 flex flex-col justify-between items-center text-center space-y-4 shadow-sm">
+                    <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold">Active Ritual</span>
+                    <div className="w-16 h-16 rounded-2xl bg-brand-cream border border-brand-rose flex items-center justify-center text-amethyst">
                       <Compass size={32} />
                     </div>
                     <div className="space-y-0.5">
-                      <span className="text-xs font-bold text-white uppercase block">{user.skin_type || "Normal"} Skin Ritual</span>
-                      <span className="text-[9px] text-orchid-text-muted block">{user.skin_concerns?.length || 0} Targeted Concerns</span>
+                      <span className="text-xs font-bold text-foreground uppercase block">{user.skin_type || "Normal"} Skin Ritual</span>
+                      <span className="text-[9px] text-foreground/70 block">{user.skin_concerns?.length || 0} Targeted Concerns</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Quick Orders summary */}
                 <div className="space-y-3">
-                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
-                    <h4 className="text-xs uppercase tracking-widest text-[#9F7AC2] font-bold">Recent Skincare Shipments</h4>
+                  <div className="flex justify-between items-center border-b border-brand-rose pb-2">
+                    <h4 className="text-xs uppercase tracking-widest text-foreground/60 font-bold">Recent Skincare Shipments</h4>
                     <button 
                       onClick={() => setActiveTab("orders")}
-                      className="text-[10px] text-[#FF8DC7] font-extrabold hover:underline"
+                      className="text-[10px] text-amethyst font-extrabold hover:underline"
                     >
                       View All Orders
                     </button>
                   </div>
 
                   {userOrders.length === 0 ? (
-                    <div className="py-6 text-center text-orchid-text-muted/60 text-xs bg-[#1E0629]/30 rounded-2xl border border-dashed border-[#C77DFF]/10 font-medium">
+                    <div className="py-6 text-center text-foreground/50 text-xs bg-brand-cream/50 rounded-2xl border border-dashed border-brand-rose font-medium">
                       No order legacy found. Start your botanics journey today!
                     </div>
                   ) : (
                     <div className="space-y-3.5">
                       {userOrders.slice(0, 2).map((order) => (
-                        <div key={order.id} className="p-4 rounded-2xl bg-[#1E0629]/40 border border-[#C77DFF]/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                        <div key={order.id} className="p-4 rounded-2xl bg-brand-cream border border-brand-rose flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white relative">
+                            <div className="w-10 h-10 rounded-xl bg-background border border-brand-rose flex items-center justify-center text-foreground relative">
                               <ShoppingBag size={18} />
                             </div>
-                            <div className="space-y-0.5">
-                              <span className="text-xs font-bold text-white block">{order.id}</span>
-                              <span className="text-[10px] text-orchid-text-muted font-medium block">
+                            <div className="space-y-0.5 text-left">
+                              <span className="text-xs font-bold text-foreground block">{order.id}</span>
+                              <span className="text-[10px] text-foreground/60 font-medium block">
                                 {order.items.length} items • ₹{order.total_amount}
                               </span>
                             </div>
@@ -526,7 +527,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                             >
                               {order.order_status}
                             </span>
-                            <span className="text-[9px] text-orchid-text-muted font-mono">{order.created_at.split("T")[0]}</span>
+                            <span className="text-[9px] text-foreground/60 font-mono">{order.created_at.split("T")[0]}</span>
                           </div>
                         </div>
                       ))}
@@ -539,13 +540,13 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* 2. EDIT PROFILE TAB */}
             {activeTab === "edit-profile" && (
               <div className="space-y-6">
-                <div className="border-b border-white/5 pb-3 text-center sm:text-left">
-                  <h3 className="text-lg font-bold font-elegant tracking-wide text-white">Customize Luxury Profile</h3>
-                  <p className="text-[11px] text-orchid-text-muted">Personalize your identity signature, bios, and theme highlights.</p>
+                <div className="border-b border-brand-rose pb-3 text-center sm:text-left">
+                  <h3 className="text-lg font-bold font-elegant tracking-wide text-foreground">Customize Luxury Profile</h3>
+                  <p className="text-[11px] text-foreground/70">Personalize your identity signature, bios, and theme highlights.</p>
                 </div>
 
                 {profileSuccess && (
-                  <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl p-4 text-xs font-semibold leading-relaxed animate-pulse">
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-2xl p-4 text-xs font-semibold leading-relaxed animate-pulse">
                     {profileSuccess}
                   </div>
                 )}
@@ -554,7 +555,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   
                   {/* Select Preset Avatars */}
                   <div className="space-y-2">
-                    <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Select Vault Avatar</label>
+                    <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Select Vault Avatar</label>
                     <div className="flex flex-wrap gap-3">
                       {avatarPresets.map((url, i) => (
                         <button
@@ -562,7 +563,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           type="button"
                           onClick={() => updateUserProfile({ avatar: url })}
                           className={`relative w-12 h-12 rounded-xl overflow-hidden border-2 cursor-pointer transition-all hover:scale-105 ${
-                            user.avatar === url ? "border-white" : "border-transparent opacity-60"
+                            user.avatar === url ? "border-amethyst" : "border-brand-rose opacity-60"
                           }`}
                         >
                           <Image src={url} alt={`Preset Avatar ${i}`} fill className="object-cover" unoptimized />
@@ -578,7 +579,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                   {/* Select Cover Banners */}
                   <div className="space-y-2">
-                    <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Select Cover Banner</label>
+                    <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Select Cover Banner</label>
                     <div className="grid grid-cols-3 gap-3">
                       {bannerPresets.map((url, i) => (
                         <button
@@ -586,7 +587,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           type="button"
                           onClick={() => updateUserProfile({ cover_banner: url })}
                           className={`relative h-12 sm:h-16 rounded-xl overflow-hidden border-2 cursor-pointer transition-all hover:scale-102 ${
-                            user.cover_banner === url ? "border-white" : "border-transparent opacity-60"
+                            user.cover_banner === url ? "border-amethyst" : "border-brand-rose opacity-60"
                           }`}
                         >
                           <Image src={url} alt={`Preset Banner ${i}`} fill className="object-cover" unoptimized />
@@ -603,47 +604,47 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   {/* General inputs */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Full Name</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Full Name</label>
                       <input
                         type="text"
                         required
                         value={profName}
                         onChange={(e) => setProfName(e.target.value)}
-                        className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                        className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                       />
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Phone Connection</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Phone Connection</label>
                       <input
                         type="text"
                         required
                         value={profPhone}
                         onChange={(e) => setProfPhone(e.target.value)}
-                        className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                        className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                       />
                     </div>
                   </div>
 
                   {/* Bio */}
                   <div className="space-y-1.5">
-                    <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Skincare Bio / Self-Care Commitment</label>
+                    <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Skincare Bio / Self-Care Commitment</label>
                     <textarea
                       rows={3}
                       value={profBio}
                       onChange={(e) => setProfBio(e.target.value)}
                       placeholder="My self-care mantra is..."
-                      className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans resize-none"
+                      className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans resize-none"
                     />
                   </div>
 
                   {/* Gender & Birth */}
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Gender</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Gender</label>
                       <select
                         value={profGender}
                         onChange={(e) => setProfGender(e.target.value)}
-                        className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                        className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                       >
                         <option value="">Select gender</option>
                         <option value="female">Female</option>
@@ -653,23 +654,23 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                       </select>
                     </div>
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Birth Date</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Birth Date</label>
                       <input
                         type="date"
                         value={profBirth}
                         onChange={(e) => setProfBirth(e.target.value)}
-                        className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                        className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                       />
                     </div>
                   </div>
 
                   {/* Aesthetic preferences */}
-                  <div className="border-t border-white/5 pt-4 space-y-4">
-                    <h4 className="text-[10px] uppercase tracking-widest text-[#FF8DC7] font-extrabold">Aesthetic & Interface Options</h4>
+                  <div className="border-t border-brand-rose pt-4 space-y-4">
+                    <h4 className="text-[10px] uppercase tracking-widest text-amethyst font-extrabold">Aesthetic & Interface Options</h4>
                     
                     {/* Presets Accent Colors */}
                     <div className="space-y-2">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Brand Accent Highlight Color</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Brand Accent Highlight Color</label>
                       <div className="flex flex-wrap gap-3">
                         {accentColors.map((color, i) => (
                           <button
@@ -678,8 +679,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                             onClick={() => updateUserProfile({ accent_color: color.code })}
                             className={`px-3 py-1.5 rounded-full border text-[9px] font-bold uppercase transition-all cursor-pointer select-none flex items-center gap-1.5 ${
                               userAccent === color.code 
-                                ? "bg-white/10 text-white" 
-                                : "bg-[#1E0629] border-[#C77DFF]/10 text-orchid-text-muted hover:border-[#C77DFF]/30"
+                                ? "bg-brand-cream border-amethyst text-amethyst font-black shadow-sm" 
+                                : "bg-background border-brand-rose text-foreground/75 hover:border-amethyst"
                             }`}
                           >
                             <span className="w-2.5 h-2.5 rounded-full block shrink-0" style={{ backgroundColor: color.code }} />
@@ -690,20 +691,20 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                     </div>
 
                     {/* Compact layout mode toggler */}
-                    <div className="flex justify-between items-center p-3 rounded-2xl bg-[#1E0629]/50 border border-white/5">
+                    <div className="flex justify-between items-center p-3 rounded-2xl bg-brand-cream border border-brand-rose">
                       <div className="space-y-0.5">
-                        <span className="text-xs font-bold text-white block">Compact Interface Grids</span>
-                        <span className="text-[10px] text-orchid-text-muted block">Compress cards paddings to fit more parameters on screens.</span>
+                        <span className="text-xs font-bold text-foreground block">Compact Interface Grids</span>
+                        <span className="text-[10px] text-foreground/60 block">Compress cards paddings to fit more parameters on screens.</span>
                       </div>
                       <button
                         type="button"
                         onClick={() => updateUserProfile({ compact_mode: !userCompact })}
                         className={`w-11 h-6 rounded-full p-1 transition-colors cursor-pointer duration-300 relative ${
-                          userCompact ? "bg-emerald-600" : "bg-[#120018]"
+                          userCompact ? "bg-emerald-600 animate-pulse" : "bg-background border border-brand-rose"
                         }`}
                       >
                         <div 
-                          className={`w-4 h-4 rounded-full bg-white transition-all duration-300 transform ${
+                          className={`w-4 h-4 rounded-full bg-white shadow-sm transition-all duration-300 transform ${
                             userCompact ? "translate-x-5" : "translate-x-0"
                           }`}
                         />
@@ -713,7 +714,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#E056FD]/20 active:scale-95"
+                    className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-amethyst/20 active:scale-95"
                   >
                     Save Changes
                   </button>
@@ -727,90 +728,90 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
               <div className="space-y-8">
                 {/* Addresses */}
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <div className="flex justify-between items-center border-b border-brand-rose pb-2">
                     <div className="space-y-0.5">
-                      <h3 className="text-base font-bold font-elegant tracking-wide text-white">Address Management</h3>
-                      <p className="text-[10px] text-orchid-text-muted">Register default shipping locations for instant checkout cycles.</p>
+                      <h3 className="text-base font-bold font-elegant tracking-wide text-foreground">Address Management</h3>
+                      <p className="text-[10px] text-foreground/70">Register default shipping locations for instant checkout cycles.</p>
                     </div>
                     <button
                       onClick={() => setShowAddressForm(!showAddressForm)}
-                      className="p-1.5 rounded-full hover:bg-white/5 text-[#C77DFF] hover:text-white transition-colors cursor-pointer select-none"
+                      className="p-1.5 rounded-full hover:bg-brand-cream text-amethyst hover:text-brand-purple transition-colors cursor-pointer select-none"
                     >
                       <Plus size={20} />
                     </button>
                   </div>
 
                   {showAddressForm && (
-                    <form onSubmit={handleAddAddress} className="p-4 rounded-2xl bg-[#1E0629]/60 border border-[#C77DFF]/20 space-y-4 text-xs animate-slide-in text-left">
+                    <form onSubmit={handleAddAddress} className="p-4 rounded-2xl bg-brand-cream border border-brand-rose space-y-4 text-xs animate-slide-in text-left">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Contact Name</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Contact Name</label>
                           <input
                             type="text"
                             required
                             placeholder="Sayanita Payra"
                             value={addrName}
                             onChange={(e) => setAddrName(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Contact Phone</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Contact Phone</label>
                           <input
                             type="tel"
                             required
                             placeholder="+91 93309 62326"
                             value={addrPhone}
                             onChange={(e) => setAddrPhone(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Street Address</label>
+                        <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Street Address</label>
                         <input
-                          type="text"
-                          required
-                          placeholder="Flat 4B, Orchid Heights, Salt Lake"
-                          value={addrText}
-                          onChange={(e) => setAddrText(e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                           type="text"
+                           required
+                           placeholder="Flat 4B, Orchid Heights, Salt Lake"
+                           value={addrText}
+                           onChange={(e) => setAddrText(e.target.value)}
+                           className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                         />
                       </div>
 
                       <div className="grid grid-cols-3 gap-3">
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">City</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">City</label>
                           <input
                             type="text"
                             required
                             placeholder="Kolkata"
                             value={addrCity}
                             onChange={(e) => setAddrCity(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">State</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">State</label>
                           <input
                             type="text"
                             required
                             placeholder="West Bengal"
                             value={addrState}
                             onChange={(e) => setAddrState(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                           />
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Zip Code</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Zip Code</label>
                           <input
                             type="text"
                             required
                             placeholder="700091"
                             value={addrZip}
                             onChange={(e) => setAddrZip(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                           />
                         </div>
                       </div>
@@ -820,16 +821,16 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           type="checkbox"
                           checked={addrDefault}
                           onChange={(e) => setAddrDefault(e.target.checked)}
-                          className="w-3.5 h-3.5 accent-[#C77DFF]"
+                          className="w-3.5 h-3.5 accent-amethyst"
                         />
-                        <span className="text-[10px] text-orchid-text-muted font-semibold uppercase tracking-wider">Set as default shipping address</span>
+                        <span className="text-[10px] text-foreground/75 font-semibold uppercase tracking-wider">Set as default shipping address</span>
                       </label>
 
                       <div className="flex gap-3 justify-end pt-2">
                         <button
                           type="button"
                           onClick={() => setShowAddressForm(false)}
-                          className="px-4 py-2 border border-white/10 rounded-lg text-orchid-text-muted hover:text-white transition-colors cursor-pointer font-bold uppercase text-[10px] tracking-wider"
+                          className="px-4 py-2 border border-brand-rose rounded-lg text-foreground/70 hover:text-foreground transition-colors cursor-pointer font-bold uppercase text-[10px] tracking-wider"
                         >
                           Cancel
                         </button>
@@ -844,7 +845,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   )}
 
                   {(!user.addresses || user.addresses.length === 0) ? (
-                    <div className="py-6 text-center text-orchid-text-muted/60 text-xs bg-[#1E0629]/30 rounded-2xl border border-dashed border-[#C77DFF]/10 font-medium">
+                    <div className="py-6 text-center text-foreground/50 text-xs bg-brand-cream/50 rounded-2xl border border-dashed border-brand-rose font-medium">
                       No addresses saved. Tap the plus button to register your shipping vault locations.
                     </div>
                   ) : (
@@ -852,27 +853,27 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                       {user.addresses.map((address) => (
                         <div 
                           key={address.id} 
-                          className="p-4.5 rounded-2xl bg-[#1E0629]/40 border border-[#C77DFF]/10 flex flex-col justify-between space-y-3 relative overflow-hidden"
+                          className="p-4.5 rounded-2xl bg-brand-cream border border-brand-rose flex flex-col justify-between space-y-3 relative overflow-hidden shadow-sm"
                         >
                           {address.isDefault && (
                             <div 
                               className="absolute top-0 right-0 py-0.5 px-3 rounded-bl-xl text-[8px] uppercase tracking-wider font-extrabold"
-                              style={{ backgroundColor: userAccent, color: "#120018" }}
+                              style={{ backgroundColor: userAccent, color: "#FFFFFF" }}
                             >
                               Default
                             </div>
                           )}
                           <div className="space-y-1.5 text-left">
-                            <span className="text-xs font-bold text-white block">{address.name}</span>
-                            <span className="text-[10px] text-[#FF8DC7] font-semibold font-mono block">{address.phone}</span>
-                            <p className="text-[10px] text-orchid-text-muted leading-relaxed">
+                            <span className="text-xs font-bold text-foreground block">{address.name}</span>
+                            <span className="text-[10px] text-amethyst font-semibold font-mono block">{address.phone}</span>
+                            <p className="text-[10px] text-foreground/70 leading-relaxed">
                               {address.address}, {address.city}, {address.state} - {address.zipCode}
                             </p>
                           </div>
-                          <div className="flex gap-3 justify-end pt-2 border-t border-white/5">
+                          <div className="flex gap-3 justify-end pt-2 border-t border-brand-rose">
                             <button
                               onClick={() => deleteUserAddress(address.id)}
-                              className="text-red-400 hover:text-red-300 transition-colors flex items-center gap-1 text-[9px] uppercase tracking-wider font-extrabold cursor-pointer"
+                              className="text-red-500 hover:text-red-600 transition-colors flex items-center gap-1 text-[9px] uppercase tracking-wider font-extrabold cursor-pointer"
                             >
                               <Trash2 size={11} />
                               Delete
@@ -886,28 +887,28 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                 {/* Cards / Payments */}
                 <div className="space-y-4">
-                  <div className="flex justify-between items-center border-b border-white/5 pb-2">
+                  <div className="flex justify-between items-center border-b border-brand-rose pb-2">
                     <div className="space-y-0.5">
-                      <h3 className="text-base font-bold font-elegant tracking-wide text-white">Saved Payment Options</h3>
-                      <p className="text-[10px] text-orchid-text-muted">Link credit/debit cards or UPI methods for faster transactions.</p>
+                      <h3 className="text-base font-bold font-elegant tracking-wide text-foreground">Saved Payment Options</h3>
+                      <p className="text-[10px] text-foreground/70">Link credit/debit cards or UPI methods for faster transactions.</p>
                     </div>
                     <button
                       onClick={() => setShowPaymentForm(!showPaymentForm)}
-                      className="p-1.5 rounded-full hover:bg-white/5 text-[#C77DFF] hover:text-white transition-colors cursor-pointer select-none"
+                      className="p-1.5 rounded-full hover:bg-brand-cream text-amethyst hover:text-brand-purple transition-colors cursor-pointer select-none"
                     >
                       <Plus size={20} />
                     </button>
                   </div>
 
                   {showPaymentForm && (
-                    <form onSubmit={handleAddPayment} className="p-4 rounded-2xl bg-[#1E0629]/60 border border-[#C77DFF]/20 space-y-4 text-xs animate-slide-in text-left">
+                    <form onSubmit={handleAddPayment} className="p-4 rounded-2xl bg-brand-cream border border-brand-rose space-y-4 text-xs animate-slide-in text-left">
                       <div className="grid grid-cols-2 gap-4">
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Card Provider</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Card Provider</label>
                           <select
                             value={cardBrand}
                             onChange={(e) => setCardBrand(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                           >
                             <option value="Visa">Visa Card</option>
                             <option value="Mastercard">Mastercard</option>
@@ -916,27 +917,27 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           </select>
                         </div>
                         <div className="space-y-1.5">
-                          <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Details (Card / UPI Number)</label>
+                          <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Details (Card / UPI Number)</label>
                           <input
                             type="text"
                             required
                             placeholder="Enter 16 digit card number or UPI ID"
                             value={cardNumber}
                             onChange={(e) => setCardNumber(e.target.value)}
-                            className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                            className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                           />
                         </div>
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Expiration Date (MM/YY)</label>
+                        <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Expiration Date (MM/YY)</label>
                         <input
                           type="text"
                           required
                           placeholder="12/29"
                           value={cardExp}
                           onChange={(e) => setCardExp(e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                          className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                         />
                       </div>
 
@@ -945,16 +946,16 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           type="checkbox"
                           checked={cardDefault}
                           onChange={(e) => setCardDefault(e.target.checked)}
-                          className="w-3.5 h-3.5 accent-[#C77DFF]"
+                          className="w-3.5 h-3.5 accent-amethyst"
                         />
-                        <span className="text-[10px] text-orchid-text-muted font-semibold uppercase tracking-wider">Set as default payment method</span>
+                        <span className="text-[10px] text-foreground/75 font-semibold uppercase tracking-wider">Set as default payment method</span>
                       </label>
 
                       <div className="flex gap-3 justify-end pt-2">
                         <button
                           type="button"
                           onClick={() => setShowPaymentForm(false)}
-                          className="px-4 py-2 border border-white/10 rounded-lg text-orchid-text-muted hover:text-white transition-colors cursor-pointer font-bold uppercase text-[10px] tracking-wider"
+                          className="px-4 py-2 border border-brand-rose rounded-lg text-foreground/70 hover:text-foreground transition-colors cursor-pointer font-bold uppercase text-[10px] tracking-wider"
                         >
                           Cancel
                         </button>
@@ -969,7 +970,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   )}
 
                   {(!user.payment_methods || user.payment_methods.length === 0) ? (
-                    <div className="py-6 text-center text-orchid-text-muted/60 text-xs bg-[#1E0629]/30 rounded-2xl border border-dashed border-[#C77DFF]/10 font-medium">
+                    <div className="py-6 text-center text-foreground/50 text-xs bg-brand-cream/50 rounded-2xl border border-dashed border-brand-rose font-medium">
                       No linked payment options. Tap the plus button to securely register credentials.
                     </div>
                   ) : (
@@ -977,22 +978,22 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                       {user.payment_methods.map((method) => (
                         <div 
                           key={method.id} 
-                          className="p-4.5 rounded-2xl bg-[#1E0629]/40 border border-[#C77DFF]/10 flex items-center justify-between relative overflow-hidden"
+                          className="p-4.5 rounded-2xl bg-brand-cream border border-brand-rose flex items-center justify-between relative overflow-hidden shadow-sm animate-slide-in"
                         >
                           <div className="flex items-center gap-3">
-                            <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white shrink-0">
+                            <div className="w-10 h-10 rounded-xl bg-background border border-brand-rose flex items-center justify-center text-foreground shrink-0">
                               <CreditCard size={18} style={{ color: userAccent }} />
                             </div>
                             <div className="space-y-0.5 text-left">
-                              <span className="text-xs font-bold text-white block">{method.card_brand}</span>
-                              <span className="text-[10px] text-orchid-text-muted font-mono block">•••• •••• •••• {method.last_4}</span>
-                              <span className="text-[9px] text-[#FF8DC7] font-semibold block uppercase">Exp: {method.exp_date}</span>
+                              <span className="text-xs font-bold text-foreground block">{method.card_brand}</span>
+                              <span className="text-[10px] text-foreground/60 font-mono block">•••• •••• •••• {method.last_4}</span>
+                              <span className="text-[9px] text-amethyst font-semibold block uppercase">Exp: {method.exp_date}</span>
                             </div>
                           </div>
                           
                           <button
                             onClick={() => deleteUserPaymentMethod(method.id)}
-                            className="text-red-400 hover:text-red-300 transition-colors p-1 cursor-pointer"
+                            className="text-red-500 hover:text-red-600 transition-colors p-1 cursor-pointer"
                             title="Delete"
                           >
                             <Trash2 size={13} />
@@ -1008,13 +1009,13 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* 4. AI BEAUTY PROFILE TAB */}
             {activeTab === "beauty-profile" && (
               <div className="space-y-6">
-                <div className="border-b border-white/5 pb-3 text-center sm:text-left select-none">
-                  <h3 className="text-lg font-bold font-elegant tracking-wide text-white">AI Dermal Intelligence Profile</h3>
-                  <p className="text-[11px] text-orchid-text-muted">Configure active bio-markers to adjust visual dashboard hints and botanical suggestions.</p>
+                <div className="border-b border-brand-rose pb-3 text-center sm:text-left select-none">
+                  <h3 className="text-lg font-bold font-elegant tracking-wide text-foreground">AI Dermal Intelligence Profile</h3>
+                  <p className="text-[11px] text-foreground/70">Configure active bio-markers to adjust visual dashboard hints and botanical suggestions.</p>
                 </div>
 
                 {beautySuccess && (
-                  <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-2xl p-4 text-xs font-semibold leading-relaxed animate-pulse">
+                  <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-2xl p-4 text-xs font-semibold leading-relaxed animate-pulse">
                     {beautySuccess}
                   </div>
                 )}
@@ -1023,7 +1024,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   
                   {/* Skin Type Presets */}
                   <div className="space-y-2">
-                    <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Dynamic Skin Type</label>
+                    <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Dynamic Skin Type</label>
                     <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5">
                       {["normal", "dry", "oily", "combination", "sensitive"].map((type) => (
                         <button
@@ -1032,8 +1033,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           onClick={() => setSkinType(type)}
                           className={`py-2.5 px-1.5 text-center rounded-xl border text-[10px] font-bold uppercase transition-all capitalize cursor-pointer select-none ${
                             skinType === type
-                              ? "bg-[#C77DFF]/25 border-[#C77DFF] text-white shadow-[0_0_10px_rgba(199,125,255,0.15)]"
-                              : "bg-[#1E0629] border-[#C77DFF]/10 text-orchid-text-muted hover:border-[#C77DFF]/30"
+                              ? "bg-brand-cream border-amethyst text-amethyst shadow-sm font-extrabold"
+                              : "bg-background border-brand-rose text-foreground/75 hover:border-amethyst"
                           }`}
                         >
                           {type}
@@ -1044,7 +1045,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                   {/* Skincare concerns (Multi-select tags) */}
                   <div className="space-y-2">
-                    <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Target Skincare Concerns</label>
+                    <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Target Skincare Concerns</label>
                     <div className="flex flex-wrap gap-2.5">
                       {[
                         "Acne & Blemishes", "Fine Lines & Wrinkles", "Pigmentation & Dark Spots",
@@ -1059,11 +1060,11 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                             onClick={() => setSkinConcerns(prev => selected ? prev.filter(c => c !== concern) : [...prev, concern])}
                             className={`py-2 px-3.5 rounded-full border text-[10px] font-medium transition-all cursor-pointer select-none flex items-center gap-1.5 ${
                               selected
-                                ? "bg-[#E056FD]/20 border-[#E056FD] text-white shadow-[0_0_10px_rgba(224,86,253,0.15)]"
-                                : "bg-[#1E0629] border-[#C77DFF]/10 text-orchid-text-muted hover:border-[#C77DFF]/30"
+                                ? "bg-brand-cream border-amethyst text-amethyst shadow-sm font-extrabold"
+                                : "bg-background border-brand-rose text-foreground/75 hover:border-amethyst"
                             }`}
                           >
-                            <Heart size={9} className={selected ? "fill-[#FF8DC7] text-[#FF8DC7]" : "text-orchid-text-muted"} />
+                            <Heart size={9} className={selected ? "fill-amethyst text-amethyst" : "text-foreground/40"} />
                             {concern}
                           </button>
                         );
@@ -1073,7 +1074,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                   {/* Sensitivities / Allergies */}
                   <div className="space-y-2">
-                    <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Allergies / Avoided Ingredients</label>
+                    <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Allergies / Avoided Ingredients</label>
                     <div className="flex flex-wrap gap-2.5">
                       {[
                         "Synthetic Fragrances", "Essential Oils", "Parabens",
@@ -1087,8 +1088,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                             onClick={() => setSkinAllergies(prev => selected ? prev.filter(a => a !== allergy) : [...prev, allergy])}
                             className={`py-2 px-3.5 rounded-full border text-[10px] font-medium transition-all cursor-pointer select-none ${
                               selected
-                                ? "bg-red-500/10 border-red-500/30 text-red-400"
-                                : "bg-[#1E0629] border-[#C77DFF]/10 text-orchid-text-muted hover:border-[#C77DFF]/30"
+                                ? "bg-red-500/10 border-red-500/30 text-red-600 font-bold"
+                                : "bg-background border-brand-rose text-foreground/75 hover:border-amethyst"
                             }`}
                           >
                             {allergy}
@@ -1099,13 +1100,13 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   </div>
 
                   {/* Aesthetic Preferences (Tone & Finish) */}
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-white/5 pt-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 border-t border-brand-rose pt-4">
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Tone Match Direction</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Tone Match Direction</label>
                       <select
                         value={tonePref}
                         onChange={(e) => setTonePref(e.target.value)}
-                        className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                        className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                       >
                         <option value="natural">Natural Matching</option>
                         <option value="fair">Brightened / Fair</option>
@@ -1114,11 +1115,11 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Finish Goal</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Finish Goal</label>
                       <select
                         value={finishPref}
                         onChange={(e) => setFinishPref(e.target.value)}
-                        className="w-full px-3 py-3 rounded-xl border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                        className="w-full px-3 py-3 rounded-xl border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                       >
                         <option value="dewy">Dewy Gloss / Radiant Glow</option>
                         <option value="matte">Matte / Oil Control</option>
@@ -1129,7 +1130,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                   <button
                     type="submit"
-                    className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-[#E056FD]/20 active:scale-95 animate-slide-in"
+                    className="w-full py-3.5 bg-brand-gradient hover:bg-brand-gradient-hover text-white text-xs font-bold uppercase tracking-wider rounded-xl transition-all duration-300 flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-amethyst/20 active:scale-95 animate-slide-in"
                   >
                     Lock Beauty Markers
                   </button>
@@ -1279,29 +1280,29 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                   const activeSteps = selectedRoutineTab === "morning" ? morningSteps : nightSteps;
 
                   return (
-                    <div className="border-t border-white/10 pt-8 mt-8 space-y-6 select-none text-left animate-slide-in">
+                    <div className="border-t border-brand-rose pt-8 mt-8 space-y-6 select-none text-left animate-slide-in">
                       <div className="space-y-1.5">
-                        <span className="text-[9px] uppercase tracking-widest text-[#FF8DC7] font-extrabold flex items-center gap-1.5">
-                          <Sparkles size={11} className="animate-pulse text-[#C77DFF]" /> Dynamic Circadian Rituals
+                        <span className="text-[9px] uppercase tracking-widest text-amethyst font-extrabold flex items-center gap-1.5">
+                          <Sparkles size={11} className="animate-pulse text-amethyst" /> Dynamic Circadian Rituals
                         </span>
-                        <h4 className="text-base font-bold font-elegant tracking-wide text-white uppercase">
+                        <h4 className="text-base font-bold font-elegant tracking-wide text-foreground uppercase">
                           Your Custom Skincare Circadian Vanity
                         </h4>
-                        <p className="text-[11px] text-orchid-text-muted leading-relaxed">
+                        <p className="text-[11px] text-foreground/70 leading-relaxed">
                           Below is your morning and night routine checklist, dynamically mapped in real-time to your skin profile. Focuses on barrier restoration and avoids your flagged ingredient allergens.
                         </p>
                       </div>
 
                       {/* Tab Selector Switcher */}
-                      <div className="flex gap-2.5 p-1 rounded-xl bg-[#1E0629]/60 border border-[#C77DFF]/15 max-w-xs select-none">
+                      <div className="flex gap-2.5 p-1 rounded-xl bg-brand-cream border border-brand-rose max-w-xs select-none">
                         <button
                           key="morning"
                           type="button"
                           onClick={() => setSelectedRoutineTab("morning")}
                           className={`flex-1 py-2 text-[10px] uppercase font-bold tracking-wider rounded-lg transition-all cursor-pointer ${
                             selectedRoutineTab === "morning"
-                              ? "bg-[#C77DFF] text-[#120018] font-extrabold shadow-sm"
-                              : "text-orchid-text-muted hover:text-white"
+                              ? "bg-brand-gradient text-white font-extrabold shadow-sm"
+                              : "text-foreground/60 hover:text-amethyst"
                           }`}
                         >
                           ☀️ Sunrise Shield
@@ -1312,8 +1313,8 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                           onClick={() => setSelectedRoutineTab("night")}
                           className={`flex-1 py-2 text-[10px] uppercase font-bold tracking-wider rounded-lg transition-all cursor-pointer ${
                             selectedRoutineTab === "night"
-                              ? "bg-[#E056FD] text-white font-extrabold shadow-sm"
-                              : "text-orchid-text-muted hover:text-white"
+                              ? "bg-brand-gradient text-white font-extrabold shadow-sm"
+                              : "text-foreground/60 hover:text-amethyst"
                           }`}
                         >
                           🌙 Sunset Repair
@@ -1321,7 +1322,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                       </div>
 
                       {/* Stepper Vertical Timeline */}
-                      <div className="relative border-l border-dashed border-[#C77DFF]/20 pl-6 ml-3 space-y-8 py-2 select-none">
+                      <div className="relative border-l border-dashed border-brand-rose pl-6 ml-3 space-y-8 py-2 select-none">
                         {activeSteps.map((step, idx) => {
                           const rec = getRecommendedProductForStep(step.type);
                           const product = rec.product;
@@ -1332,11 +1333,11 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                             <div key={idx} className="relative group/step animate-slide-in">
                               {/* Glowing Connected Dot */}
                               <div 
-                                className="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-[#120018] flex items-center justify-center text-[7px] font-bold shadow-md transition-all duration-300 group-hover/step:scale-110"
+                                className="absolute -left-[31px] top-1 w-4 h-4 rounded-full border-2 border-brand-rose flex items-center justify-center text-[7px] font-bold shadow-md transition-all duration-300 group-hover/step:scale-110"
                                 style={{ 
-                                  backgroundColor: selectedRoutineTab === "morning" ? "#C77DFF" : "#E056FD", 
-                                  color: "#120018",
-                                  boxShadow: `0 0 10px ${selectedRoutineTab === "morning" ? "rgba(199,125,255,0.4)" : "rgba(224,86,253,0.4)"}` 
+                                  backgroundColor: selectedRoutineTab === "morning" ? "#FC2779" : "#D81B60", 
+                                  color: "#FFFFFF",
+                                  boxShadow: `0 0 10px ${selectedRoutineTab === "morning" ? "rgba(252,39,121,0.4)" : "rgba(216,27,96,0.4)"}` 
                                 }}
                               >
                                 {idx + 1}
@@ -1344,45 +1345,45 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                               {/* Stepper info details */}
                               <div className="space-y-1.5 mb-3">
-                                <span className="text-[9px] uppercase tracking-widest font-black" style={{ color: selectedRoutineTab === "morning" ? "#C77DFF" : "#FF8DC7" }}>
+                                <span className="text-[9px] uppercase tracking-widest font-black" style={{ color: "#FC2779" }}>
                                   {step.title}
                                 </span>
-                                <p className="text-[10px] text-orchid-text-muted/80 leading-relaxed max-w-lg font-semibold">
+                                <p className="text-[10px] text-foreground/75 leading-relaxed max-w-lg font-semibold">
                                   {step.desc}
                                 </p>
                               </div>
 
                               {/* Stepper Custom Recommendation vanity box */}
-                              <div className="bg-[#1E0629]/40 border border-[#C77DFF]/10 rounded-2xl p-4 max-w-xl flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between hover:border-[#C77DFF]/25 transition-all duration-300 select-none">
+                              <div className="bg-brand-cream border border-brand-rose rounded-2xl p-4 max-w-xl flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between hover:border-amethyst transition-all duration-300 select-none shadow-sm">
                                 
                                 {/* Left Section: Metadata */}
                                 <div className="flex items-center gap-3">
-                                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-[#120018]/50 border border-white/5 shrink-0 flex items-center justify-center">
-                                    <Image src={product.image} alt={product.title} fill className="object-cover" unoptimized />
+                                  <div className="relative w-12 h-12 rounded-xl overflow-hidden bg-brand-cream border border-brand-rose shrink-0 flex items-center justify-center">
+                                    <ProductImage src={product.image} alt={product.title} brand={product.brand} />
                                   </div>
                                   <div className="space-y-0.5 text-left">
                                     <div className="flex flex-wrap items-center gap-1.5">
-                                      <span className="text-[8px] font-black uppercase tracking-wider text-[#FF8DC7]">{product.brand}</span>
+                                      <span className="text-[8px] font-black uppercase tracking-wider text-amethyst">{product.brand}</span>
                                       {rec.conflict && (
-                                        <span className="px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/20 text-red-400 text-[7px] uppercase tracking-widest font-black animate-pulse">
+                                        <span className="px-2 py-0.5 rounded-md bg-red-500/10 border border-red-500/20 text-red-600 text-[7px] uppercase tracking-widest font-black animate-pulse">
                                           ⚠️ Allergy Warning: Contains {rec.conflictingAllergens.join(", ")}
                                         </span>
                                       )}
                                     </div>
-                                    <span className="text-xs font-bold text-white block line-clamp-1 max-w-[240px] sm:max-w-[320px]">{product.title}</span>
-                                    <span className="text-[9.5px] text-orchid-text-muted/60 leading-normal block italic line-clamp-1 max-w-[280px]">
+                                    <span className="text-xs font-bold text-foreground block line-clamp-1 max-w-[240px] sm:max-w-[320px]">{product.title}</span>
+                                    <span className="text-[9.5px] text-foreground/60 leading-normal block italic line-clamp-1 max-w-[280px]">
                                       {getProductMetadata(product).benefits}
                                     </span>
                                   </div>
                                 </div>
 
                                 {/* Right Section: Cart actions */}
-                                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 w-full sm:w-auto border-t sm:border-t-0 border-white/5 pt-3 sm:pt-0 shrink-0">
+                                <div className="flex sm:flex-col items-center sm:items-end justify-between sm:justify-center gap-3 w-full sm:w-auto border-t sm:border-t-0 border-brand-rose pt-3 sm:pt-0 shrink-0">
                                   <div className="text-left sm:text-right space-y-0.5">
                                     {product.mrp > product.price && (
-                                      <span className="text-[9.5px] text-orchid-text-muted/30 line-through font-mono block">₹{product.mrp}</span>
+                                      <span className="text-[9.5px] text-foreground/40 line-through font-mono block">₹{product.mrp}</span>
                                     )}
-                                    <span className="text-xs font-black text-white font-mono block">₹{product.price}</span>
+                                    <span className="text-xs font-black text-foreground font-mono block">₹{product.price}</span>
                                   </div>
                                   <button
                                     type="button"
@@ -1391,7 +1392,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                                       addToCart(product, 1, defaultShade);
                                       setCartOpen(true);
                                     }}
-                                    className="px-3.5 py-1.5 rounded-lg bg-brand-gradient hover:bg-brand-gradient-hover text-white text-[9px] uppercase tracking-wider font-extrabold transition-all cursor-pointer select-none active:scale-95 shadow-md shadow-[#E056FD]/10 border border-[#E056FD]/10 flex items-center gap-1 shrink-0"
+                                    className="px-3.5 py-1.5 rounded-lg bg-brand-gradient hover:bg-brand-gradient-hover text-white text-[9px] uppercase tracking-wider font-extrabold transition-all cursor-pointer select-none active:scale-95 shadow-md shadow-amethyst/10 border border-brand-rose flex items-center gap-1 shrink-0"
                                   >
                                     <ShoppingBag size={10} />
                                     Add to Vanity
@@ -1412,14 +1413,14 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* 5. ORDERS & CLAIMS TAB */}
             {activeTab === "orders" && (
               <div className="space-y-6">
-                <div className="flex flex-col sm:flex-row justify-between items-center border-b border-white/5 pb-3 gap-3">
+                <div className="flex flex-col sm:flex-row justify-between items-center border-b border-brand-rose pb-3 gap-3">
                   <div className="space-y-0.5 text-center sm:text-left">
-                    <h3 className="text-lg font-bold font-elegant tracking-wide text-white">Orders legacy & Claims Vault</h3>
-                    <p className="text-[10px] text-orchid-text-muted">Trace active courier milestones or submit anti-abuse claim videos.</p>
+                    <h3 className="text-lg font-bold font-elegant tracking-wide text-foreground">Orders legacy & Claims Vault</h3>
+                    <p className="text-[10px] text-foreground/70">Trace active courier milestones or submit anti-abuse claim videos.</p>
                   </div>
                   <button
                     onClick={() => { setShowClaimForm(!showClaimForm); setClaimSuccess(""); setClaimError(""); }}
-                    className="px-4 py-2 border border-[#C77DFF]/25 hover:bg-white/5 text-[#C77DFF] hover:text-white rounded-xl text-[9px] uppercase tracking-wider font-extrabold flex items-center gap-1.5 cursor-pointer select-none transition-all active:scale-95"
+                    className="px-4 py-2 border border-brand-rose hover:bg-brand-cream text-amethyst hover:text-brand-purple rounded-xl text-[9px] uppercase tracking-wider font-extrabold flex items-center gap-1.5 cursor-pointer select-none transition-all active:scale-95"
                   >
                     <Video size={12} />
                     Unboxing Claim Form
@@ -1428,34 +1429,34 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                 {/* Claim Submission form */}
                 {showClaimForm && (
-                  <form onSubmit={handleClaimSubmit} className="p-5 rounded-2xl bg-[#1E0629]/60 border border-red-500/20 space-y-4 text-xs animate-slide-in text-left">
-                    <span className="font-extrabold text-red-400 uppercase tracking-widest text-[9px] flex items-center gap-1 select-none">
+                  <form onSubmit={handleClaimSubmit} className="p-5 rounded-2xl bg-brand-cream border border-red-500/20 space-y-4 text-xs animate-slide-in text-left">
+                    <span className="font-extrabold text-red-500 uppercase tracking-widest text-[9px] flex items-center gap-1 select-none">
                       <AlertTriangle size={11} className="shrink-0" />
                       Anti-Abuse Unboxing Claim Vault
                     </span>
-                    <p className="text-[10px] text-orchid-text-muted/80 leading-relaxed">
+                    <p className="text-[10px] text-foreground/75 leading-relaxed">
                       Sayanita Payra mandates continuous, unedited unboxing videos for all damaged or missing items claims. Submit order ID and public unboxing video link below (Google Drive / YouTube).
                     </p>
 
                     {claimSuccess && (
-                      <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 rounded-xl p-3 text-[10px] font-semibold leading-relaxed">
+                      <div className="bg-emerald-500/10 border border-emerald-500/20 text-emerald-600 rounded-xl p-3 text-[10px] font-semibold leading-relaxed">
                         {claimSuccess}
                       </div>
                     )}
 
                     {claimError && (
-                      <div className="bg-red-500/10 border border-red-500/20 text-red-400 rounded-xl p-3 text-[10px] font-semibold leading-relaxed animate-pulse">
+                      <div className="bg-red-500/10 border border-red-500/20 text-red-600 rounded-xl p-3 text-[10px] font-semibold leading-relaxed animate-pulse">
                         {claimError}
                       </div>
                     )}
 
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                       <div className="space-y-1.5">
-                        <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Select Order ID</label>
+                        <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Select Order ID</label>
                         <select
                           value={claimOrderId}
                           onChange={(e) => setClaimOrderId(e.target.value)}
-                          className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                          className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                         >
                           <option value="">Choose order</option>
                           {userOrders.map((o) => (
@@ -1465,11 +1466,11 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                       </div>
 
                       <div className="space-y-1.5">
-                        <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Claim Reason</label>
+                        <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Claim Reason</label>
                         <select
                           value={claimType}
                           onChange={(e) => setClaimType(e.target.value as any)}
-                          className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans cursor-pointer"
+                          className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans cursor-pointer"
                         >
                           <option value="damage">Damaged Item received</option>
                           <option value="missing">Missing item in delivery</option>
@@ -1478,14 +1479,14 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                     </div>
 
                     <div className="space-y-1.5">
-                      <label className="font-bold text-[#9F7AC2] uppercase tracking-wider block text-[9px]">Unedited Unboxing Video URL</label>
+                      <label className="font-bold text-foreground/60 uppercase tracking-wider block text-[9px]">Unedited Unboxing Video URL</label>
                       <input
                         type="url"
                         required
                         placeholder="https://drive.google.com/file/... or https://youtube.com/..."
                         value={claimVideoUrl}
                         onChange={(e) => setClaimVideoUrl(e.target.value)}
-                        className="w-full px-3 py-2.5 rounded-lg border border-[#C77DFF]/15 focus:border-[#E056FD] bg-[#1E0629] text-white outline-none font-sans"
+                        className="w-full px-3 py-2.5 rounded-lg border border-brand-rose focus:border-amethyst bg-background text-foreground outline-none font-sans"
                       />
                     </div>
 
@@ -1493,7 +1494,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                       <button
                         type="button"
                         onClick={() => setShowClaimForm(false)}
-                        className="px-4 py-2 border border-white/10 rounded-lg text-orchid-text-muted hover:text-white transition-colors cursor-pointer font-bold uppercase text-[10px] tracking-wider"
+                        className="px-4 py-2 border border-brand-rose rounded-lg text-foreground/60 hover:text-foreground transition-colors cursor-pointer font-bold uppercase text-[10px] tracking-wider"
                       >
                         Cancel
                       </button>
@@ -1509,7 +1510,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
 
                 {/* Orders legacy list */}
                 {userOrders.length === 0 ? (
-                  <div className="py-12 text-center text-orchid-text-muted/60 text-xs bg-[#1E0629]/30 rounded-[28px] border border-dashed border-[#C77DFF]/10 font-medium">
+                  <div className="py-12 text-center text-foreground/50 text-xs bg-brand-cream/50 rounded-[28px] border border-dashed border-brand-rose font-medium">
                     No order transactions recorded in your profile. Fill your basket with botanicals to activate catalog shipping records!
                   </div>
                 ) : (
@@ -1517,12 +1518,12 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                     {userOrders.map((order) => {
                       const associatedClaims = claims.filter(c => c.order_id === order.id);
                       return (
-                        <div key={order.id} className="rounded-2xl border border-white/5 bg-[#1E0629]/35 overflow-hidden">
+                        <div key={order.id} className="rounded-2xl border border-brand-rose bg-brand-cream overflow-hidden shadow-sm">
                           {/* Order Brief Header */}
-                          <div className="bg-[#2A093D]/30 px-5 py-4 border-b border-white/5 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
+                          <div className="bg-brand-peach px-5 py-4 border-b border-brand-rose flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-left">
                             <div className="space-y-0.5">
-                              <span className="text-xs font-bold text-white block">Order {order.id}</span>
-                              <span className="text-[10px] text-orchid-text-muted font-medium font-mono">
+                              <span className="text-xs font-bold text-foreground block">Order {order.id}</span>
+                              <span className="text-[10px] text-foreground/60 font-medium font-mono">
                                 Placed on {order.created_at.split("T")[0]} • Paid via {order.payment_method}
                               </span>
                             </div>
@@ -1537,7 +1538,7 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                               >
                                 {order.order_status}
                               </span>
-                              <span className="text-[11px] font-extrabold text-white">₹{order.total_amount}</span>
+                              <span className="text-[11px] font-extrabold text-foreground">₹{order.total_amount}</span>
                             </div>
                           </div>
 
@@ -1547,35 +1548,35 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                             <div className="space-y-2">
                               {order.items.map((item, idx) => (
                                 <div key={idx} className="flex justify-between text-[11px] items-center">
-                                  <span className="text-orchid-text-muted font-medium">
-                                    {item.product.title} <span className="text-[9px] text-[#FF8DC7] font-semibold">({item.selectedShade || "Default"})</span> <span className="font-bold text-white/50">x{item.quantity}</span>
+                                  <span className="text-foreground/80 font-medium">
+                                    {item.product.title} <span className="text-[9px] text-amethyst font-semibold">({item.selectedShade || "Default"})</span> <span className="font-bold text-foreground/40">x{item.quantity}</span>
                                   </span>
-                                  <span className="font-mono text-white/80 font-bold">₹{item.product.price * item.quantity}</span>
+                                  <span className="font-mono text-foreground/80 font-bold">₹{item.product.price * item.quantity}</span>
                                 </div>
                               ))}
                             </div>
 
                             {/* Tracking Milestones */}
                             {order.courier && order.tracking_id && (
-                              <div className="p-3.5 rounded-xl bg-[#120018]/50 border border-white/5 space-y-1">
-                                <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold block">Milestone Tracking Details</span>
+                              <div className="p-3.5 rounded-xl bg-background border border-brand-rose space-y-1">
+                                <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold block">Milestone Tracking Details</span>
                                 <div className="flex flex-wrap justify-between items-center text-[10px] gap-2">
-                                  <span className="font-medium text-white">Courier: {order.courier}</span>
-                                  <span className="font-mono text-[#FF8DC7] font-semibold select-all">AWB Tracking: {order.tracking_id}</span>
+                                  <span className="font-medium text-foreground">Courier: {order.courier}</span>
+                                  <span className="font-mono text-amethyst font-semibold select-all">AWB Tracking: {order.tracking_id}</span>
                                 </div>
                               </div>
                             )}
 
                             {/* Claims logs */}
                             {associatedClaims.length > 0 && (
-                              <div className="space-y-2 pt-2 border-t border-white/5">
-                                <span className="text-[9px] uppercase tracking-widest text-red-400 font-bold block">Associated Unboxing Claims</span>
+                              <div className="space-y-2 pt-2 border-t border-brand-rose">
+                                <span className="text-[9px] uppercase tracking-widest text-red-500 font-bold block">Associated Unboxing Claims</span>
                                 {associatedClaims.map((claim) => (
-                                  <div key={claim.id} className="p-3 rounded-xl bg-red-950/15 border border-red-500/10 flex justify-between items-center gap-3">
+                                  <div key={claim.id} className="p-3 rounded-xl bg-red-500/5 border border-red-500/20 flex justify-between items-center gap-3">
                                     <div className="space-y-0.5">
-                                      <span className="text-[10px] font-bold text-white uppercase block">{claim.claim_type} claim ({claim.id})</span>
+                                      <span className="text-[10px] font-bold text-foreground uppercase block">{claim.claim_type} claim ({claim.id})</span>
                                       {claim.resolution_notes && (
-                                        <p className="text-[9px] text-orchid-text-muted leading-relaxed font-medium">
+                                        <p className="text-[9px] text-foreground/70 leading-relaxed font-medium">
                                           Resolution: {claim.resolution_notes}
                                         </p>
                                       )}
@@ -1608,47 +1609,47 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* 6. WISHLIST TAB */}
             {activeTab === "wishlist" && (
               <div className="space-y-6">
-                <div className="border-b border-white/5 pb-3 text-center sm:text-left select-none">
-                  <h3 className="text-lg font-bold font-elegant tracking-wide text-white">Curated saved items</h3>
-                  <p className="text-[11px] text-orchid-text-muted">A dedicated vault for catalog items you desire.</p>
+                <div className="border-b border-brand-rose pb-3 text-center sm:text-left select-none">
+                  <h3 className="text-lg font-bold font-elegant tracking-wide text-foreground">Curated saved items</h3>
+                  <p className="text-[11px] text-foreground/70">A dedicated vanity for catalog items you desire.</p>
                 </div>
 
                 {wishlist.length === 0 ? (
-                  <div className="py-12 text-center text-orchid-text-muted/60 text-xs bg-[#1E0629]/30 rounded-2xl border border-dashed border-[#C77DFF]/10 font-medium">
+                  <div className="py-12 text-center text-foreground/50 text-xs bg-brand-cream/50 rounded-2xl border border-dashed border-brand-rose font-medium">
                     Your wishlist is empty. Explore Sayanita's curated products to save favorites!
                   </div>
                 ) : (
                   <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
                     {products.filter(p => isInWishlist(p.id)).map((product) => (
-                      <div key={product.id} className="group rounded-2xl bg-[#1E0629]/40 border border-white/5 overflow-hidden flex flex-col justify-between relative hover:border-[#C77DFF]/20 transition-all duration-300">
+                      <div key={product.id} className="group rounded-2xl bg-brand-cream border border-brand-rose overflow-hidden flex flex-col justify-between relative hover:border-amethyst transition-all duration-300 shadow-sm animate-slide-in">
                         {/* Remove favorite */}
                         <button
                           onClick={() => toggleWishlist(product.id)}
-                          className="absolute top-2.5 right-2.5 p-1.5 rounded-xl bg-[#120018]/80 hover:bg-[#120018] text-red-400 hover:text-red-300 transition-colors z-20 cursor-pointer"
+                          className="absolute top-2.5 right-2.5 p-1.5 rounded-xl bg-background/80 hover:bg-background text-red-500 hover:text-red-600 transition-colors z-20 cursor-pointer shadow-sm"
                         >
-                          <Heart size={14} className="fill-red-400" />
+                          <Heart size={14} className="fill-red-500" />
                         </button>
 
-                        <div className="relative aspect-square w-full bg-[#120018]/50 overflow-hidden">
-                          <Image src={product.image} alt={product.title} fill className="object-cover transition-transform duration-500 group-hover:scale-103" unoptimized />
+                        <div className="relative aspect-square w-full bg-brand-cream/30 overflow-hidden">
+                          <ProductImage src={product.image} alt={product.title} brand={product.brand} />
                         </div>
 
                         <div className="p-4 space-y-3 text-left">
                           <div className="space-y-0.5">
-                            <span className="text-[9px] uppercase tracking-widest text-[#FF8DC7] font-bold block">{product.category}</span>
-                            <span className="text-xs font-bold text-white block line-clamp-1">{product.title}</span>
+                            <span className="text-[9px] uppercase tracking-widest text-amethyst font-bold block">{product.category}</span>
+                            <span className="text-xs font-bold text-foreground block line-clamp-1">{product.title}</span>
                           </div>
                           
                           <div className="flex justify-between items-center">
-                            <span className="text-xs font-extrabold text-white font-mono">₹{product.price}</span>
-                            <span className={`text-[9px] uppercase tracking-widest font-extrabold ${product.stock > 0 ? "text-emerald-400" : "text-red-400"}`}>
+                            <span className="text-xs font-extrabold text-foreground font-mono">₹{product.price}</span>
+                            <span className={`text-[9px] uppercase tracking-widest font-extrabold ${product.stock > 0 ? "text-emerald-600" : "text-red-500"}`}>
                               {product.stock > 0 ? "In Stock" : "Sold Out"}
                             </span>
                           </div>
 
                           <Link
                             href="/shop"
-                            className="w-full py-2 bg-[#2A093D]/60 hover:bg-[#2A093D] text-[10px] text-center uppercase tracking-wider font-bold rounded-lg border border-[#C77DFF]/15 block transition-colors cursor-pointer"
+                            className="w-full py-2 bg-brand-cream hover:bg-brand-peach text-[10px] text-center uppercase tracking-wider font-bold rounded-lg border border-brand-rose block transition-colors cursor-pointer text-foreground"
                           >
                             Explore In Catalog
                           </Link>
@@ -1663,63 +1664,63 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* 7. SECURITY TAB */}
             {activeTab === "security" && (
               <div className="space-y-6">
-                <div className="border-b border-white/5 pb-3 text-center sm:text-left select-none">
-                  <h3 className="text-lg font-bold font-elegant tracking-wide text-white">Security Center & Credentials</h3>
-                  <p className="text-[11px] text-orchid-text-muted">Trace active device connections, manage 2FA configurations, or review audit standards.</p>
+                <div className="border-b border-brand-rose pb-3 text-center sm:text-left select-none">
+                  <h3 className="text-lg font-bold font-elegant tracking-wide text-foreground">Security Center & Credentials</h3>
+                  <p className="text-[11px] text-foreground/70">Trace active device connections, manage 2FA configurations, or review audit standards.</p>
                 </div>
 
                 {/* Security metrics */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
-                  <div className="bg-[#1E0629]/50 border border-white/5 rounded-2xl p-5 space-y-3">
-                    <span className="font-extrabold text-[#C77DFF] uppercase tracking-widest text-[9px] flex items-center gap-1.5">
+                  <div className="bg-brand-cream border border-brand-rose rounded-2xl p-5 space-y-3 shadow-sm">
+                    <span className="font-extrabold text-amethyst uppercase tracking-widest text-[9px] flex items-center gap-1.5">
                       <Key size={12} /> Account Integrity Check
                     </span>
-                    <ul className="space-y-3 text-[10px] text-orchid-text-muted font-medium">
+                    <ul className="space-y-3 text-[10px] text-foreground/80 font-medium">
                       <li className="flex justify-between items-center">
                         <span>Email Verification Status</span>
-                        <span className="text-emerald-400 font-bold uppercase tracking-wider flex items-center gap-1"><Check size={11} /> Verified</span>
+                        <span className="text-emerald-600 font-bold uppercase tracking-wider flex items-center gap-1"><Check size={11} /> Verified</span>
                       </li>
                       <li className="flex justify-between items-center">
                         <span>2-Factor Authentication</span>
-                        <span className="text-amber-500 font-bold uppercase tracking-wider flex items-center gap-1"><Info size={11} /> Disabled</span>
+                        <span className="text-amber-600 font-bold uppercase tracking-wider flex items-center gap-1"><Info size={11} /> Disabled</span>
                       </li>
                       <li className="flex justify-between items-center">
                         <span>Anti-Abuse Video Claim Auditing</span>
-                        <span className="text-[#FF8DC7] font-bold uppercase tracking-wider">Active</span>
+                        <span className="text-amethyst font-bold uppercase tracking-wider">Active</span>
                       </li>
                     </ul>
                   </div>
 
-                  <div className="bg-[#1E0629]/50 border border-white/5 rounded-2xl p-5 space-y-3">
-                    <span className="font-extrabold text-[#FF8DC7] uppercase tracking-widest text-[9px] flex items-center gap-1.5">
+                  <div className="bg-brand-cream border border-brand-rose rounded-2xl p-5 space-y-3 shadow-sm">
+                    <span className="font-extrabold text-amethyst uppercase tracking-widest text-[9px] flex items-center gap-1.5">
                       <Shield size={12} /> Device Session Audit log
                     </span>
                     <div className="space-y-3">
-                      <div className="flex justify-between items-center border-b border-white/5 pb-2 text-[10px]">
+                      <div className="flex justify-between items-center border-b border-brand-rose pb-2 text-[10px]">
                         <div className="space-y-0.5">
-                          <span className="font-bold text-white block">NextJS Client Browser</span>
-                          <span className="text-orchid-text-muted block">IP: 192.168.1.45 • Kolkata, IN</span>
+                          <span className="font-bold text-foreground block">NextJS Client Browser</span>
+                          <span className="text-foreground/60 block">IP: 192.168.1.45 • Kolkata, IN</span>
                         </div>
-                        <span className="text-[9px] uppercase font-bold text-emerald-400">Current</span>
+                        <span className="text-[9px] uppercase font-bold text-emerald-600">Current</span>
                       </div>
                       <div className="flex justify-between items-center text-[10px]">
                         <div className="space-y-0.5">
-                          <span className="font-bold text-white/50 block">Chrome / Mobile Phone</span>
-                          <span className="text-orchid-text-muted/50 block">IP: 202.144.15.2 • West Bengal</span>
+                          <span className="font-bold text-foreground/50 block">Chrome / Mobile Phone</span>
+                          <span className="text-foreground/50 block">IP: 202.144.15.2 • West Bengal</span>
                         </div>
-                        <span className="text-[9px] uppercase font-bold text-orchid-text-muted/40">2 hours ago</span>
+                        <span className="text-[9px] uppercase font-bold text-foreground/40">2 hours ago</span>
                       </div>
                     </div>
                   </div>
                 </div>
 
-                {/* Luxury Guard pledge banner */}
-                <div className="p-5 rounded-2xl bg-gradient-to-r from-[#2A093D]/30 to-[#120018]/50 border border-red-500/10 text-left space-y-2 text-xs text-orchid-text-muted select-none">
-                  <span className="font-extrabold text-[#FF8DC7] uppercase tracking-widest text-[9px] flex items-center gap-1.5">
-                    <AlertTriangle size={12} className="text-red-400" />
+                {/* Security notification pledge */}
+                <div className="p-5 rounded-2xl bg-gradient-to-r from-brand-cream to-background border border-red-500/20 text-left space-y-2 text-xs text-foreground/75 select-none shadow-sm">
+                  <span className="font-extrabold text-amethyst uppercase tracking-widest text-[9px] flex items-center gap-1.5">
+                    <AlertTriangle size={12} className="text-red-500" />
                     Security Notification for Admins
                   </span>
-                  <p className="text-[10px] leading-relaxed font-medium text-orchid-text-muted/80">
+                  <p className="text-[10px] leading-relaxed font-medium text-foreground/70">
                     If this user profile is suspended by Sayanita during security audits or payment disputes, active credentials are automatically invalidated, blocking checkout, login, or cart configurations.
                   </p>
                 </div>
@@ -1729,32 +1730,32 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
             {/* 8. LOYALTY TAB */}
             {activeTab === "loyalty" && (
               <div className="space-y-6">
-                <div className="border-b border-white/5 pb-3 text-center sm:text-left select-none">
-                  <h3 className="text-lg font-bold font-elegant tracking-wide text-white">Loyalty lounge & exclusive milestones</h3>
-                  <p className="text-[11px] text-orchid-text-muted">Earn GLOW POINTS on every purchase to unlock exclusive discount tiers.</p>
+                <div className="border-b border-brand-rose pb-3 text-center sm:text-left select-none">
+                  <h3 className="text-lg font-bold font-elegant tracking-wide text-foreground">Loyalty lounge & exclusive milestones</h3>
+                  <p className="text-[11px] text-foreground/70">Earn GLOW POINTS on every purchase to unlock exclusive discount tiers.</p>
                 </div>
 
                 {/* Score panel */}
-                <div className="bg-gradient-to-r from-[#C77DFF]/15 to-[#E056FD]/5 border border-[#C77DFF]/25 rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 select-none">
+                <div className="bg-gradient-to-r from-brand-cream to-brand-peach border border-brand-rose rounded-2xl p-6 flex flex-col sm:flex-row items-center justify-between gap-6 select-none shadow-sm animate-slide-in">
                   <div className="space-y-1.5 text-center sm:text-left">
-                    <span className="text-[9px] uppercase tracking-widest text-[#FF8DC7] font-extrabold block">Current Loyalty Balance</span>
-                    <h3 className="text-3xl font-extrabold font-elegant text-white block">
-                      {user.loyalty_points || 0} <span className="text-xs uppercase text-orchid-text-muted font-sans font-bold">Glow Points</span>
+                    <span className="text-[9px] uppercase tracking-widest text-amethyst font-extrabold block">Current Loyalty Balance</span>
+                    <h3 className="text-3xl font-extrabold font-elegant text-foreground block">
+                      {user.loyalty_points || 0} <span className="text-xs uppercase text-foreground/60 font-sans font-bold">Glow Points</span>
                     </h3>
-                    <p className="text-[10px] text-orchid-text-muted leading-relaxed font-medium">
+                    <p className="text-[10px] text-foreground/70 leading-relaxed font-medium">
                       You are enjoying <strong style={{ color: userAccent }}>{userTier} Level</strong> benefits. Spend points at checkout or unlock vouchers.
                     </p>
                   </div>
                   
                   {/* Tier status indicator badge */}
-                  <div className="flex items-center justify-center p-3 rounded-full bg-[#120018]/50 border border-white/10 shrink-0">
+                  <div className="flex items-center justify-center p-3 rounded-full bg-background border border-brand-rose shrink-0 shadow-sm">
                     <Award size={48} style={{ color: userAccent }} />
                   </div>
                 </div>
 
                 {/* Spending Milestones */}
                 <div className="space-y-3 text-left">
-                  <span className="text-[9px] uppercase tracking-widest text-[#9F7AC2] font-bold block select-none">Points milestones & rewards</span>
+                  <span className="text-[9px] uppercase tracking-widest text-foreground/60 font-bold block select-none">Points milestones & rewards</span>
                   
                   <div className="space-y-3">
                     {[
@@ -1767,18 +1768,18 @@ export default function AccountPortal({ initialTab = "dashboard" }: AccountPorta
                         key={idx} 
                         className={`p-4 rounded-xl border flex justify-between items-center gap-4 ${
                           milestone.unlocked 
-                            ? "bg-[#C77DFF]/5 border-[#C77DFF]/20" 
-                            : "bg-[#1E0629]/20 border-white/5 opacity-55"
+                            ? "bg-brand-cream border-brand-rose shadow-sm" 
+                            : "bg-background border-brand-rose/60 opacity-60"
                         }`}
                       >
                         <div className="space-y-0.5">
-                          <span className="text-xs font-bold text-white block">{milestone.reward}</span>
-                          <span className="text-[9px] text-orchid-text-muted block">Requires {milestone.points} Glow Points</span>
+                          <span className="text-xs font-bold text-foreground block">{milestone.reward}</span>
+                          <span className="text-[9px] text-foreground/60 block">Requires {milestone.points} Glow Points</span>
                         </div>
                         <span className={`px-2.5 py-0.5 rounded-full text-[8px] uppercase tracking-wider font-extrabold border ${
                           milestone.unlocked 
-                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-400" 
-                            : "bg-[#1E0629]/30 border-white/10 text-orchid-text-muted"
+                            ? "bg-emerald-500/10 border-emerald-500/20 text-emerald-600" 
+                            : "bg-background border-brand-rose/60 text-foreground/50"
                         }`}>
                           {milestone.unlocked ? "Unlocked" : "Locked"}
                         </span>

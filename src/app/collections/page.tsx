@@ -8,6 +8,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { useShop, Product } from "@/context/ShopContext";
 import { Sparkles, ShieldCheck, Heart, ShoppingBag, ArrowRight, Star, Sparkle, Tag } from "lucide-react";
+import ProductImage from "@/components/ProductImage";
 
 interface CollectionType {
   slug: string;
@@ -148,11 +149,11 @@ export default function Collections() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#120018] text-white relative">
+    <div className="min-h-screen flex flex-col bg-background text-foreground relative">
       {/* Visual background luxury radial meshes */}
-      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-[#E056FD]/4 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/3 right-1/4 w-[700px] h-[700px] bg-[#C77DFF]/3 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute top-1/2 left-5 w-[250px] h-[250px] bg-[#FF8DC7]/2 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-0 left-1/4 w-[600px] h-[600px] bg-brand-magenta/3 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[700px] h-[700px] bg-brand-rose/2 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/2 left-5 w-[250px] h-[250px] bg-brand-lilac/3 rounded-full blur-3xl pointer-events-none" />
 
       <Header />
       <CartDrawer />
@@ -161,14 +162,14 @@ export default function Collections() {
         
         {/* Editorial Header Section */}
         <section className="text-center max-w-2xl mx-auto space-y-4">
-          <span className="inline-flex items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-widest text-[#FF8DC7] bg-[#2A093D]/70 border border-[#C77DFF]/20 px-4 py-1.5 rounded-full shadow-[0_0_15px_rgba(199,125,255,0.08)]">
-            <Sparkle size={10} className="animate-spin text-[#FF8DC7]" style={{ animationDuration: '6s' }} />
+          <span className="inline-flex items-center gap-1.5 text-[9px] font-extrabold uppercase tracking-widest text-brand-magenta bg-brand-rose/30 border border-brand-rose px-4 py-1.5 rounded-full">
+            <Sparkle size={10} className="animate-spin text-brand-magenta" style={{ animationDuration: '6s' }} />
             Korean Inspired Skincare Vault
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black font-elegant text-white tracking-wide leading-tight">
+          <h1 className="text-3xl sm:text-5xl font-black font-elegant text-foreground tracking-wide leading-tight">
             The Curated Collections
           </h1>
-          <p className="text-xs sm:text-sm text-orchid-text-muted leading-relaxed max-w-md mx-auto font-medium">
+          <p className="text-xs sm:text-sm text-foreground/75 leading-relaxed max-w-md mx-auto font-medium">
             Discover bespoke skincare rituals mapped by Sayanita to target specific concerns: whether you seek Korean glass skin dewyness, oil clearing, or lip care plumpness.
           </p>
         </section>
@@ -183,8 +184,8 @@ export default function Collections() {
                 onClick={() => setActiveCollectionSlug(col.slug)}
                 className={`group relative h-80 rounded-[32px] overflow-hidden shadow-xl cursor-pointer border transition-all duration-500 ios-spring ios-spring-hover ios-spring-active ${
                   isActive 
-                    ? "border-[#E056FD] scale-[1.03] shadow-[0_0_30px_rgba(224,86,253,0.18)]" 
-                    : "border-[#C77DFF]/15 bg-gradient-to-b from-[#2A093D]/45 to-[#1B0124]/75 hover:border-[#C77DFF]/30"
+                    ? "border-brand-magenta scale-[1.03] shadow-md shadow-brand-magenta/15" 
+                    : "border-brand-rose/60 bg-gradient-to-b from-brand-peach/10 to-white hover:border-brand-magenta/40"
                 }`}
               >
                 {/* Visual Background image overlay */}
@@ -193,7 +194,7 @@ export default function Collections() {
                   src={col.image}
                   alt={col.name}
                   fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-700 bg-[#1B0124]"
+                  className="object-cover group-hover:scale-105 transition-transform duration-700 bg-brand-cream"
                   unoptimized
                 />
 
@@ -202,7 +203,7 @@ export default function Collections() {
                   
                   {/* Concern tag */}
                   <span className={`inline-block self-start text-[8px] uppercase tracking-widest px-3 py-1 rounded-full font-bold transition-all duration-300 ${
-                    isActive ? "bg-brand-gradient shadow-[0_0_10px_rgba(224,86,253,0.4)]" : "bg-[#E056FD]/85"
+                    isActive ? "bg-brand-gradient shadow-[0_0_10px_rgba(252,39,121,0.4)]" : "bg-brand-magenta"
                   }`}>
                     {col.concernTag}
                   </span>
@@ -213,7 +214,7 @@ export default function Collections() {
                     <p className="text-[10px] text-white/80 line-clamp-2 leading-relaxed font-sans font-light">
                       {col.tagline}
                     </p>
-                    <div className="pt-2 flex items-center gap-1.5 text-[9px] uppercase font-bold tracking-widest text-[#FF8DC7] group-hover:translate-x-1.5 transition-transform">
+                    <div className="pt-2 flex items-center gap-1.5 text-[9px] uppercase font-bold tracking-widest text-brand-lilac group-hover:translate-x-1.5 transition-transform">
                       {isActive ? "Viewing Collection" : "Explore Collection"}
                       <ArrowRight size={10} />
                     </div>
@@ -236,8 +237,8 @@ export default function Collections() {
                 onClick={() => setActiveCollectionSlug(col.slug)}
                 className={`px-5 py-3 rounded-full text-xs font-bold transition-all duration-300 border cursor-pointer select-none ios-spring ios-spring-hover ${
                   isActive
-                    ? "bg-brand-gradient border-[#E056FD] text-white shadow-[0_0_20px_rgba(224,86,253,0.35)] scale-105"
-                    : "bg-[#2A093D]/40 border-[#C77DFF]/15 text-white/60 hover:text-white hover:bg-[#2A093D]/65 hover:border-[#C77DFF]/30"
+                    ? "bg-brand-gradient border-brand-magenta text-white shadow-xs scale-105"
+                    : "bg-white border-brand-rose/60 text-foreground/60 hover:text-brand-magenta hover:bg-brand-cream hover:border-brand-rose"
                 }`}
               >
                 {col.name}
@@ -247,19 +248,19 @@ export default function Collections() {
         </div>
 
         {/* Curated Catalogue Products Panel */}
-        <section className="bg-gradient-to-b from-[#2A093D]/45 via-[#2A093D]/25 to-[#120018]/90 border border-[#C77DFF]/15 rounded-[36px] p-6 sm:p-10 shadow-2xl backdrop-blur-md space-y-8 animate-slide-in relative overflow-hidden">
-          <div className="absolute inset-0 bg-[#E056FD]/2 rounded-full blur-3xl pointer-events-none" />
+        <section className="bg-gradient-to-br from-brand-peach/30 via-brand-cream to-white border border-brand-rose rounded-[36px] p-6 sm:p-10 shadow-xl space-y-8 animate-slide-in relative overflow-hidden">
+          <div className="absolute inset-0 bg-brand-magenta/1 rounded-full blur-3xl pointer-events-none" />
           
           {/* Header intro of selected */}
-          <div className="text-left max-w-3xl border-b border-[#C77DFF]/12 pb-6 space-y-3.5 relative z-10">
-            <span className="text-[9px] font-extrabold text-[#E056FD] uppercase tracking-widest flex items-center gap-1">
-              <Sparkles size={11} className="text-[#E056FD] animate-pulse" />
+          <div className="text-left max-w-3xl border-b border-brand-rose pb-6 space-y-3.5 relative z-10">
+            <span className="text-[9px] font-extrabold text-brand-magenta uppercase tracking-widest flex items-center gap-1">
+              <Sparkles size={11} className="text-brand-magenta animate-pulse" />
               Active Skincare Ritual
             </span>
-            <h2 className="text-2xl sm:text-3.5xl font-black font-elegant text-white leading-tight">
+            <h2 className="text-2xl sm:text-3.5xl font-black font-elegant text-foreground leading-tight">
               {activeCollection.name}
             </h2>
-            <p className="text-xs text-orchid-text-warm leading-relaxed font-sans font-semibold">
+            <p className="text-xs text-foreground/75 leading-relaxed font-sans font-semibold">
               {activeCollection.description}
             </p>
           </div>
@@ -267,8 +268,8 @@ export default function Collections() {
           {/* Grid list of collection items */}
           {collectionProducts.length === 0 ? (
             <div className="py-16 text-center space-y-3 relative z-10">
-              <p className="text-xs text-orchid-text-muted font-medium">No products currently matched to this ritual.</p>
-              <Link href="/shop" className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-[#FF8DC7] hover:underline">
+              <p className="text-xs text-foreground/65 font-medium">No products currently matched to this ritual.</p>
+              <Link href="/shop" className="inline-flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider text-brand-magenta hover:underline">
                 Explore Full Shop <ArrowRight size={10} />
               </Link>
             </div>
@@ -282,32 +283,32 @@ export default function Collections() {
                 return (
                   <div
                     key={product.id}
-                    className="group flex flex-col bg-[#2A093D]/25 border border-[#C77DFF]/12 rounded-3xl overflow-hidden shadow-md hover:border-[#E056FD]/50 hover:shadow-[0_0_30px_rgba(224,86,253,0.12)] transition-all duration-500 glow-card h-full justify-between ios-spring ios-spring-hover"
+                    className="group flex flex-col bg-white border border-brand-rose rounded-3xl overflow-hidden shadow-xs hover:border-brand-magenta/40 hover:shadow-lg transition-all duration-500 h-full justify-between ios-spring ios-spring-hover"
                   >
                     
                     {/* Image Section */}
-                    <div className="relative aspect-square w-full bg-[#1B0124] overflow-hidden border-b border-[#C77DFF]/10">
-                      <Image
-                        src={product.image}
-                        alt={product.title}
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                        unoptimized
-                      />
+                    <div className="relative aspect-square w-full bg-brand-cream/30 overflow-hidden border-b border-brand-rose/60">
+                      <div className="w-full h-full group-hover:scale-105 transition-transform duration-700">
+                        <ProductImage
+                          src={product.image}
+                          alt={product.title}
+                          brand={product.brand}
+                        />
+                      </div>
                       
                       {/* Authenticity badge */}
-                      <span className="absolute top-3 left-3 bg-[#1B0124]/90 text-white text-[8px] font-bold py-1.5 px-3.5 rounded-full border border-[#C77DFF]/15 flex items-center gap-1.5 backdrop-blur-md font-sans select-none">
-                        <ShieldCheck size={11} className="text-[#FF8DC7]" />
+                      <span className="absolute top-3 left-3 bg-white/95 text-foreground text-[8px] font-bold py-1.5 px-3.5 rounded-full border border-brand-rose/60 flex items-center gap-1.5 backdrop-blur-md font-sans select-none">
+                        <ShieldCheck size={11} className="text-brand-magenta" />
                         100% Genuine
                       </span>
 
                       {/* AI Confidence / Best Seller Badge */}
                       {product.ai_confidence && product.ai_confidence > 75 ? (
-                        <span className="absolute top-3 right-3 bg-[#E056FD]/90 text-white text-[8px] font-bold py-1.5 px-3 rounded-full border border-white/20 flex items-center gap-1 backdrop-blur-md font-sans">
+                        <span className="absolute top-3 right-3 bg-brand-magenta/90 text-white text-[8px] font-bold py-1.5 px-3 rounded-full border border-white/20 flex items-center gap-1 backdrop-blur-md font-sans">
                           ✨ AI Match {product.ai_confidence}%
                         </span>
                       ) : (
-                        <span className="absolute top-3 right-3 bg-[#FF8DC7]/95 text-[#120018] text-[8px] font-extrabold py-1.5 px-3.5 rounded-full border border-white/20 flex items-center gap-1 backdrop-blur-md font-sans">
+                        <span className="absolute top-3 right-3 bg-brand-rose/95 text-brand-magenta text-[8px] font-extrabold py-1.5 px-3.5 rounded-full border border-white/20 flex items-center gap-1 backdrop-blur-md font-sans">
                           👑 Curator's Pick
                         </span>
                       )}
@@ -317,8 +318,8 @@ export default function Collections() {
                         onClick={() => toggleWishlist(product.id)}
                         className={`absolute bottom-3 right-3 p-2.5 rounded-full border transition-all duration-300 shadow-sm cursor-pointer z-20 ${
                           fav 
-                            ? "bg-[#FF8DC7]/95 text-[#120018] border-transparent scale-105" 
-                            : "bg-[#1B0124]/85 text-white/40 hover:text-[#FF8DC7] hover:bg-[#1B0124] border-[#C77DFF]/15"
+                            ? "bg-brand-magenta text-white border-transparent scale-105" 
+                            : "bg-brand-cream/80 text-foreground/45 hover:text-brand-magenta hover:bg-brand-cream border-brand-rose/30"
                         }`}
                         aria-label="Toggle wishlist"
                       >
@@ -330,19 +331,19 @@ export default function Collections() {
                     <div className="p-5 flex-1 flex flex-col justify-between space-y-4 text-left">
                       <div className="space-y-1.5">
                         <div className="flex justify-between items-center text-[9px] font-sans font-bold">
-                          <span className="uppercase tracking-widest text-[#E056FD]">{product.brand}</span>
-                          <span className="text-[#FF8DC7]/70 truncate max-w-[110px] bg-[#FF8DC7]/5 px-2 py-0.5 rounded-md border border-[#FF8DC7]/10 flex items-center gap-1">
+                          <span className="uppercase tracking-widest text-brand-magenta">{product.brand}</span>
+                          <span className="text-brand-magenta/80 truncate max-w-[110px] bg-brand-cream px-2 py-0.5 rounded-md border border-brand-rose/50 flex items-center gap-1">
                             <Tag size={8} />
                             {product.category}
                           </span>
                         </div>
                         <Link
                           href={`/product/${product.id}`}
-                          className="block text-xs sm:text-sm font-bold text-white hover:text-[#FF8DC7] transition-colors line-clamp-1 font-elegant"
+                          className="block text-xs sm:text-sm font-bold text-foreground hover:text-brand-magenta transition-colors line-clamp-1 font-elegant"
                         >
                           {product.title}
                         </Link>
-                        <p className="text-[10px] text-orchid-text-muted leading-relaxed line-clamp-2 font-sans font-medium">
+                        <p className="text-[10px] text-foreground/70 leading-relaxed line-clamp-2 font-sans font-medium">
                           {product.description}
                         </p>
                       </div>
@@ -352,30 +353,30 @@ export default function Collections() {
                         {[...Array(5)].map((_, i) => (
                           <Star key={i} size={11} fill="currentColor" />
                         ))}
-                        <span className="text-[9px] text-[#C77DFF] font-extrabold ml-1">
+                        <span className="text-[9px] text-brand-magenta font-extrabold ml-1">
                           (4.9 Rating)
                         </span>
                       </div>
 
                       {/* Pricing Actions */}
-                      <div className="flex justify-between items-center pt-3 border-t border-[#C77DFF]/10 text-xs shrink-0 bg-[#2A093D]/10 rounded-xl p-3">
+                      <div className="flex justify-between items-center pt-3 border-t border-brand-rose/60 text-xs shrink-0 bg-brand-cream/40 rounded-xl p-3">
                         <div>
                           {product.mrp > product.price && (
                             <div className="flex items-center gap-1.5 mb-0.5">
-                              <span className="text-[10px] text-orchid-text-muted/30 line-through">₹{product.mrp}</span>
+                              <span className="text-[10px] text-foreground/30 line-through">₹{product.mrp}</span>
                               {discount > 0 && (
-                                <span className="text-[8px] font-extrabold text-[#FF8DC7] bg-[#FF8DC7]/10 px-1.5 py-0.5 rounded-md border border-[#FF8DC7]/20 uppercase tracking-wide">
+                                <span className="text-[8px] font-extrabold text-brand-magenta bg-brand-magenta/10 px-1.5 py-0.5 rounded-md border border-brand-rose uppercase tracking-wide">
                                   Save {discount}%
                                 </span>
                               )}
                             </div>
                           )}
-                          <span className="text-sm font-bold text-white block font-sans">₹{product.price}</span>
+                          <span className="text-sm font-bold text-foreground block font-sans">₹{product.price}</span>
                         </div>
                         
                         <button
                           onClick={() => handleQuickAdd(product)}
-                          className="px-4 py-2 bg-brand-gradient hover:bg-[#FF8DC7] hover:text-[#120018] text-white rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-md hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-1 cursor-pointer border border-[#E056FD]/20"
+                          className="px-4 py-2 bg-brand-gradient text-white rounded-xl text-[10px] sm:text-xs font-bold uppercase tracking-wider shadow-md hover:scale-105 active:scale-95 transition-all duration-300 flex items-center gap-1 cursor-pointer border border-brand-rose/30"
                         >
                           <ShoppingBag size={11} />
                           Add To Bag
@@ -393,21 +394,21 @@ export default function Collections() {
         </section>
 
         {/* MAPPING STORY SECTION */}
-        <section className="bg-gradient-to-br from-[#2A093D]/80 to-[#1B0124]/90 border border-[#C77DFF]/20 rounded-[36px] p-8 sm:p-12 lg:p-16 max-w-5xl mx-auto shadow-2xl relative overflow-hidden text-center space-y-6 backdrop-blur-md glow-border select-none ios-spring-hover">
-          <div className="absolute inset-0 bg-[#E056FD]/2 rounded-full blur-3xl pointer-events-none" />
+        <section className="bg-gradient-to-br from-brand-cream/80 to-white/90 border border-brand-rose rounded-[36px] p-8 sm:p-12 lg:p-16 max-w-5xl mx-auto shadow-2xl relative overflow-hidden text-center space-y-6 backdrop-blur-md glow-border select-none ios-spring-hover">
+          <div className="absolute inset-0 bg-brand-magenta/2 rounded-full blur-3xl pointer-events-none" />
 
           <div className="max-w-2xl mx-auto space-y-5 z-10 relative">
-            <div className="flex justify-center text-[#E056FD]">
+            <div className="flex justify-center text-brand-magenta">
               <Sparkles size={32} className="animate-pulse" />
             </div>
-            <h2 className="text-xl sm:text-2xl font-black font-elegant text-white uppercase tracking-wider">
+            <h2 className="text-xl sm:text-2xl font-black font-elegant text-foreground uppercase tracking-wider">
               Circadian Ritual Mapping Philosophy
             </h2>
-            <p className="text-xs sm:text-sm text-orchid-text-warm leading-relaxed font-sans font-medium">
+            <p className="text-xs sm:text-sm text-foreground/80 leading-relaxed font-sans font-medium">
               Skincare is not just application; it is chronobiology. Sayanita maps each ritual to synchronize with your skin's biological rhythm—unlocking glass skin dewyness in the morning and deep cellular barrier repair at night. Indulge in routines verified by dermal AI for true skin harmony.
             </p>
             <div className="pt-2">
-              <span className="text-[10px] uppercase font-bold tracking-widest text-[#FF8DC7] border-b border-[#FF8DC7]/30 pb-0.5">
+              <span className="text-[10px] uppercase font-bold tracking-widest text-brand-magenta border-b border-brand-rose pb-0.5">
                 RITUAL BIO-HARMONY MAP BY SAYANITA
               </span>
             </div>

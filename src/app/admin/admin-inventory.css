@@ -5,26 +5,43 @@
 
 /* ---- CORE DESIGN TOKENS ---- */
 :root {
-  --page-bg: #140019;
-  --primary-surface: #1E0629;
-  --secondary-surface: #2B083A;
-  --elevated-card: #351049;
-  --hover-surface: #43135A;
-  --border-subtle: rgba(255, 255, 255, 0.14);
+  --page-bg: #FFFDFE; /* Clean bright Myntra/Nykaa background */
+  --primary-surface: #FFF5F7; /* Warm blush cherry cream */
+  --secondary-surface: #FFFFFF; /* Crisp white */
+  --elevated-card: #FFF0F5; /* Elegant lavender blush card back */
+  --hover-surface: #FFF5F7; /* Soft blush pink on hover */
+  --border-subtle: #FEE3EC; /* Delicate rose gold border */
 
-  --text-primary: #FFFFFF;
-  --text-secondary: #D3B6FF;
-  --text-muted: #9F7AC2;
-  --text-disabled: #6E4E85;
+  --text-primary: #232323; /* Charcoal readable text */
+  --text-secondary: #555555; /* Medium charcoal/grey */
+  --text-muted: #7A7A7A; /* Muted grey */
+  --text-disabled: #A5A5A5; /* Disabled grey */
 
-  --accent-pink: #D946EF;
-  --accent-purple: #A855F7;
+  --accent-pink: #FC2779; /* Signature Nykaa hot pink */
+  --accent-purple: #D81B60; /* Deep rose magenta */
   --accent-success: #10B981;
   --accent-warning: #F59E0B;
   --accent-danger: #EF4444;
 
   --font-serif: 'Playfair Display', Georgia, serif;
   --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.dark {
+  --page-bg: #0C0714; /* Deep midnight obsidian */
+  --primary-surface: #140A1F; /* Mysterious dark plum element fill */
+  --secondary-surface: #1C0F2B; /* Dark carbon amethyst card */
+  --elevated-card: #25143A; /* Slightly lighter elevated orchid layer */
+  --hover-surface: #2E1949; /* High-contrast active plum surface */
+  --border-subtle: #361A54; /* Deep rich plum border outline */
+
+  --text-primary: #F3EEF6; /* Soft radiant off-white text */
+  --text-secondary: #D0C3D9; /* Luminous silver lavender text */
+  --text-muted: #8E7A9C; /* Muted dusty lavender */
+  --text-disabled: #5E506B; /* Dark disabled lavender */
+
+  --accent-pink: #FC2779; /* Signature Nykaa hot pink */
+  --accent-purple: #C77DFF; /* Luminous orchid violet */
 }
 
 /* ---- RESET & GLOBAL ADMIN SURFACE ---- */
@@ -34,11 +51,9 @@
   font-family: var(--font-sans);
 }
 
-/* ---- FORCE VISIBILITY ON ADMIN PAGE ---- 
-   Ensure border-white/* classes are visible by increasing
-   the alpha when inside the admin wrapper */
+/* ---- FORCE VISIBILITY ON ADMIN PAGE ---- */
 .admin-portal-wrapper [class*="border-white/"] {
-  border-color: rgba(255, 255, 255, 0.16) !important;
+  border-color: var(--border-subtle) !important;
 }
 
 /* ---- PREMIUM SCROLLBARS FOR CHROME/SAFARI/FIREFOX ---- */
@@ -257,25 +272,33 @@
 }
 
 /* ---- Floating Glass Mobile Bottom Nav ---- */
-.admin-mobile-dock {
-  position: fixed;
-  bottom: 16px;
-  left: 16px;
-  right: 16px;
-  height: 64px;
-  background: rgba(30, 6, 41, 0.9);
-  backdrop-filter: blur(24px) saturate(180%);
-  -webkit-backdrop-filter: blur(24px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 20px;
-  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(168, 85, 247, 0.15);
-  z-index: 49;
-  display: flex;
-  justify-content: space-around;
-  align-items: center;
-  padding: 0 10px;
-  padding-bottom: env(safe-area-inset-bottom, 0);
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+@media (max-width: 767px) {
+  .admin-mobile-dock {
+    position: fixed;
+    bottom: 16px;
+    left: 16px;
+    right: 16px;
+    height: 64px;
+    background: rgba(255, 255, 255, 0.92);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    border: 1px solid var(--border-subtle);
+    border-radius: 20px;
+    box-shadow: 0 10px 40px rgba(252, 39, 121, 0.08), 0 0 20px rgba(252, 39, 121, 0.05);
+    z-index: 49;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    padding: 0 10px;
+    padding-bottom: env(safe-area-inset-bottom, 0);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+}
+
+@media (min-width: 768px) {
+  .admin-mobile-dock {
+    display: none !important;
+  }
 }
 
 .admin-dock-item {

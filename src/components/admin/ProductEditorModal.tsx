@@ -798,19 +798,19 @@ export default function ProductEditorModal({
   return (
     <div className="admin-modal-backdrop fixed inset-0 z-50 flex items-end sm:items-center justify-center" onClick={(e) => { if (e.target === e.currentTarget && !compareData) onClose(); }}>
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" />
+      <div className="absolute inset-0 bg-[#080012]/40 backdrop-blur-xs" />
 
       {/* Modal Container */}
       <div
         ref={modalRef}
-        className="relative z-10 flex flex-col w-full sm:w-[95vw] sm:max-w-5xl h-[calc(100vh-32px)] sm:h-[90vh] sm:max-h-[90vh] bg-[#1E0629] border border-white/8 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden"
+        className="relative z-10 flex flex-col w-full sm:w-[95vw] sm:max-w-5xl h-[calc(100vh-32px)] sm:h-[90vh] sm:max-h-[90vh] bg-background border border-brand-rose dark:border-[#FFB7D2]/10 rounded-t-3xl sm:rounded-2xl shadow-2xl overflow-hidden"
       >
         {/* ── STICKY HEADER ── */}
-        <div className="shrink-0 flex items-center justify-between gap-3 px-5 sm:px-6 py-3.5 border-b border-white/8 bg-[#1E0629]/95 backdrop-blur-md z-20">
+        <div className="shrink-0 flex items-center justify-between gap-3 px-5 sm:px-6 py-3.5 border-b border-brand-rose dark:border-[#FFB7D2]/10 bg-background/95 backdrop-blur-md z-20">
           <div className="flex items-center gap-3 min-w-0">
             {/* Mobile drag handle */}
             <div className="sm:hidden w-10 h-1 rounded-full bg-white/20 absolute top-2 left-1/2 -translate-x-1/2" />
-            <div className="w-10 h-10 rounded-xl bg-[#2B083A] border border-white/8 flex items-center justify-center shrink-0 overflow-hidden relative">
+            <div className="w-10 h-10 rounded-xl bg-brand-cream border border-brand-rose dark:border-[#FFB7D2]/10 flex items-center justify-center shrink-0 overflow-hidden relative">
               {form.image ? (
                 <>
                   <Image 
@@ -826,16 +826,16 @@ export default function ProductEditorModal({
                     }}
                     unoptimized
                   />
-                  <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#2B083A]">
-                    <Package size={18} className="text-[#9F7AC2]" />
+                  <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex items-center justify-center bg-brand-cream">
+                    <Package size={18} className="text-amethyst" />
                   </div>
                 </>
               ) : (
-                <Package size={18} className="text-[#9F7AC2]" />
+                <Package size={18} className="text-amethyst" />
               )}
             </div>
-            <div className="min-w-0">
-              <h2 className="text-sm font-bold text-white truncate">{form.title || "Edit Product"}</h2>
+            <div className="min-w-0 text-left">
+              <h2 className="text-sm font-bold text-foreground truncate">{form.title || "Edit Product"}</h2>
               <div className="flex items-center gap-2 mt-0.5">
                 <span className={`text-[9px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-md border ${statusColors[form.status || "active"]}`}>
                   {form.status || "active"}
@@ -848,13 +848,13 @@ export default function ProductEditorModal({
               </div>
             </div>
           </div>
-          <button onClick={onClose} className="p-2 rounded-xl hover:bg-white/5 text-[#9F7AC2] hover:text-white transition-colors cursor-pointer shrink-0">
+          <button onClick={onClose} className="p-2 rounded-xl hover:bg-brand-rose/25 text-amethyst hover:text-brand-magenta transition-colors cursor-pointer shrink-0">
             <X size={18} />
           </button>
         </div>
 
         {/* ── STICKY TAB BAR ── */}
-        <div className="shrink-0 border-b border-white/8 bg-[#2B083A]/95 backdrop-blur-md z-20 px-5 sm:px-6">
+        <div className="shrink-0 border-b border-brand-rose dark:border-[#FFB7D2]/10 bg-brand-cream/95 backdrop-blur-md z-20 px-5 sm:px-6">
           <div className="admin-scrollable-tabs gap-1 py-2">
             {TABS.map((t) => (
               <button
@@ -873,9 +873,9 @@ export default function ProductEditorModal({
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-0">
 
             {/* ─── LEFT SIDEBAR (Product Image + Quick Stats) ─── */}
-            <div className="lg:col-span-4 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-white/8 bg-[#2B083A]/40">
+            <div className="lg:col-span-4 p-5 sm:p-6 border-b lg:border-b-0 lg:border-r border-brand-rose dark:border-[#FFB7D2]/10 bg-brand-cream/40">
               {/* Product Image */}
-              <div className="aspect-square w-full max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-[#140019] border border-white/8 mb-5 relative">
+              <div className="aspect-square w-full max-w-[280px] mx-auto rounded-2xl overflow-hidden bg-background border border-brand-rose mb-5 relative">
                 {form.image ? (
                   <>
                     <Image 
@@ -891,13 +891,13 @@ export default function ProductEditorModal({
                       }}
                       unoptimized
                     />
-                    <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-3 text-[#6E4E85] bg-[#140019]">
+                    <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex flex-col items-center justify-center gap-3 text-foreground/30 bg-background">
                       <Package size={48} strokeWidth={1} />
                       <span className="text-[10px] font-bold uppercase tracking-wider">No Image</span>
                     </div>
                   </>
                 ) : (
-                  <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-[#6E4E85]">
+                  <div className="w-full h-full flex flex-col items-center justify-center gap-3 text-foreground/30">
                     <Package size={48} strokeWidth={1} />
                     <span className="text-[10px] font-bold uppercase tracking-wider">No Image</span>
                   </div>
@@ -906,35 +906,35 @@ export default function ProductEditorModal({
 
               {/* AI Confidence Ring */}
               {form.ai_confidence != null && form.ai_confidence > 0 && (
-                <div className="flex items-center gap-4 p-4 rounded-xl bg-[#1E0629] border border-white/8 mb-4">
+                <div className="flex items-center gap-4 p-4 rounded-xl bg-brand-cream border border-brand-rose mb-4">
                   <div className="relative w-16 h-16 shrink-0">
                     <svg className="w-full h-full -rotate-90" viewBox="0 0 88 88">
                       <circle cx="44" cy="44" r="40" fill="none" stroke="rgba(255,255,255,0.06)" strokeWidth="6" />
                       <circle cx="44" cy="44" r="40" fill="none" stroke={form.ai_confidence >= 80 ? "#10B981" : form.ai_confidence >= 60 ? "#F59E0B" : "#EF4444"} strokeWidth="6" strokeLinecap="round" strokeDasharray="251.2" strokeDashoffset={radialDashoffset} className="transition-all duration-700" />
                     </svg>
-                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-white">{form.ai_confidence}%</span>
+                    <span className="absolute inset-0 flex items-center justify-center text-xs font-black text-foreground">{form.ai_confidence}%</span>
                   </div>
-                  <div>
-                    <span className="text-[9px] font-bold uppercase tracking-wider text-[#9F7AC2] block">AI Confidence</span>
-                    <span className="text-sm font-bold text-white">{confidence.label}</span>
+                  <div className="text-left">
+                    <span className="text-[9px] font-bold uppercase tracking-wider text-foreground/75 block">AI Confidence</span>
+                    <span className="text-sm font-bold text-foreground">{confidence.label}</span>
                   </div>
                 </div>
               )}
 
               {/* Quick Stats */}
               <div className="space-y-2.5">
-                <div className="flex justify-between items-center p-3 rounded-xl bg-[#1E0629] border border-white/8">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#9F7AC2]">SKU</span>
-                  <span className="text-xs font-bold text-[#D3B6FF] font-mono">{form.sku || "—"}</span>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-brand-cream border border-brand-rose">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/75">SKU</span>
+                  <span className="text-xs font-bold text-amethyst font-mono">{form.sku || "—"}</span>
                 </div>
-                <div className="flex justify-between items-center p-3 rounded-xl bg-[#1E0629] border border-white/8">
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-[#9F7AC2]">Stock</span>
-                  <span className={`text-xs font-bold font-mono ${(form.stock || 0) <= 5 ? "text-red-400" : "text-emerald-400"}`}>{form.stock ?? 0} units</span>
+                <div className="flex justify-between items-center p-3 rounded-xl bg-brand-cream border border-brand-rose">
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/75">Stock</span>
+                  <span className={`text-xs font-bold font-mono ${(form.stock || 0) <= 5 ? "text-red-500" : "text-emerald-600"}`}>{form.stock ?? 0} units</span>
                 </div>
                 {margins.percent > 0 && (
-                  <div className="flex justify-between items-center p-3 rounded-xl bg-[#1E0629] border border-white/8">
-                    <span className="text-[10px] font-bold uppercase tracking-wider text-[#9F7AC2]">Margin</span>
-                    <span className="text-xs font-bold text-emerald-400 font-mono flex items-center gap-1"><TrendingUp size={10} />{margins.percent}% (₹{margins.profit})</span>
+                  <div className="flex justify-between items-center p-3 rounded-xl bg-brand-cream border border-brand-rose">
+                    <span className="text-[10px] font-bold uppercase tracking-wider text-foreground/75">Margin</span>
+                    <span className="text-xs font-bold text-emerald-600 font-mono flex items-center gap-1"><TrendingUp size={10} />{margins.percent}% (₹{margins.profit})</span>
                   </div>
                 )}
               </div>
@@ -943,7 +943,7 @@ export default function ProductEditorModal({
               <button
                 onClick={handleReanalyze}
                 disabled={reanalyzing || !form.image}
-                className="w-full mt-5 flex items-center justify-center gap-2 px-4 py-3 text-[10px] font-bold uppercase tracking-widest rounded-xl admin-gradient-btn disabled:opacity-40 disabled:cursor-not-allowed"
+                className="w-full mt-5 flex items-center justify-center gap-2 px-4 py-3 text-[10px] font-bold uppercase tracking-widest rounded-xl bg-brand-gradient hover:bg-brand-gradient-hover text-white transition-all disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {reanalyzing ? <Loader2 size={13} className="animate-spin" /> : <Sparkles size={13} />}
                 {reanalyzing ? "Analyzing…" : "Re-Analyze with AI"}
@@ -1179,27 +1179,27 @@ export default function ProductEditorModal({
               {tab === "AI Data" && (
                 <div className="space-y-5">
                   {/* AI Extraction Info Card */}
-                  <div className="p-4 rounded-xl bg-[#2B083A] border border-white/8 space-y-3">
+                  <div className="p-4 rounded-xl bg-brand-cream border border-brand-rose space-y-3 text-left">
                     <div className="flex items-center gap-2">
-                      <Sparkle size={14} className="text-[#D946EF]" />
-                      <span className="text-[10px] font-bold uppercase tracking-wider text-[#D3B6FF]">AI Extraction Metadata</span>
+                      <Sparkle size={14} className="text-brand-magenta" />
+                      <span className="text-[10px] font-bold uppercase tracking-wider text-amethyst">AI Extraction Metadata</span>
                     </div>
                     <div className="grid grid-cols-2 gap-3 text-[10px]">
-                      <div className="p-2.5 rounded-lg bg-[#1E0629] border border-white/8">
-                        <span className="text-[#6E4E85] font-bold uppercase tracking-wider block text-[8px]">Confidence</span>
-                        <span className="text-white font-bold">{form.ai_confidence || 0}%</span>
+                      <div className="p-2.5 rounded-lg bg-background border border-brand-rose">
+                        <span className="text-foreground/45 font-bold uppercase tracking-wider block text-[8px]">Confidence</span>
+                        <span className="text-foreground font-bold">{form.ai_confidence || 0}%</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-[#1E0629] border border-white/8">
-                        <span className="text-[#6E4E85] font-bold uppercase tracking-wider block text-[8px]">Discount</span>
-                        <span className="text-white font-bold">{form.discount_percent || 0}%</span>
+                      <div className="p-2.5 rounded-lg bg-background border border-brand-rose">
+                        <span className="text-foreground/45 font-bold uppercase tracking-wider block text-[8px]">Discount</span>
+                        <span className="text-foreground font-bold">{form.discount_percent || 0}%</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-[#1E0629] border border-white/8">
-                        <span className="text-[#6E4E85] font-bold uppercase tracking-wider block text-[8px]">Model</span>
-                        <span className="text-white font-bold text-[9px]">{form.ai_extraction?.ai_model || "N/A"}</span>
+                      <div className="p-2.5 rounded-lg bg-background border border-brand-rose">
+                        <span className="text-foreground/45 font-bold uppercase tracking-wider block text-[8px]">Model</span>
+                        <span className="text-foreground font-bold text-[9px]">{form.ai_extraction?.ai_model || "N/A"}</span>
                       </div>
-                      <div className="p-2.5 rounded-lg bg-[#1E0629] border border-white/8">
-                        <span className="text-[#6E4E85] font-bold uppercase tracking-wider block text-[8px]">Status</span>
-                        <span className="text-white font-bold text-[9px]">{form.ai_extraction?.extraction_status || "N/A"}</span>
+                      <div className="p-2.5 rounded-lg bg-background border border-brand-rose">
+                        <span className="text-foreground/45 font-bold uppercase tracking-wider block text-[8px]">Status</span>
+                        <span className="text-foreground font-bold text-[9px]">{form.ai_extraction?.extraction_status || "N/A"}</span>
                       </div>
                     </div>
                   </div>
@@ -1209,11 +1209,11 @@ export default function ProductEditorModal({
                     <textarea value={form.extracted_text || ""} onChange={(e) => update({ extracted_text: e.target.value })} className="admin-glass-input resize-none min-h-[120px] font-mono text-xs" placeholder="Raw OCR text from product image…" rows={5} />
                   </div>
                   {/* Authenticity */}
-                  <div className="flex items-center gap-3 p-4 rounded-xl bg-[#1E0629] border border-white/8">
-                    <input type="checkbox" checked={form.authenticity_flag ?? true} onChange={(e) => update({ authenticity_flag: e.target.checked })} className="accent-[#D946EF] w-4 h-4 cursor-pointer" />
-                    <div>
-                      <span className="text-xs font-bold text-white">Authenticity Verified</span>
-                      <p className="text-[9px] text-[#6E4E85] font-semibold mt-0.5">Mark this product as verified authentic by admin</p>
+                  <div className="flex items-center gap-3 p-4 rounded-xl bg-brand-cream border border-brand-rose">
+                    <input type="checkbox" checked={form.authenticity_flag ?? true} onChange={(e) => update({ authenticity_flag: e.target.checked })} className="accent-brand-magenta w-4 h-4 cursor-pointer" />
+                    <div className="text-left">
+                      <span className="text-xs font-bold text-foreground">Authenticity Verified</span>
+                      <p className="text-[9px] text-foreground/45 font-semibold mt-0.5">Mark this product as verified authentic by admin</p>
                     </div>
                   </div>
                 </div>
@@ -1224,12 +1224,12 @@ export default function ProductEditorModal({
         </div>
 
         {/* ── STICKY FOOTER ── */}
-        <div className="shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 px-5 sm:px-6 py-3.5 border-t border-white/8 bg-[#1E0629]/95 backdrop-blur-md z-20">
-          <div className="flex items-center gap-2 text-[10px] font-bold text-[#9F7AC2] select-none self-start sm:self-auto">
+        <div className="shrink-0 flex flex-col sm:flex-row items-center justify-between gap-3 px-5 sm:px-6 py-3.5 border-t border-brand-rose dark:border-[#FFB7D2]/10 bg-background/95 backdrop-blur-md z-20">
+          <div className="flex items-center gap-2 text-[10px] font-bold text-amethyst select-none self-start sm:self-auto">
             {autosaveState === "saving" ? (
               <>
-                <Loader2 size={11} className="animate-spin text-[#D946EF]" />
-                <span className="text-[#D946EF]">Auto-saving drafts…</span>
+                <Loader2 size={11} className="animate-spin text-brand-magenta" />
+                <span className="text-brand-magenta">Auto-saving drafts…</span>
               </>
             ) : (
               <>
@@ -1247,10 +1247,10 @@ export default function ProductEditorModal({
                 Undo AI
               </button>
             )}
-            <button onClick={onClose} className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-white/8 text-[#9F7AC2] hover:text-white hover:bg-white/5 cursor-pointer transition-colors">
+            <button onClick={onClose} className="flex-1 sm:flex-none px-4 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-brand-rose text-amethyst hover:text-brand-magenta hover:bg-brand-cream/35 cursor-pointer transition-colors">
               Cancel
             </button>
-            <button onClick={handleSave} disabled={saving} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl admin-gradient-btn disabled:opacity-60">
+            <button onClick={handleSave} disabled={saving} className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-6 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl bg-brand-gradient hover:bg-brand-gradient-hover text-white transition-all disabled:opacity-60">
               {saving ? (<><Loader2 size={12} className="animate-spin" />Saving…</>) : (<><Save size={12} />Publish Product</>)}
             </button>
           </div>
@@ -1258,15 +1258,15 @@ export default function ProductEditorModal({
 
         {/* ── COMPARISON OVERLAY ── */}
         {compareData && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-[#120018]/98 backdrop-blur-md overflow-hidden">
-            <div className="relative w-full max-w-4xl h-[85vh] max-h-[85vh] overflow-hidden rounded-3xl bg-[#1E0629] border border-[#D946EF]/20 shadow-2xl flex flex-col">
+          <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-background/98 backdrop-blur-md overflow-hidden">
+            <div className="relative w-full max-w-4xl h-[85vh] max-h-[85vh] overflow-hidden rounded-3xl bg-background border border-brand-rose dark:border-[#FFB7D2]/10 shadow-2xl flex flex-col">
               {/* Sticky Header */}
-              <div className="sticky top-0 z-20 bg-[#1E0629] border-b border-[#D946EF]/10 px-6 py-4 shrink-0 flex justify-between items-center">
-                <div className="flex items-center gap-2.5 text-white">
-                  <Sparkles size={16} className="text-[#D946EF]" />
+              <div className="sticky top-0 z-20 bg-background border-b border-brand-rose/60 dark:border-[#FFB7D2]/15 px-6 py-4 shrink-0 flex justify-between items-center">
+                <div className="flex items-center gap-2.5 text-foreground">
+                  <Sparkles size={16} className="text-brand-magenta" />
                   <h4 className="text-xs font-extrabold uppercase tracking-wider">AI Extraction Review Console</h4>
                 </div>
-                <button onClick={() => { setCompareData(null); setScanStep("idle"); }} className="p-1 rounded-lg hover:bg-white/5 text-[#9F7AC2] hover:text-white cursor-pointer transition-colors">
+                <button onClick={() => { setCompareData(null); setScanStep("idle"); }} className="p-1 rounded-lg hover:bg-brand-rose/25 text-amethyst hover:text-brand-magenta cursor-pointer transition-colors">
                   <X size={14} />
                 </button>
               </div>
@@ -1275,33 +1275,33 @@ export default function ProductEditorModal({
               <div className="flex-1 overflow-y-auto overscroll-contain touch-pan-y px-6 py-6 custom-scrollbar text-left space-y-6 admin-scrollable-form animate-slide-in" style={{ WebkitOverflowScrolling: "touch" }}>
                 {/* Trust Engine Stats */}
                 <div className="space-y-3">
-                  <h5 className="text-[9px] font-bold text-[#9F7AC2] uppercase tracking-widest">AI Trust Engine & Safety Assessment</h5>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-[#2B083A]/30 border border-white/8">
+                  <h5 className="text-[9px] font-bold text-foreground/75 uppercase tracking-widest">AI Trust Engine & Safety Assessment</h5>
+                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 p-4 rounded-2xl bg-brand-cream border border-brand-rose">
                     <div className="flex flex-col justify-between text-left">
-                      <span className="text-[8px] font-bold text-[#9F7AC2] uppercase tracking-widest block">System Integrity</span>
+                      <span className="text-[8px] font-bold text-foreground/75 uppercase tracking-widest block">System Integrity</span>
                       <div className="flex items-center gap-2 mt-1.5">
-                        <span className={`text-xs font-black px-2.5 py-0.5 rounded-lg border uppercase tracking-wider ${trustStats?.status === "SAFE" ? "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" : trustStats?.status === "REVIEW" ? "bg-amber-500/10 text-amber-400 border-amber-500/20" : "bg-red-500/10 text-red-400 border-red-500/20 animate-pulse"}`}>
+                        <span className={`text-xs font-black px-2.5 py-0.5 rounded-lg border uppercase tracking-wider ${trustStats?.status === "SAFE" ? "bg-emerald-500/10 text-emerald-600 border-emerald-500/20" : trustStats?.status === "REVIEW" ? "bg-amber-500/10 text-amber-600 border-amber-500/20" : "bg-red-500/10 text-red-600 border-red-500/20 animate-pulse"}`}>
                           {trustStats?.status}
                         </span>
                       </div>
-                      <p className="text-[8.5px] text-[#9F7AC2] mt-1 leading-normal font-semibold">
+                      <p className="text-[8.5px] text-foreground/75 mt-1 leading-normal font-semibold">
                         {trustStats?.status === "SAFE" ? "✓ High-trust printed facts" : trustStats?.status === "REVIEW" ? "⚠ Partial inference matching" : "✗ Safety overrides triggered"}
                       </p>
                     </div>
-                    <div className="bg-[#1E0629]/60 p-3 rounded-xl border border-white/6 text-left">
-                      <span className="text-[8px] text-[#9F7AC2] uppercase tracking-widest block mb-0.5">OCR Accuracy</span>
-                      <span className="text-white font-extrabold text-sm font-mono">{trustStats?.ocrAccuracy}%</span>
-                      <div className="h-1 w-full rounded bg-[#140019] mt-1.5 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${trustStats?.ocrAccuracy}%` }} /></div>
+                    <div className="bg-background p-3 rounded-xl border border-brand-rose text-left">
+                      <span className="text-[8px] text-foreground/75 uppercase tracking-widest block mb-0.5">OCR Accuracy</span>
+                      <span className="text-foreground font-extrabold text-sm font-mono">{trustStats?.ocrAccuracy}%</span>
+                      <div className="h-1 w-full rounded bg-brand-cream mt-1.5 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${trustStats?.ocrAccuracy}%` }} /></div>
                     </div>
-                    <div className="bg-[#1E0629]/60 p-3 rounded-xl border border-white/6 text-left">
-                      <span className="text-[8px] text-[#9F7AC2] uppercase tracking-widest block mb-0.5">Visual Logo Match</span>
-                      <span className="text-white font-extrabold text-sm font-mono">{trustStats?.visualMatch}%</span>
-                      <div className="h-1 w-full rounded bg-[#140019] mt-1.5 overflow-hidden"><div className="h-full bg-blue-400" style={{ width: `${trustStats?.visualMatch}%` }} /></div>
+                    <div className="bg-background p-3 rounded-xl border border-brand-rose text-left">
+                      <span className="text-[8px] text-foreground/75 uppercase tracking-widest block mb-0.5">Visual Logo Match</span>
+                      <span className="text-foreground font-extrabold text-sm font-mono">{trustStats?.visualMatch}%</span>
+                      <div className="h-1 w-full rounded bg-brand-cream mt-1.5 overflow-hidden"><div className="h-full bg-blue-400" style={{ width: `${trustStats?.visualMatch}%` }} /></div>
                     </div>
-                    <div className="bg-[#1E0629]/60 p-3 rounded-xl border border-white/6 text-left">
-                      <span className="text-[8px] text-[#9F7AC2] uppercase tracking-widest block mb-0.5">Catalog Protection</span>
-                      <span className="text-emerald-400 font-extrabold text-sm font-mono">{trustStats?.catalogSafety}% Secure</span>
-                      <div className="h-1 w-full rounded bg-[#140019] mt-1.5 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${trustStats?.catalogSafety}%` }} /></div>
+                    <div className="bg-background p-3 rounded-xl border border-brand-rose text-left">
+                      <span className="text-[8px] text-foreground/75 uppercase tracking-widest block mb-0.5">Catalog Protection</span>
+                      <span className="text-emerald-600 font-extrabold text-sm font-mono">{trustStats?.catalogSafety}% Secure</span>
+                      <div className="h-1 w-full rounded bg-brand-cream mt-1.5 overflow-hidden"><div className="h-full bg-emerald-400" style={{ width: `${trustStats?.catalogSafety}%` }} /></div>
                     </div>
                   </div>
                 </div>
@@ -1454,29 +1454,29 @@ export default function ProductEditorModal({
                   <div className="space-y-6 text-left">
                     {safeItems.length > 0 && (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center text-[10px] font-bold text-[#9F7AC2] px-1 select-none">
-                          <span className="text-green-400 uppercase tracking-widest text-[8.5px] font-black flex items-center gap-1"><CheckCircle2 size={11} className="text-green-400" />Verified Improvements (Auto-Checked SAFE)</span>
-                          <button onClick={() => { const all = safeItems.every(c => selectedFields[c.key]); const next = { ...selectedFields }; safeItems.forEach(c => { next[c.key] = !all; }); setSelectedFields(next); }} className="text-[#A855F7] hover:underline cursor-pointer">{safeItems.every(c => selectedFields[c.key]) ? "Deselect All Safe" : "Select All Safe"}</button>
+                        <div className="flex justify-between items-center text-[10px] font-bold text-foreground/75 px-1 select-none">
+                          <span className="text-green-500 uppercase tracking-widest text-[8.5px] font-black flex items-center gap-1"><CheckCircle2 size={11} className="text-green-500" />Verified Improvements (Auto-Checked SAFE)</span>
+                          <button onClick={() => { const all = safeItems.every(c => selectedFields[c.key]); const next = { ...selectedFields }; safeItems.forEach(c => { next[c.key] = !all; }); setSelectedFields(next); }} className="text-brand-magenta hover:underline cursor-pointer">{safeItems.every(c => selectedFields[c.key]) ? "Deselect All Safe" : "Select All Safe"}</button>
                         </div>
-                        <div className="divide-y divide-white/6 border border-green-500/25 rounded-xl bg-[#2B083A]/20 overflow-hidden">{safeItems.map((c) => renderComparisonRow(c, "SAFE"))}</div>
+                        <div className="divide-y divide-brand-rose border border-green-500/25 rounded-xl bg-brand-cream overflow-hidden">{safeItems.map((c) => renderComparisonRow(c, "SAFE"))}</div>
                       </div>
                     )}
                     {reviewItems.length > 0 && (
                       <div className="space-y-3">
-                        <div className="flex justify-between items-center text-[10px] font-bold text-[#9F7AC2] px-1 select-none">
-                          <span className="text-amber-400 uppercase tracking-widest text-[8.5px] font-black flex items-center gap-1"><AlertTriangle size={11} className="text-amber-400" />Needs Review (Manual Verification)</span>
-                          <button onClick={() => { const all = reviewItems.every(c => selectedFields[c.key]); const next = { ...selectedFields }; reviewItems.forEach(c => { next[c.key] = !all; }); setSelectedFields(next); }} className="text-[#A855F7] hover:underline cursor-pointer">{reviewItems.every(c => selectedFields[c.key]) ? "Deselect All" : "Select All Review"}</button>
+                        <div className="flex justify-between items-center text-[10px] font-bold text-foreground/75 px-1 select-none">
+                          <span className="text-amber-500 uppercase tracking-widest text-[8.5px] font-black flex items-center gap-1"><AlertTriangle size={11} className="text-amber-500" />Needs Review (Manual Verification)</span>
+                          <button onClick={() => { const all = reviewItems.every(c => selectedFields[c.key]); const next = { ...selectedFields }; reviewItems.forEach(c => { next[c.key] = !all; }); setSelectedFields(next); }} className="text-brand-magenta hover:underline cursor-pointer">{reviewItems.every(c => selectedFields[c.key]) ? "Deselect All" : "Select All Review"}</button>
                         </div>
-                        <div className="divide-y divide-white/6 border border-amber-500/25 rounded-xl bg-[#2B083A]/20 overflow-hidden">{reviewItems.map((c) => renderComparisonRow(c, "REVIEW"))}</div>
+                        <div className="divide-y divide-brand-rose border border-amber-500/25 rounded-xl bg-brand-cream overflow-hidden">{reviewItems.map((c) => renderComparisonRow(c, "REVIEW"))}</div>
                       </div>
                     )}
                     {blockedItems.length > 0 && (
                       <div className="space-y-3">
-                        <button type="button" onClick={() => setBlockedOpen(!blockedOpen)} className="w-full flex items-center justify-between p-3.5 rounded-xl border border-red-500/20 bg-red-500/[0.03] text-red-400 hover:bg-red-500/[0.06] transition-colors text-left cursor-pointer">
-                          <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"><ShieldAlert size={12} className="text-red-400 animate-pulse" />Blocked ({blockedItems.length} Hallucinations Protected)</div>
-                          <span className="text-[10px] font-bold text-red-400">{blockedOpen ? "Collapse" : "Expand"}</span>
+                        <button type="button" onClick={() => setBlockedOpen(!blockedOpen)} className="w-full flex items-center justify-between p-3.5 rounded-xl border border-red-500/20 bg-red-500/[0.03] text-red-500 hover:bg-red-500/[0.06] transition-colors text-left cursor-pointer">
+                          <div className="flex items-center gap-2 text-[9px] font-black uppercase tracking-widest"><ShieldAlert size={12} className="text-red-500 animate-pulse" />Blocked ({blockedItems.length} Hallucinations Protected)</div>
+                          <span className="text-[10px] font-bold text-red-500">{blockedOpen ? "Collapse" : "Expand"}</span>
                         </button>
-                        {blockedOpen && (<div className="divide-y divide-white/6 border border-red-500/25 rounded-xl bg-red-950/[0.03] overflow-hidden">{blockedItems.map((c) => renderComparisonRow(c, "BLOCKED"))}</div>)}
+                        {blockedOpen && (<div className="divide-y divide-brand-rose border border-red-500/25 rounded-xl bg-red-500/[0.02] overflow-hidden">{blockedItems.map((c) => renderComparisonRow(c, "BLOCKED"))}</div>)}
                       </div>
                     )}
                   </div>
@@ -1484,16 +1484,16 @@ export default function ProductEditorModal({
               </div>
 
               {/* Sticky Footer */}
-              <div className="sticky bottom-0 z-20 bg-[#1E0629] border-t border-[#D946EF]/10 p-6 shrink-0 flex gap-3">
+              <div className="sticky bottom-0 z-20 bg-background border-t border-brand-rose dark:border-[#FFB7D2]/10 p-6 shrink-0 flex gap-3">
                 {comparisonItems.length === 0 ? (
-                  <button onClick={() => { setCompareData(null); setScanStep("idle"); }} className="flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl admin-gradient-btn cursor-pointer">
+                  <button onClick={() => { setCompareData(null); setScanStep("idle"); }} className="flex-1 flex items-center justify-center gap-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl bg-brand-gradient hover:bg-brand-gradient-hover text-white transition-all cursor-pointer">
                     <CheckCircle2 size={12} />
                     Catalog Confirmed - Close Review
                   </button>
                 ) : (
                   <>
-                    <button onClick={() => { setCompareData(null); setScanStep("idle"); }} className="flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-white/8 text-[#9F7AC2] hover:text-white hover:bg-white/5 cursor-pointer transition-colors">Decline</button>
-                    <button onClick={applyCompareSelection} disabled={Object.values(selectedFields).filter(Boolean).length === 0} className="flex-grow-[2] flex items-center justify-center gap-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl admin-gradient-btn">
+                    <button onClick={() => { setCompareData(null); setScanStep("idle"); }} className="flex-1 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl border border-brand-rose text-amethyst hover:text-brand-magenta hover:bg-brand-cream/35 cursor-pointer transition-all">Decline</button>
+                    <button onClick={applyCompareSelection} disabled={Object.values(selectedFields).filter(Boolean).length === 0} className="flex-grow-[2] flex items-center justify-center gap-2 py-2.5 text-xs font-bold uppercase tracking-wider rounded-xl bg-brand-gradient hover:bg-brand-gradient-hover text-white transition-all">
                       <CheckCircle2 size={12} />
                       Apply {Object.values(selectedFields).filter(Boolean).length} Overwrites
                     </button>
@@ -1506,20 +1506,20 @@ export default function ProductEditorModal({
 
         {/* ── LOADING OVERLAY ── */}
         {reanalyzing && (
-          <div className="absolute inset-0 bg-[#080012]/85 z-50 flex items-center justify-center p-6 backdrop-blur-sm">
-            <div className="bg-[#1E0629] border border-white/10 p-8 rounded-2xl w-full max-w-md text-center space-y-5 shadow-2xl">
+          <div className="absolute inset-0 bg-[#080012]/45 z-50 flex items-center justify-center p-6 backdrop-blur-xs">
+            <div className="bg-background border border-brand-rose dark:border-[#FFB7D2]/10 p-8 rounded-2xl w-full max-w-md text-center space-y-5 shadow-2xl">
               <div className="flex justify-center relative">
-                <div className="absolute inset-0 rounded-full bg-[#D946EF]/20 blur-md animate-pulse" />
-                <Loader2 size={36} className="text-[#D946EF] animate-spin relative z-10" />
+                <div className="absolute inset-0 rounded-full bg-brand-magenta/20 blur-md animate-pulse" />
+                <Loader2 size={36} className="text-brand-magenta animate-spin relative z-10" />
               </div>
               <div className="space-y-1.5">
-                <h4 className="text-sm font-extrabold uppercase tracking-widest text-white flex items-center justify-center gap-2">
-                  <Sparkles size={14} className="text-[#D946EF] animate-pulse" />
+                <h4 className="text-sm font-extrabold uppercase tracking-widest text-foreground flex items-center justify-center gap-2">
+                  <Sparkles size={14} className="text-brand-magenta animate-pulse" />
                   GEMINI BEAUTY INTELLIGENCE ACTIVE
                 </h4>
-                <p className="text-[10.5px] text-[#9F7AC2] font-semibold">Executing Vision & Copywriting pipeline</p>
+                <p className="text-[10.5px] text-foreground/75 font-semibold">Executing Vision & Copywriting pipeline</p>
               </div>
-              <div className="space-y-3 text-[10.5px] font-extrabold text-left pt-4 border-t border-white/8 select-none">
+              <div className="space-y-3 text-[10.5px] font-extrabold text-left pt-4 border-t border-brand-rose dark:border-[#FFB7D2]/10 select-none">
                 {(() => {
                   const stages = [
                     { key: "gemini_scan", label: "Gemini Vision Scan & OCR (Stage 1)" },

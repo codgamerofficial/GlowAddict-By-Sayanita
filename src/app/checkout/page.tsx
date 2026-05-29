@@ -54,8 +54,6 @@ export default function Checkout() {
   const otpInputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const countdownRef = useRef<NodeJS.Timeout | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [isDevFallback, setIsDevFallback] = useState(false);
-  const [fallbackCode, setFallbackCode] = useState("");
 
   // Pincode checking states (Myntra/Nykaa style!)
   const [zipChecking, setZipChecking] = useState(false);
@@ -343,15 +341,7 @@ ${freebiesText}
         setOtpError(data.error || "Failed to send verification email.");
         return false;
       }
-      if (data.devFallback) {
-        setIsDevFallback(true);
-        if (data.code) {
-          setFallbackCode(data.code);
-        }
-      } else {
-        setIsDevFallback(false);
-        setFallbackCode("");
-      }
+      // Real production OTP email verification triggered
       return true;
     } catch {
       setOtpError("Network error. Please check your connection.");
@@ -617,7 +607,7 @@ ${freebiesText}
                       src="/payment_qr.jpg"
                       alt="Sayanita UPI payment QR"
                       fill
-                      className="object-cover"
+                      className="object-contain p-2"
                     />
                   </div>
                   <p className="text-[9px] text-foreground/50 leading-relaxed max-w-[180px]">
@@ -1252,21 +1242,6 @@ ${freebiesText}
                         <ShieldAlert size={12} />
                         {otpError}
                       </p>
-                    ) : isDevFallback ? (
-                      <div className="p-3 bg-amber-500/10 border border-amber-500/25 rounded-2xl text-[10px] text-amber-600 dark:text-amber-400 font-medium flex flex-col items-center justify-center gap-1 max-w-[280px] mx-auto leading-normal animate-slide-in">
-                        <span className="flex items-center gap-1 font-bold">
-                          ⚠️ Sandbox Mode (SMTP Offline)
-                        </span>
-                        <span>
-                          Use Master Bypass Code: <strong className="font-extrabold text-amethyst dark:text-brand-lilac text-xs">0909</strong>
-                        </span>
-                        {fallbackCode && (
-                          <div className="mt-1 px-3 py-1 bg-brand-gradient hover:scale-105 transition-all text-white font-extrabold text-xs tracking-wider rounded-lg shadow-sm flex items-center gap-1">
-                            <span>Your OTP is:</span>
-                            <span className="font-mono text-sm tracking-widest">{fallbackCode}</span>
-                          </div>
-                        )}
-                      </div>
                     ) : null}
                   </div>
 

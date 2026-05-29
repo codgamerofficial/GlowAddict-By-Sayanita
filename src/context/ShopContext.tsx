@@ -1003,7 +1003,7 @@ export const ShopProvider: React.FC<{ children: React.ReactNode }> = ({ children
       if (localSettings) setSettings(JSON.parse(localSettings));
       if (localWishlist) setWishlist(JSON.parse(localWishlist));
       
-      const activeTheme = localTheme || (window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+      const activeTheme = localTheme || "light";
       setTheme(activeTheme);
       if (activeTheme === "dark") {
         document.documentElement.classList.add("dark");

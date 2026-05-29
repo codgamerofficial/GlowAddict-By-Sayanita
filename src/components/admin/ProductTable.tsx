@@ -116,13 +116,13 @@ export default function ProductTable({ products, onEdit, onDuplicate, onArchive,
   // Empty state
   if (products.length === 0) {
     return (
-      <div className="bg-[#1E0629] border border-white/8 rounded-2xl p-10 text-center space-y-3">
-        <div className="mx-auto w-16 h-16 rounded-full bg-gradient-to-br from-[#D946EF]/10 to-[#A855F7]/10 flex items-center justify-center border border-white/8">
-          <Package size={28} className="text-[#D3B6FF]" />
+      <div className="bg-brand-cream border border-brand-rose rounded-2xl p-10 text-center space-y-3">
+        <div className="mx-auto w-16 h-16 rounded-full bg-brand-peach flex items-center justify-center border border-brand-rose">
+          <Package size={28} className="text-amethyst" />
         </div>
         <div>
-          <p className="text-sm font-extrabold text-white uppercase tracking-wider">No products yet</p>
-          <p className="text-[10px] text-[#9F7AC2] mt-1.5 max-w-sm mx-auto leading-relaxed">
+          <p className="text-sm font-extrabold text-foreground uppercase tracking-wider">No products yet</p>
+          <p className="text-[10px] text-foreground/70 mt-1.5 max-w-sm mx-auto leading-relaxed">
             Upload your first product packaging image or paste a URL above. Sayanita's AI will extract all details automatically.
           </p>
         </div>
@@ -136,75 +136,75 @@ export default function ProductTable({ products, onEdit, onDuplicate, onArchive,
       <div className="flex flex-col sm:flex-row gap-2 sm:items-center">
         {/* Search */}
         <div className="relative flex-1 max-w-sm">
-          <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9F7AC2]" />
+          <Search size={13} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amethyst" />
           <input value={search} onChange={(e) => setSearch(e.target.value)}
             placeholder="Search products by title, brand, SKU…" aria-label="Search products"
-            className="admin-glass-input pl-9 text-xs text-white placeholder-[#9F7AC2]" />
+            className="admin-glass-input pl-9 text-xs text-foreground placeholder-foreground/45" />
         </div>
         {/* Filters */}
         <div className="flex gap-2 flex-wrap text-[10px]">
           <select value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)} aria-label="Filter by status"
-            className="admin-glass-input !w-auto !py-2 !px-3 cursor-pointer text-[10px] font-bold text-[#D3B6FF] border border-white/8">
-            <option value="all" className="bg-[#1E0629] text-white">All Status</option>
-            <option value="active" className="bg-[#1E0629] text-white">Active</option>
-            <option value="draft" className="bg-[#1E0629] text-white">Draft</option>
-            <option value="archived" className="bg-[#1E0629] text-white">Archived</option>
+            className="admin-glass-input !w-auto !py-2 !px-3 cursor-pointer text-[10px] font-bold text-amethyst border border-brand-rose">
+            <option value="all" className="bg-brand-cream text-foreground">All Status</option>
+            <option value="active" className="bg-brand-cream text-foreground">Active</option>
+            <option value="draft" className="bg-brand-cream text-foreground">Draft</option>
+            <option value="archived" className="bg-brand-cream text-foreground">Archived</option>
           </select>
           <select value={categoryFilter} onChange={(e) => setCategoryFilter(e.target.value)} aria-label="Filter by category"
-            className="admin-glass-input !w-auto !py-2 !px-3 cursor-pointer text-[10px] font-bold text-[#D3B6FF] border border-white/8">
-            <option value="all" className="bg-[#1E0629] text-white">All Categories</option>
-            {categories.map((c) => <option key={c} value={c} className="bg-[#1E0629] text-white">{c}</option>)}
+            className="admin-glass-input !w-auto !py-2 !px-3 cursor-pointer text-[10px] font-bold text-amethyst border border-brand-rose">
+            <option value="all" className="bg-brand-cream text-foreground">All Categories</option>
+            {categories.map((c) => <option key={c} value={c} className="bg-brand-cream text-foreground">{c}</option>)}
           </select>
-          <span className="text-[#9F7AC2] self-center font-bold tracking-wide uppercase text-[9px] ml-2">
+          <span className="text-foreground/70 self-center font-bold tracking-wide uppercase text-[9px] ml-2">
             {filtered.length} of {products.length} products
           </span>
         </div>
       </div>
 
       {/* Table — Desktop */}
-      <div className="hidden md:block bg-[#1E0629] border border-white/8 rounded-2xl overflow-hidden shadow-2xl">
+      <div className="hidden md:block bg-background border border-brand-rose rounded-2xl overflow-hidden shadow-2xl">
         <div className="overflow-x-auto">
           <table className="w-full text-xs font-sans" role="grid">
-            <thead className="admin-table-header bg-[#2B083A] border-b border-white/8">
+            <thead className="admin-table-header bg-brand-cream border-b border-brand-rose">
               <tr>
-                <th className="text-left p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider">
-                  <button onClick={() => toggleSort("title")} className="inline-flex items-center cursor-pointer hover:text-[#D946EF] transition-colors">
+                <th className="text-left p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider">
+                  <button onClick={() => toggleSort("title")} className="inline-flex items-center cursor-pointer hover:text-brand-magenta transition-colors">
                     Product <SortIcon column="title" />
                   </button>
                 </th>
-                <th className="text-left p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider">
-                  <button onClick={() => toggleSort("category")} className="inline-flex items-center cursor-pointer hover:text-[#D946EF] transition-colors">
+                <th className="text-left p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider">
+                  <button onClick={() => toggleSort("category")} className="inline-flex items-center cursor-pointer hover:text-brand-magenta transition-colors">
                     Category <SortIcon column="category" />
                   </button>
                 </th>
-                <th className="text-center p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider">
-                  <button onClick={() => toggleSort("stock")} className="inline-flex items-center cursor-pointer hover:text-[#D946EF] transition-colors">
+                <th className="text-center p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider">
+                  <button onClick={() => toggleSort("stock")} className="inline-flex items-center cursor-pointer hover:text-brand-magenta transition-colors">
                     Stock <SortIcon column="stock" />
                   </button>
                 </th>
-                <th className="text-center p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider">Status</th>
-                <th className="text-right p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider">
-                  <button onClick={() => toggleSort("price")} className="inline-flex items-center cursor-pointer hover:text-[#D946EF] transition-colors">
+                <th className="text-center p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider">Status</th>
+                <th className="text-right p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider">
+                  <button onClick={() => toggleSort("price")} className="inline-flex items-center cursor-pointer hover:text-brand-magenta transition-colors">
                     Price <SortIcon column="price" />
                   </button>
                 </th>
-                <th className="text-center p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider">
-                  <button onClick={() => toggleSort("ai_confidence")} className="inline-flex items-center cursor-pointer hover:text-[#D946EF] transition-colors">
+                <th className="text-center p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider">
+                  <button onClick={() => toggleSort("ai_confidence")} className="inline-flex items-center cursor-pointer hover:text-brand-magenta transition-colors">
                     AI <SortIcon column="ai_confidence" />
                   </button>
                 </th>
-                <th className="text-center p-3.5 font-bold text-[#D3B6FF] uppercase text-[9px] tracking-wider w-12"></th>
+                <th className="text-center p-3.5 font-bold text-amethyst uppercase text-[9px] tracking-wider w-12"></th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/8">
+            <tbody className="divide-y divide-brand-rose">
               {paginated.map((prod) => {
                 const conf = getConfidenceLabel(prod.ai_confidence || 0);
                 const stockDot = getStockDot(prod.stock);
                 return (
-                  <tr key={prod.id} className="admin-table-row hover:bg-[#2B083A]/40 transition-all border-b border-white/8 cursor-pointer" onClick={() => onEdit(prod)}>
+                  <tr key={prod.id} className="admin-table-row hover:bg-brand-rose/25 transition-all border-b border-brand-rose cursor-pointer" onClick={() => onEdit(prod)}>
                     <td className="p-3.5">
                       <div className="flex items-center gap-3">
-                        <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-[#2B083A] border border-white/8 shrink-0">
+                        <div className="relative w-11 h-11 rounded-xl overflow-hidden bg-brand-cream border border-brand-rose shrink-0">
                           {prod.image ? (
                             <>
                               <Image 
@@ -219,72 +219,72 @@ export default function ProductTable({ products, onEdit, onDuplicate, onArchive,
                                 }}
                                 unoptimized 
                               />
-                              <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#2B083A]">
-                                <Package size={14} className="text-[#9F7AC2]/30" />
+                              <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex items-center justify-center bg-brand-cream">
+                                <Package size={14} className="text-amethyst/30" />
                               </div>
                             </>
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center"><Package size={14} className="text-[#9F7AC2]/30" /></div>
+                            <div className="w-full h-full flex items-center justify-center"><Package size={14} className="text-amethyst/30" /></div>
                           )}
                         </div>
                         <div className="min-w-0 text-left">
-                          <p className="font-extrabold text-white text-xs leading-tight truncate max-w-[200px]">{prod.title}</p>
-                          <p className="text-[9px] text-[#9F7AC2] mt-0.5 font-bold tracking-wider">{prod.brand} • {prod.sku}</p>
+                          <p className="font-extrabold text-foreground text-xs leading-tight truncate max-w-[200px]">{prod.title}</p>
+                          <p className="text-[9px] text-foreground/75 mt-0.5 font-bold tracking-wider">{prod.brand} • {prod.sku}</p>
                         </div>
                       </div>
                     </td>
-                    <td className="p-3.5 text-left text-[#D3B6FF] text-[10px] font-semibold">{prod.category}</td>
+                    <td className="p-3.5 text-left text-amethyst text-[10px] font-semibold">{prod.category}</td>
                     <td className="p-3.5 text-center">
-                      <span className="inline-flex items-center text-[10px] font-bold text-white">
+                      <span className="inline-flex items-center text-[10px] font-bold text-foreground">
                         <span className={`admin-stock-dot ${stockDot} mr-1.5`} />
                         {prod.stock}
                       </span>
                     </td>
                     <td className="p-3.5 text-center">
                       <span className={`inline-block px-2.5 py-1 rounded-full text-[9px] font-extrabold uppercase tracking-wider ${
-                        prod.status === "active" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25" :
-                        prod.status === "draft" ? "bg-amber-500/15 text-amber-400 border border-amber-500/25" :
-                        "bg-gray-500/15 text-gray-400 border border-gray-500/25"
+                        prod.status === "active" ? "bg-emerald-500/15 text-emerald-600 border border-emerald-500/25" :
+                        prod.status === "draft" ? "bg-amber-500/15 text-amber-600 border border-amber-500/25" :
+                        "bg-gray-500/15 text-gray-500 border border-gray-500/25"
                       }`}>
                         {prod.status || "active"}
                       </span>
                     </td>
                     <td className="p-3.5 text-right">
-                      <span className="font-extrabold text-white text-xs">₹{prod.price}</span>
+                      <span className="font-extrabold text-foreground text-xs">₹{prod.price}</span>
                       {prod.mrp > prod.price && (
-                        <span className="text-[9px] text-[#9F7AC2]/50 line-through ml-1.5">₹{prod.mrp}</span>
+                        <span className="text-[9px] text-foreground/40 line-through ml-1.5">₹{prod.mrp}</span>
                       )}
                     </td>
                     <td className="p-3.5 text-center">
                       {prod.ai_confidence ? (
-                        <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/20 text-[#D946EF]`}>
+                        <span className={`text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-gradient-to-r from-brand-rose/10 to-brand-cream/10 border border-brand-rose text-brand-magenta`}>
                           {prod.ai_confidence}%
                         </span>
-                      ) : <span className="text-[9px] text-[#6E4E85]">—</span>}
+                      ) : <span className="text-[9px] text-foreground/30">—</span>}
                     </td>
                     <td className="p-3.5 text-center" onClick={(e) => e.stopPropagation()}>
                       <div className="relative" ref={activeMenu === prod.id ? menuRef : undefined}>
                         <button onClick={() => setActiveMenu(activeMenu === prod.id ? null : prod.id)}
                           aria-label="Product actions" aria-expanded={activeMenu === prod.id}
-                          className="p-1.5 rounded-lg hover:bg-white/5 border border-transparent hover:border-white/8 cursor-pointer transition-all">
-                          <MoreVertical size={14} className="text-[#9F7AC2]" />
+                          className="p-1.5 rounded-lg hover:bg-brand-rose/20 border border-transparent hover:border-brand-rose cursor-pointer transition-all">
+                          <MoreVertical size={14} className="text-amethyst" />
                         </button>
                         {activeMenu === prod.id && (
-                          <div className="admin-action-menu bg-[#2B083A] border border-white/10 rounded-xl shadow-2xl p-1 z-30 absolute right-0 mt-1 w-44">
-                            <button onClick={() => { onEdit(prod); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-[#351049] text-[#D3B6FF] hover:text-white cursor-pointer transition-all">
+                          <div className="admin-action-menu bg-white dark:bg-[#2D0F21] border border-brand-rose dark:border-[#FFB7D2]/10 rounded-xl shadow-2xl p-1 z-30 absolute right-0 mt-1 w-44">
+                            <button onClick={() => { onEdit(prod); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-brand-rose/40 text-amethyst hover:text-brand-magenta cursor-pointer transition-all">
                               <Edit3 size={12} /> Edit Details
                             </button>
-                            <button onClick={() => { window.open(`/product/${prod.id}`, "_blank"); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-[#351049] text-[#D3B6FF] hover:text-white cursor-pointer transition-all">
+                            <button onClick={() => { window.open(`/product/${prod.id}`, "_blank"); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-brand-rose/40 text-amethyst hover:text-brand-magenta cursor-pointer transition-all">
                               <Eye size={12} /> Preview
                             </button>
-                            <button onClick={() => { onDuplicate(prod.id); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-[#351049] text-[#D3B6FF] hover:text-white cursor-pointer transition-all">
+                            <button onClick={() => { onDuplicate(prod.id); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-brand-rose/40 text-amethyst hover:text-brand-magenta cursor-pointer transition-all">
                               <Copy size={12} /> Duplicate
                             </button>
-                            <button onClick={() => { onArchive(prod.id); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-[#351049] text-[#D3B6FF] hover:text-white cursor-pointer transition-all">
+                            <button onClick={() => { onArchive(prod.id); setActiveMenu(null); }} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-brand-rose/40 text-amethyst hover:text-brand-magenta cursor-pointer transition-all">
                               <Archive size={12} /> Archive
                             </button>
-                            <div className="border-t border-white/8 my-1" />
-                            <button onClick={() => handleDelete(prod.id)} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-red-500/10 text-red-400 cursor-pointer transition-all">
+                            <div className="border-t border-brand-rose my-1" />
+                            <button onClick={() => handleDelete(prod.id)} className="w-full flex items-center gap-2.5 px-3 py-2 text-[10px] font-bold rounded-lg hover:bg-red-500/10 text-red-500 cursor-pointer transition-all">
                               <Trash2 size={12} /> {confirmDelete === prod.id ? "Confirm Delete" : "Delete"}
                             </button>
                           </div>
@@ -306,9 +306,9 @@ export default function ProductTable({ products, onEdit, onDuplicate, onArchive,
           const stockDot = getStockDot(prod.stock);
           return (
             <div key={prod.id} onClick={() => onEdit(prod)}
-              className="bg-[#1E0629] border border-white/8 rounded-2xl p-4 cursor-pointer active:scale-[0.99] transition-transform shadow-xl relative overflow-hidden group">
+              className="bg-brand-cream dark:bg-[#2D0F21] border border-brand-rose dark:border-[#FFB7D2]/10 rounded-2xl p-4 cursor-pointer active:scale-[0.99] transition-transform shadow-xl relative overflow-hidden group">
               <div className="flex gap-4">
-                <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-[#2B083A] border border-white/8 shrink-0">
+                <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-white dark:bg-[#3A142A] border border-brand-rose dark:border-[#FFB7D2]/10 shrink-0">
                   {prod.image ? (
                     <>
                       <Image 
@@ -323,39 +323,39 @@ export default function ProductTable({ products, onEdit, onDuplicate, onArchive,
                         }}
                         unoptimized 
                       />
-                      <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex items-center justify-center bg-[#2B083A]">
-                        <Package size={18} className="text-[#9F7AC2]/40" />
+                      <div style={{ display: 'none' }} className="absolute inset-0 w-full h-full flex items-center justify-center bg-brand-cream">
+                        <Package size={18} className="text-amethyst/40" />
                       </div>
                     </>
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center"><Package size={18} className="text-[#9F7AC2]/40" /></div>
+                    <div className="w-full h-full flex items-center justify-center"><Package size={18} className="text-amethyst/40" /></div>
                   )}
                 </div>
                 <div className="flex-1 min-w-0 flex flex-col justify-between text-left">
                   <div>
                     <div className="flex items-center justify-between gap-2">
-                      <p className="font-extrabold text-white text-xs leading-tight truncate flex-1">{prod.title}</p>
+                      <p className="font-extrabold text-foreground text-xs leading-tight truncate flex-1">{prod.title}</p>
                       <span className={`px-2 py-0.5 rounded-full text-[8px] font-extrabold uppercase shrink-0 tracking-wider ${
-                        prod.status === "active" ? "bg-emerald-500/15 text-emerald-400 border border-emerald-500/25" :
-                        prod.status === "draft" ? "bg-amber-500/15 text-amber-400 border border-amber-500/25" :
-                        "bg-gray-500/15 text-gray-400 border border-gray-500/25"
+                        prod.status === "active" ? "bg-emerald-500/15 text-emerald-600 border border-emerald-500/25" :
+                        prod.status === "draft" ? "bg-amber-500/15 text-amber-600 border border-amber-500/25" :
+                        "bg-gray-500/15 text-gray-500 border border-gray-500/25"
                       }`}>
                         {prod.status || "active"}
                       </span>
                     </div>
-                    <p className="text-[9px] text-[#9F7AC2] mt-0.5 font-bold uppercase tracking-wider">{prod.brand} • {prod.category}</p>
+                    <p className="text-[9px] text-foreground/75 mt-0.5 font-bold uppercase tracking-wider">{prod.brand} • {prod.category}</p>
                   </div>
-                  <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-white/6">
+                  <div className="flex items-center justify-between gap-2 mt-2 pt-2 border-t border-brand-rose/60">
                     <div className="flex items-center gap-2">
-                      <span className="font-extrabold text-xs text-white">₹{prod.price}</span>
-                      {prod.mrp > prod.price && <span className="text-[9px] text-[#9F7AC2]/50 line-through">₹{prod.mrp}</span>}
+                      <span className="font-extrabold text-xs text-foreground font-sans">₹{prod.price}</span>
+                      {prod.mrp > prod.price && <span className="text-[9px] text-foreground/45 line-through">₹{prod.mrp}</span>}
                     </div>
                     <div className="flex items-center gap-2">
-                      <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-[#D3B6FF]">
+                      <span className="inline-flex items-center gap-1.5 text-[9px] font-bold text-amethyst">
                         <span className={`admin-stock-dot ${stockDot}`} />{prod.stock} in stock
                       </span>
                       {prod.ai_confidence ? (
-                        <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-gradient-to-r from-purple-500/10 to-pink-500/10 border border-purple-500/25 text-[#D946EF]">
+                        <span className="text-[9px] font-extrabold px-1.5 py-0.5 rounded bg-gradient-to-r from-brand-rose/10 to-brand-cream/10 border border-brand-rose text-brand-magenta">
                           {prod.ai_confidence}%
                         </span>
                       ) : null}
@@ -371,17 +371,17 @@ export default function ProductTable({ products, onEdit, onDuplicate, onArchive,
       {/* Pagination */}
       {totalPages > 1 && (
         <div className="flex items-center justify-between pt-1">
-          <p className="text-[10px] text-[#9F7AC2] font-bold uppercase tracking-wider">
+          <p className="text-[10px] text-foreground/75 font-bold uppercase tracking-wider">
             Page {page} of {totalPages}
           </p>
           <div className="flex gap-1">
             <button onClick={() => setPage((p) => Math.max(1, p - 1))} disabled={page === 1} aria-label="Previous page"
-              className="p-2 rounded-lg hover:bg-white/5 border border-transparent disabled:opacity-25 cursor-pointer transition-colors">
-              <ChevronLeft size={14} className="text-[#D3B6FF]" />
+              className="p-2 rounded-lg hover:bg-brand-rose/20 border border-transparent disabled:opacity-25 cursor-pointer transition-colors">
+              <ChevronLeft size={14} className="text-amethyst" />
             </button>
             <button onClick={() => setPage((p) => Math.min(totalPages, p + 1))} disabled={page === totalPages} aria-label="Next page"
-              className="p-2 rounded-lg hover:bg-white/5 border border-transparent disabled:opacity-25 cursor-pointer transition-colors">
-              <ChevronRight size={14} className="text-[#D3B6FF]" />
+              className="p-2 rounded-lg hover:bg-brand-rose/20 border border-transparent disabled:opacity-25 cursor-pointer transition-colors">
+              <ChevronRight size={14} className="text-amethyst" />
             </button>
           </div>
         </div>

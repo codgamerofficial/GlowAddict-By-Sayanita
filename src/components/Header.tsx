@@ -36,7 +36,7 @@ export const Header: React.FC = () => {
     );
 
   return (
-    <header className="sticky top-0 z-40 w-full bg-white/70 dark:bg-[#120018]/65 backdrop-blur-md border-b border-brand-rose/25 dark:border-[#C77DFF]/10 shadow-sm transition-all duration-300">
+    <header className="sticky top-0 z-40 w-full bg-white/80 dark:bg-[#1A0914]/75 backdrop-blur-md border-b border-brand-rose/40 dark:border-brand-rose/10 shadow-xs transition-all duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-20">
           
@@ -108,17 +108,15 @@ export const Header: React.FC = () => {
             <button
               onClick={toggleTheme}
               className="p-2.5 rounded-full text-foreground/90 hover:text-brand-magenta hover:bg-brand-cream dark:hover:bg-brand-cream/10 transition-all duration-300 group cursor-pointer"
-              aria-label="Toggle visual theme"
+              aria-label="Toggle dark mode"
             >
-              {!mounted ? (
-                <div className="w-5 h-5" />
-              ) : theme === "dark" ? (
-                <Sun size={20} className="group-hover:rotate-45 transition-transform duration-500 text-yellow-400" />
+              {mounted && theme === "dark" ? (
+                <Sun size={20} className="text-amber-400 group-hover:rotate-45 transition-transform duration-500" />
               ) : (
-                <Moon size={20} className="group-hover:-rotate-12 transition-transform duration-500 text-amethyst" />
+                <Moon size={20} className="text-[#FC2779] group-hover:-rotate-12 transition-transform duration-500" />
               )}
             </button>
- 
+
             {/* Wishlist Button */}
             <Link
               href="/wishlist"
@@ -127,7 +125,7 @@ export const Header: React.FC = () => {
             >
               <Heart size={20} className="group-hover:scale-110 transition-transform duration-300" />
               {mounted && wishlist.length > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gradient text-[10px] font-bold text-white ring-2 ring-white dark:ring-[#120018]">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gradient text-[10px] font-bold text-white ring-2 ring-white dark:ring-[#1A0914]">
                   {wishlist.length}
                 </span>
               )}
@@ -142,7 +140,7 @@ export const Header: React.FC = () => {
             >
               <ShoppingBag size={20} className="group-hover:scale-110 transition-transform duration-300" />
               {mounted && cartItemsCount > 0 && (
-                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gradient text-[10px] font-bold text-white ring-2 ring-white dark:ring-[#120018] animate-pulse">
+                <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-brand-gradient text-[10px] font-bold text-white ring-2 ring-white dark:ring-[#1A0914] animate-pulse">
                   {cartItemsCount}
                 </span>
               )}
@@ -163,7 +161,7 @@ export const Header: React.FC = () => {
 
       {/* Mobile Menu Panel */}
       {mobileMenuOpen && (
-        <div className="md:hidden bg-white/95 dark:bg-[#120018]/95 border-b border-brand-rose/20 dark:border-brand-rose/10 py-4 px-6 animate-slide-in">
+        <div className="md:hidden bg-white/95 dark:bg-[#1A0914]/95 border-b border-brand-rose/20 dark:border-brand-rose/10 py-4 px-6 animate-slide-in">
           <div className="flex flex-col space-y-3 text-xs uppercase tracking-wider font-bold">
             <Link
               href="/shop"

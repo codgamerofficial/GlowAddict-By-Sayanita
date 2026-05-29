@@ -4,22 +4,22 @@
 @variant dark (&:where(.dark, .dark *));
 
 :root {
-  --background: #FFF8F5; /* Warm creamy vanilla shell */
-  --foreground: #5A2A6A; /* Dark velvet mulberry wine */
+  --background: #FFFFFF; /* Crisp clean Myntra white */
+  --foreground: #232323; /* Modern charcoal text */
   --font-serif: 'Playfair Display', serif; /* Luxury editorial serif */
   --font-sans: 'Outfit', 'Inter', sans-serif;
   --font-script: 'Allura', cursive; /* Script signature calligraphs */
   
-  /* Brand colors */
-  --brand-amethyst: #A56ABD; /* Primary amethyst */
-  --brand-purple: #5A2A6A; /* Primary mulberry */
-  --brand-magenta: #EC4899;
-  --brand-rose: #F7D6E6; /* Soft pastel pink */
-  --brand-cream: #FFF8F5; /* Vanilla background */
+  /* Nykaa Pinks Brand Colors */
+  --brand-amethyst: #FC2779; /* Signature Nykaa Hot Pink */
+  --brand-purple: #D81B60; /* Deep Magenta Rose */
+  --brand-magenta: #FC2779; /* Vibrant Hot Pink Active Trigger */
+  --brand-rose: #FEE3EC; /* Soft pastel rose pink border */
+  --brand-cream: #FFF5F7; /* Warm blush cherry cream bg */
   
-  --brand-lilac: #DCC6F0; /* Accent lilac */
-  --brand-peach: #FFD1BA; /* Accent peach */
-  --brand-gold: #D4AF37; /* Premium jewelry gold */
+  --brand-lilac: #FFB7D2; /* Soft blossom pink */
+  --brand-peach: #FFF0F5; /* Elegant lavender blush card back */
+  --brand-gold: #FC2779; /* Hot Pink Highlight */
 }
 
 /* iOS Spring transitions physics */
@@ -32,7 +32,7 @@
 .ios-spring-hover:hover {
   transform: scale(1.02);
   filter: brightness(1.02);
-  box-shadow: 0 12px 30px rgba(224, 86, 253, 0.1);
+  box-shadow: 0 12px 30px rgba(252, 39, 121, 0.1);
 }
 .ios-spring-active {
   transition: all 0.15s cubic-bezier(0.16, 1, 0.3, 1);
@@ -52,7 +52,7 @@
   inset: -1px;
   border-radius: inherit;
   padding: 1px;
-  background: linear-gradient(135deg, rgba(224, 86, 253, 0.3), rgba(255, 141, 199, 0.1), rgba(224, 86, 253, 0.3));
+  background: linear-gradient(135deg, rgba(252, 39, 121, 0.3), rgba(254, 227, 236, 0.1), rgba(252, 39, 121, 0.3));
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
@@ -62,30 +62,23 @@
   transition: opacity 0.4s ease;
 }
 .glow-border:hover::after {
-  background: linear-gradient(135deg, rgba(224, 86, 253, 0.8), rgba(255, 141, 199, 0.6), rgba(224, 86, 253, 0.8));
+  background: linear-gradient(135deg, rgba(252, 39, 121, 0.8), rgba(254, 227, 236, 0.6), rgba(252, 39, 121, 0.8));
 }
 
 .dark {
-  --background: #120018; /* Luxury midnight orchid background */
-  --foreground: #FFFFFF; /* High contrast white text */
+  --background: #080012; /* Deep luxurious midnight orchid onyx black */
+  --foreground: #F5E6FF; /* Glowing soft white with a hint of lavender */
   
-  /* Overrides for dark mode */
-  --brand-amethyst: #C77DFF; /* Soft vibrant glowing violet */
-  --brand-purple: #34114A; /* Deep plum velvet accent */
-  --brand-magenta: #E056FD; /* Electric violet highlight */
-  --brand-rose: #FF8DC7; /* Sweet apricot peach highlight */
-  --brand-cream: #1B0124; /* Midnight plum secondary back */
+  /* Glowing luxurious dark branding */
+  --brand-amethyst: #FC2779; /* Keep the signature Nykaa hot pink active highlights! */
+  --brand-purple: #C77DFF; /* Luminous orchid violet */
+  --brand-magenta: #FF539B; /* Vibrant neon pink */
+  --brand-rose: #2E1541; /* Deep rich plum outline borders */
+  --brand-cream: #140A1F; /* Mysterious dark plum element fill */
   
-  --brand-lilac: #D8B4FE; /* Radiant lavender lilac text */
-  --brand-peach: #2A093D; /* Luxury dark amethyst card back */
-  --brand-gold: #D4AF37; /* Metallic jewel gold */
-}
-
-.dark [class*="bg-[#fdfafb]"],
-.dark [class*="bg-[#fdfafb]/"],
-.dark [class*="bg-[#FFF8F5]"],
-.dark [class*="bg-[#FFF8F5]/"] {
-  background-color: var(--background) !important;
+  --brand-lilac: #D8B4FE; /* Lavender blossom text */
+  --brand-peach: #1F0F30; /* Carbon shadow background for inside blocks */
+  --brand-gold: #FFB7D2; /* Soft blossom peach pink highlight */
 }
 
 @theme inline {
@@ -127,7 +120,7 @@ h1, h2, h3, .font-elegant {
   background: #f1f1f1;
 }
 .dark ::-webkit-scrollbar-track {
-  background: #190924;
+  background: #f1f1f1;
 }
 ::-webkit-scrollbar-thumb {
   background: var(--brand-amethyst);
@@ -137,37 +130,38 @@ h1, h2, h3, .font-elegant {
   background: var(--brand-magenta);
 }
 .dark ::-webkit-scrollbar-thumb {
-  background: #9d5fe5;
+  background: var(--brand-amethyst);
 }
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #f472b6;
+  background: var(--brand-magenta);
 }
 
 /* Background mesh gradients and keyframe glow */
 .mesh-gradient {
-  background: radial-gradient(at 0% 0%, rgba(124, 58, 237, 0.08) 0px, transparent 50%),
-              radial-gradient(at 100% 0%, rgba(236, 72, 153, 0.08) 0px, transparent 50%),
-              radial-gradient(at 100% 100%, rgba(251, 207, 232, 0.08) 0px, transparent 50%),
-              radial-gradient(at 0% 100%, rgba(77, 28, 115, 0.08) 0px, transparent 50%);
+  background: radial-gradient(at 0% 0%, rgba(252, 39, 121, 0.05) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(254, 227, 236, 0.05) 0px, transparent 50%),
+              radial-gradient(at 100% 100%, rgba(252, 39, 121, 0.05) 0px, transparent 50%),
+              radial-gradient(at 0% 100%, rgba(254, 227, 236, 0.05) 0px, transparent 50%);
 }
 
 .dark .mesh-gradient {
-  background: radial-gradient(at 0% 0%, rgba(167, 139, 250, 0.15) 0px, transparent 50%),
-              radial-gradient(at 100% 0%, rgba(244, 114, 182, 0.15) 0px, transparent 50%),
-              radial-gradient(at 100% 100%, rgba(157, 95, 229, 0.15) 0px, transparent 50%),
-              radial-gradient(at 0% 100%, rgba(60, 30, 84, 0.25) 0px, transparent 50%);
+  background: radial-gradient(at 0% 0%, rgba(252, 39, 121, 0.05) 0px, transparent 50%),
+              radial-gradient(at 100% 0%, rgba(254, 227, 236, 0.05) 0px, transparent 50%),
+              radial-gradient(at 100% 100%, rgba(252, 39, 121, 0.05) 0px, transparent 50%),
+              radial-gradient(at 0% 100%, rgba(254, 227, 236, 0.05) 0px, transparent 50%);
 }
 
 .glow-card {
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 4px 30px rgba(252, 39, 121, 0.02);
   backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.6);
+  border: 1px solid rgba(254, 227, 236, 0.6);
+  background: rgba(255, 255, 255, 0.85);
 }
 
 .dark .glow-card {
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5) !important;
+  box-shadow: 0 4px 30px rgba(252, 39, 121, 0.05) !important;
   border: 1px solid rgba(199, 125, 255, 0.15) !important;
-  background: linear-gradient(135deg, rgba(42, 9, 61, 0.7) 0%, rgba(52, 17, 74, 0.7) 100%) !important;
+  background: rgba(18, 0, 24, 0.85) !important;
 }
 
 .gradient-text {

@@ -143,7 +143,7 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
       <div
         role="button" tabIndex={0} aria-label="Upload product image for AI extraction"
         className={`admin-hero-dropzone p-6 sm:p-8 text-center cursor-pointer transition-all ${
-          dragOver ? "drag-active border-[#D946EF] shadow-[0_0_30px_rgba(217,70,239,0.25)] scale-[1.005]" : "border-white/8 hover:border-[#A855F7]"
+          dragOver ? "drag-active border-brand-magenta shadow-[0_0_30px_rgba(252,39,121,0.25)] scale-[1.005]" : "border-brand-rose hover:border-brand-magenta"
         } relative overflow-hidden`}
         onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
         onDragLeave={() => setDragOver(false)}
@@ -158,20 +158,20 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
 
         {isProcessing ? (
           <div className="space-y-4 py-4 relative z-10">
-            <div className="mx-auto w-12 h-12 rounded-full bg-[#D946EF]/10 border border-[#D946EF]/20 flex items-center justify-center animate-bounce">
-              <Loader2 size={20} className="text-[#D946EF] animate-spin" />
+            <div className="mx-auto w-12 h-12 rounded-full bg-brand-magenta/10 border border-brand-rose flex items-center justify-center animate-bounce">
+              <Loader2 size={20} className="text-brand-magenta animate-spin" />
             </div>
             <div className="space-y-1">
-              <p className="text-sm font-extrabold text-[#D3B6FF] tracking-tight">{STEP_LABELS[step]}</p>
+              <p className="text-sm font-extrabold text-amethyst tracking-tight">{STEP_LABELS[step]}</p>
               <div className="flex items-center justify-center gap-2 pt-1.5">
                 {(["uploading", "analyzing", "structuring"] as const).map((s, i) => (
                   <div key={s} className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full transition-all duration-300 ${
-                      step === s ? "bg-[#D946EF] scale-125 shadow-[0_0_8px_var(--accent-pink)] animate-pulse" :
-                      (["uploading","analyzing","structuring"].indexOf(step) > i) ? "bg-[#10B981]" : "bg-white/10"
+                      step === s ? "bg-brand-magenta scale-125 shadow-[0_0_8px_rgba(252,39,121,0.4)] animate-pulse" :
+                      (["uploading","analyzing","structuring"].indexOf(step) > i) ? "bg-[#10B981]" : "bg-brand-rose"
                     }`} />
                     {i < 2 && <div className={`w-6 h-px ${
-                      (["uploading","analyzing","structuring"].indexOf(step) > i) ? "bg-[#10B981]" : "bg-white/10"
+                      (["uploading","analyzing","structuring"].indexOf(step) > i) ? "bg-[#10B981]" : "bg-brand-rose"
                     }`} />}
                   </div>
                 ))}
@@ -184,16 +184,16 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
           </div>
         ) : (
           <div className="space-y-3 py-2 relative z-10">
-            <div className="mx-auto w-12 h-12 rounded-full bg-gradient-to-br from-[#D946EF]/10 to-[#A855F7]/10 border border-white/8 flex items-center justify-center group-hover:scale-110 transition-transform">
-              <Upload size={18} className="text-[#D3B6FF] group-hover:text-white" />
+            <div className="mx-auto w-12 h-12 rounded-full bg-brand-cream border border-brand-rose flex items-center justify-center group-hover:scale-110 transition-transform">
+              <Upload size={18} className="text-amethyst group-hover:text-brand-magenta" />
             </div>
             <div>
-              <p className="text-sm font-extrabold text-white tracking-tight">Drop product packaging image or click to browse</p>
-              <p className="text-[10px] text-[#9F7AC2] mt-1">
+              <p className="text-sm font-extrabold text-foreground tracking-tight">Drop product packaging image or click to browse</p>
+              <p className="text-[10px] text-foreground/70 mt-1">
                 Drag-and-drop labels, photos, or screenshots • JPG, PNG, WebP up to 10MB
               </p>
-              <p className="text-[8px] text-[#6E4E85] mt-1.5 flex items-center justify-center gap-1">
-                <Sparkles size={8} className="text-[#D946EF]" />
+              <p className="text-[8px] text-amethyst mt-1.5 flex items-center justify-center gap-1">
+                <Sparkles size={8} className="text-brand-magenta" />
                 Gemini Vision Engine double-stage pipeline
               </p>
             </div>
@@ -204,7 +204,7 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
       {/* URL Input Bar */}
       <div className="flex gap-2" onClick={(e) => e.stopPropagation()}>
         <div className="relative flex-1">
-          <Link2 size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9F7AC2]" />
+          <Link2 size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-amethyst" />
           <input type="text" placeholder="Or paste remote image link to extract details…" value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
             onKeyDown={(e) => { if (e.key === "Enter") handleUrlExtract(); }}
@@ -213,7 +213,7 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
         </div>
         <button type="button" onClick={handleUrlExtract} disabled={!urlInput.trim() || isProcessing}
           aria-label="Extract product details from URL"
-          className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-xl admin-gradient-btn text-white flex items-center gap-1.5 shrink-0 border border-white/8">
+          className="px-5 py-2.5 text-[10px] font-bold uppercase tracking-wider rounded-xl bg-brand-gradient hover:bg-brand-gradient-hover text-white flex items-center gap-1.5 shrink-0 border border-brand-rose transition-all">
           <Sparkles size={12} className="animate-pulse" />
           {isProcessing ? "Processing…" : "Analyze Product"}
         </button>
@@ -238,30 +238,30 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
 
       {/* Extracted Results Preview Card */}
       {extracted && previewUrl && (
-        <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-[#1E0629] border border-white/8 rounded-2xl p-4 transition-all duration-300">
-          <div className="sm:col-span-3 relative aspect-square rounded-xl overflow-hidden bg-black/30 border border-white/8 shrink-0">
+        <div className="grid grid-cols-1 sm:grid-cols-12 gap-4 bg-brand-cream dark:bg-[#2D0F21] border border-brand-rose dark:border-[#FFB7D2]/10 rounded-2xl p-4 transition-all duration-300">
+          <div className="sm:col-span-3 relative aspect-square rounded-xl overflow-hidden bg-background border border-brand-rose shrink-0">
             <Image src={previewUrl} alt="Product preview" fill className="object-cover" unoptimized />
           </div>
           <div className="sm:col-span-9 space-y-3 text-left">
             <div className="flex items-start justify-between gap-2">
               <div>
                 <div className="flex items-center gap-2 flex-wrap">
-                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[9px] font-extrabold uppercase bg-black/45 border-white/8">
+                  <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full border text-[9px] font-extrabold uppercase bg-background border-brand-rose">
                     {statusIcon[extractionStatus]}
                     <span className={confidence?.color}>{statusLabel[extractionStatus]}</span>
                   </div>
                   {engineUsed && (
-                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded-full border border-[#D946EF]/20 text-[#D946EF]">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-0.5 text-[8px] font-bold uppercase tracking-wider rounded-full border border-brand-rose text-brand-magenta">
                       <Sparkles size={8} className="animate-pulse" /> Gemini Visual Analysis Verified
                     </span>
                   )}
                 </div>
-                <h4 className="text-sm font-extrabold text-white mt-2">{extracted.title}</h4>
-                <p className="text-[10px] text-[#9F7AC2]">{extracted.brand || "Unknown Brand"} • {extracted.category}</p>
+                <h4 className="text-sm font-extrabold text-foreground mt-2">{extracted.title}</h4>
+                <p className="text-[10px] text-foreground/75">{extracted.brand || "Unknown Brand"} • {extracted.category}</p>
               </div>
               <div className="flex items-center gap-1 shrink-0">
                 <button type="button" onClick={handleRetry} aria-label="Re-analyze image with Gemini Vision AI"
-                  className="p-2 rounded-lg bg-[#2B083A] hover:bg-[#351049] border border-white/8 text-[#D3B6FF] hover:text-white transition-all cursor-pointer">
+                  className="p-2 rounded-lg bg-brand-cream border border-brand-rose text-amethyst hover:bg-brand-rose transition-all cursor-pointer">
                   <RefreshCw size={12} />
                 </button>
               </div>
@@ -287,12 +287,12 @@ export default function AIUploadZone({ onExtracted, adminApiKey }: AIUploadZoneP
             {/* Confidence progress health bar */}
             <div className="space-y-1">
               <div className="flex justify-between items-center text-[9px]">
-                <span className="text-[#9F7AC2] font-semibold">Vision Extraction Confidence</span>
+                <span className="text-foreground/70 font-semibold">Vision Extraction Confidence</span>
                 <span className={`font-bold ${confidence?.color}`}>
                   {extracted.ai_confidence}% — {confidence?.label}
                 </span>
               </div>
-              <div className="h-2 w-full rounded-full bg-black/45 overflow-hidden border border-white/8">
+              <div className="h-2 w-full rounded-full bg-background overflow-hidden border border-brand-rose">
                 <div className="h-full bg-gradient-to-r from-purple-500 to-pink-500 rounded-full transition-all duration-1000" style={{ width: `${extracted.ai_confidence}%` }} />
               </div>
             </div>

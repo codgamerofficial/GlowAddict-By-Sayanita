@@ -196,10 +196,10 @@ export default function Shop() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#120018] text-white relative">
-      {/* Background radial glows for Apple-level luxury */}
-      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-[#E056FD]/3 rounded-full blur-3xl pointer-events-none" />
-      <div className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-[#C77DFF]/2 rounded-full blur-3xl pointer-events-none" />
+    <div className="min-h-screen flex flex-col bg-background text-foreground relative">
+      {/* Background radial glows for Myntra/Nykaa-level luxury */}
+      <div className="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-magenta/3 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute bottom-1/3 right-1/4 w-[600px] h-[600px] bg-brand-rose/2 rounded-full blur-3xl pointer-events-none" />
 
       <Header />
       <CartDrawer />
@@ -207,22 +207,22 @@ export default function Shop() {
       <main className="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8 relative z-10 select-none">
         
         {/* ✨ THE VAULT OF PURITY STORY BANNER */}
-        <section className="bg-gradient-to-br from-[#2A093D]/80 to-[#1B0124]/90 border border-[#C77DFF]/20 rounded-[32px] p-8 sm:p-12 shadow-2xl text-center space-y-4 glow-border select-none ios-spring-hover relative overflow-hidden">
-          <div className="absolute inset-0 bg-[#E056FD]/2 rounded-full blur-3xl pointer-events-none" />
-          <span className="text-[9px] font-bold uppercase tracking-widest text-[#FF8DC7] font-sans flex items-center justify-center gap-1.5">
-            <Sparkles size={12} className="animate-spin-slow text-[#E056FD]" />
+        <section className="bg-gradient-to-br from-brand-peach/40 via-brand-cream to-white border border-brand-rose rounded-[32px] p-8 sm:p-12 shadow-xl text-center space-y-4 glow-border select-none ios-spring-hover relative overflow-hidden">
+          <div className="absolute inset-0 bg-brand-magenta/1 rounded-full blur-3xl pointer-events-none" />
+          <span className="text-[9px] font-bold uppercase tracking-widest text-brand-magenta font-sans flex items-center justify-center gap-1.5">
+            <Sparkles size={12} className="animate-spin-slow text-brand-magenta" />
             Sayanita's Sourcing Journey
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black font-elegant text-white tracking-wide">
+          <h1 className="text-3xl sm:text-5xl font-black font-elegant text-foreground tracking-wide">
             The Vault of Purity
           </h1>
-          <p className="text-xs sm:text-sm text-orchid-text-warm max-w-2xl mx-auto leading-relaxed font-sans font-medium">
+          <p className="text-xs sm:text-sm text-foreground/75 max-w-2xl mx-auto leading-relaxed font-sans font-medium">
             Glow Addict's catalog is not just a collection of products—it is Sayanita's handpicked skincare closet. Every serum, lipstick, and cooling globe is sourced directly from laboratories in Seoul and Tokyo, passing rigorous chemical purity and Gemini Vision AI scans. Indulge in 100% authentic, tamper-sealed formulas.
           </p>
         </section>
 
         {/* Search and Filters Bar */}
-        <section className="bg-white dark:bg-[#1B0124]/90 border border-brand-rose/25 dark:border-[#C77DFF]/20 rounded-2xl p-4 shadow-2xs glow-card flex flex-col lg:flex-row gap-4 items-center justify-between sticky top-24 z-30 backdrop-blur-md">
+        <section className="bg-white dark:bg-brand-cream/90 border border-brand-rose rounded-2xl p-4 shadow-2xs glow-card flex flex-col lg:flex-row gap-4 items-center justify-between sticky top-24 z-30 backdrop-blur-md">
           
           {/* Search box input */}
           <div className="relative w-full lg:max-w-xs">
@@ -232,7 +232,7 @@ export default function Shop() {
               placeholder="Search formulas, brands, concerns..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-brand-rose/30 dark:border-[#C77DFF]/20 focus:border-brand-magenta dark:focus:border-[#E056FD] outline-hidden text-xs bg-[#fdfafb] dark:bg-[#2A093D] text-amethyst dark:text-white font-medium"
+              className="w-full pl-9 pr-4 py-2.5 rounded-xl border border-brand-rose/30 dark:border-brand-rose/10 focus:border-brand-magenta outline-hidden text-xs bg-brand-cream/20 dark:bg-brand-peach text-foreground font-medium"
             />
           </div>
 
@@ -245,10 +245,10 @@ export default function Shop() {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="w-full sm:w-auto bg-white dark:bg-[#2A093D] border border-brand-rose/30 dark:border-[#C77DFF]/20 px-3.5 py-2.5 rounded-xl outline-hidden focus:border-brand-magenta dark:focus:border-[#E056FD] text-amethyst dark:text-white cursor-pointer hover:border-brand-magenta/50 dark:hover:border-[#E056FD]/50 transition-colors"
+                className="w-full sm:w-auto bg-white dark:bg-brand-peach border border-brand-rose/30 dark:border-brand-rose/10 px-3.5 py-2.5 rounded-xl outline-hidden focus:border-brand-magenta text-foreground dark:text-white cursor-pointer hover:border-brand-magenta/50 transition-colors"
               >
                 {categories.map((c) => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c} value={c} className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">{c}</option>
                 ))}
               </select>
             </div>
@@ -259,10 +259,10 @@ export default function Shop() {
               <select
                 value={selectedBrand}
                 onChange={(e) => setSelectedBrand(e.target.value)}
-                className="w-full sm:w-auto bg-white dark:bg-[#2A093D] border border-brand-rose/30 dark:border-[#C77DFF]/20 px-3.5 py-2.5 rounded-xl outline-hidden focus:border-brand-magenta dark:focus:border-[#E056FD] text-amethyst dark:text-white cursor-pointer hover:border-brand-magenta/50 dark:hover:border-[#E056FD]/50 transition-colors"
+                className="w-full sm:w-auto bg-white dark:bg-brand-peach border border-brand-rose/30 dark:border-brand-rose/10 px-3.5 py-2.5 rounded-xl outline-hidden focus:border-brand-magenta text-foreground dark:text-white cursor-pointer hover:border-brand-magenta/50 transition-colors"
               >
                 {brands.map((b) => (
-                  <option key={b} value={b}>{b}</option>
+                  <option key={b} value={b} className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">{b}</option>
                 ))}
               </select>
             </div>
@@ -273,13 +273,13 @@ export default function Shop() {
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value)}
-                className="w-full sm:w-auto bg-white dark:bg-[#2A093D] border border-brand-rose/30 dark:border-[#C77DFF]/20 px-3.5 py-2.5 rounded-xl outline-hidden focus:border-brand-magenta dark:focus:border-[#E056FD] text-amethyst dark:text-white cursor-pointer hover:border-brand-magenta/50 dark:hover:border-[#E056FD]/50 transition-colors"
+                className="w-full sm:w-auto bg-white dark:bg-brand-peach border border-brand-rose/30 dark:border-brand-rose/10 px-3.5 py-2.5 rounded-xl outline-hidden focus:border-brand-magenta text-foreground dark:text-white cursor-pointer hover:border-brand-magenta/50 transition-colors"
               >
-                <option value="popular">Popularity</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="title-az">Name: A to Z</option>
-                <option value="title-za">Name: Z to A</option>
+                <option value="popular" className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">Popularity</option>
+                <option value="price-low" className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">Price: Low to High</option>
+                <option value="price-high" className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">Price: High to Low</option>
+                <option value="title-az" className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">Name: A to Z</option>
+                <option value="title-za" className="bg-white dark:bg-[#1C0F2B] text-foreground dark:text-white">Name: Z to A</option>
               </select>
             </div>
 
@@ -290,8 +290,8 @@ export default function Shop() {
         {/* Product Catalog Grid Layout */}
         <section className="space-y-6">
           <div className="flex justify-between items-center text-xs font-sans font-bold">
-            <span className="text-amethyst dark:text-[#D8B4FE]">Showing {filteredProducts.length} premium formulas</span>
-            <span className="text-[#E056FD] dark:text-[#FF8DC7] flex items-center gap-1.5">
+            <span className="text-brand-magenta dark:text-brand-lilac">Showing {filteredProducts.length} premium formulas</span>
+            <span className="text-brand-magenta flex items-center gap-1.5">
               <ShieldCheck size={15} />
               Tamper-Evident Hygiene Sealed
             </span>
@@ -299,16 +299,16 @@ export default function Shop() {
 
           {filteredProducts.length === 0 ? (
             /* Luxury Empty State Design */
-            <div className="bg-white dark:bg-[#1B0124]/90 border border-brand-rose/25 dark:border-[#C77DFF]/15 rounded-3xl p-10 sm:p-16 text-center space-y-6 glow-card max-w-lg mx-auto relative overflow-hidden">
-              <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full bg-[#E056FD]/10 blur-xl pointer-events-none" />
-              <div className="absolute -bottom-12 -right-12 w-24 h-24 rounded-full bg-[#FF8DC7]/10 blur-xl pointer-events-none" />
+            <div className="bg-white dark:bg-brand-cream/90 border border-brand-rose rounded-3xl p-10 sm:p-16 text-center space-y-6 glow-card max-w-lg mx-auto relative overflow-hidden">
+              <div className="absolute -top-12 -left-12 w-24 h-24 rounded-full bg-brand-magenta/10 blur-xl pointer-events-none" />
+              <div className="absolute -bottom-12 -right-12 w-24 h-24 rounded-full bg-brand-magenta/10 blur-xl pointer-events-none" />
               
-              <div className="p-5 rounded-full bg-brand-cream dark:bg-[#2A093D] text-brand-rose dark:text-[#C77DFF] inline-block shadow-inner relative animate-pulse-glow">
+              <div className="p-5 rounded-full bg-brand-cream dark:bg-brand-peach text-brand-rose dark:text-brand-lilac inline-block shadow-inner relative animate-pulse-glow">
                 <SlidersHorizontal size={40} className="animate-pulse" />
-                <Sparkles size={16} className="absolute -top-1 -right-1 text-[#FF8DC7]" />
+                <Sparkles size={16} className="absolute -top-1 -right-1 text-brand-magenta" />
               </div>
               <div className="space-y-2">
-                <h3 className="text-xl sm:text-2xl font-bold font-elegant text-amethyst dark:text-white">No Matching Formulas</h3>
+                <h3 className="text-xl sm:text-2xl font-bold font-elegant text-brand-magenta dark:text-white">No Matching Formulas</h3>
                 <p className="text-xs text-foreground/60 dark:text-white/60 max-w-sm mx-auto leading-relaxed font-sans font-medium">
                   We couldn't find any premium skincare elixirs matching your active concerns. Reset filters to continue self-care!
                 </p>
@@ -334,7 +334,7 @@ export default function Shop() {
                     setSelectedBrand("All");
                     setSortBy("popular");
                   }}
-                  className="w-full sm:w-auto px-6 py-3 rounded-xl border border-brand-rose dark:border-[#C77DFF]/30 text-amethyst dark:text-white font-bold uppercase tracking-wider hover:bg-brand-cream dark:hover:bg-[#2A093D] transition-colors cursor-pointer"
+                  className="w-full sm:w-auto px-6 py-3 rounded-xl border border-brand-rose dark:border-brand-rose/30 text-brand-magenta dark:text-white font-bold uppercase tracking-wider hover:bg-brand-cream dark:hover:bg-brand-peach transition-colors cursor-pointer"
                 >
                   Browse Bestsellers
                 </button>
@@ -351,11 +351,11 @@ export default function Shop() {
                 return (
                   <div
                     key={product.id}
-                    className="group flex flex-col bg-white dark:bg-[#2A093D]/40 border border-brand-rose/20 dark:border-[#C77DFF]/15 rounded-3xl overflow-hidden shadow-xs hover:shadow-lg transition-all duration-500 glow-card h-full justify-between ios-spring ios-spring-hover ios-spring-active"
+                    className="group flex flex-col bg-white dark:bg-[#2D0F21] border border-brand-rose dark:border-[#FFB7D2]/10 hover:border-brand-magenta/40 hover:shadow-lg transition-all duration-500 rounded-3xl overflow-hidden shadow-xs h-full justify-between ios-spring ios-spring-hover ios-spring-active"
                   >
                     <div>
                       {/* Image & Badges Container */}
-                      <div className="relative aspect-square w-full bg-zinc-50 dark:bg-[#1B0124] overflow-hidden border-b border-brand-rose/10 dark:border-[#C77DFF]/10">
+                      <div className="relative aspect-square w-full bg-brand-cream/30 dark:bg-[#3A142A]/20 overflow-hidden border-b border-brand-rose/60">
                         <Image
                           src={product.image}
                           alt={product.title}
@@ -367,15 +367,15 @@ export default function Shop() {
                         
                         {/* Authenticity Flag */}
                         {product.authenticity_flag && (
-                          <span className="absolute top-3 left-3 bg-white/95 dark:bg-[#1B0124]/95 text-amethyst dark:text-white text-[8px] sm:text-[9px] font-bold py-1 px-2.5 rounded-full shadow-2xs border border-brand-rose/30 dark:border-[#C77DFF]/20 flex items-center gap-1 font-sans">
-                            <ShieldCheck size={11} className="text-brand-magenta dark:text-[#E056FD]" />
+                          <span className="absolute top-3 left-3 bg-white/95 dark:bg-[#1A0914]/95 text-foreground text-[8px] sm:text-[9px] font-bold py-1 px-2.5 rounded-full shadow-2xs border border-brand-rose/30 flex items-center gap-1 font-sans">
+                            <ShieldCheck size={11} className="text-brand-magenta" />
                             100% Genuine
                           </span>
                         )}
 
                         {/* AI Recommended Badge */}
                         {isAiRecommended && (
-                          <span className="absolute top-10 left-3 bg-[#E056FD] dark:bg-[#C77DFF] text-white dark:text-[#120018] text-[8px] font-bold py-0.5 px-2 rounded-full shadow-2xs flex items-center gap-0.5 font-sans animate-pulse">
+                          <span className="absolute top-10 left-3 bg-brand-rose border border-brand-rose/80 text-brand-purple text-[8px] font-bold py-0.5 px-2 rounded-full shadow-2xs flex items-center gap-0.5 font-sans animate-pulse">
                             <Sparkles size={9} />
                             AI Match
                           </span>
@@ -393,8 +393,8 @@ export default function Shop() {
                           onClick={() => toggleWishlist(product.id)}
                           className={`absolute bottom-3 right-3 p-2.5 rounded-full border transition-all duration-300 shadow-xs cursor-pointer ${
                             fav 
-                              ? "bg-brand-rose/90 dark:bg-[#FF8DC7]/90 text-brand-magenta dark:text-[#120018] border-transparent scale-105" 
-                              : "bg-white/85 dark:bg-[#1B0124]/85 text-foreground/40 dark:text-white/40 hover:text-brand-magenta dark:hover:text-[#E056FD] hover:bg-white dark:hover:bg-[#2A093D] border-brand-rose/10 dark:border-[#C77DFF]/10"
+                              ? "bg-brand-rose/90 dark:bg-[#FFB7D2]/90 text-brand-magenta border-transparent scale-105" 
+                              : "bg-white/85 dark:bg-[#1A0914]/85 text-foreground/40 hover:text-brand-magenta hover:bg-white border-brand-rose/60"
                           }`}
                           aria-label="Toggle wishlist"
                         >
@@ -406,7 +406,7 @@ export default function Shop() {
                       <div className="p-4 sm:p-5 space-y-3">
                         <div className="space-y-1">
                           <div className="flex justify-between items-center text-[9px] sm:text-[10px] font-sans font-bold">
-                            <span className="uppercase tracking-widest text-[#E056FD] dark:text-[#C77DFF]">
+                            <span className="uppercase tracking-widest text-brand-magenta">
                               {product.brand}
                             </span>
                             <span className="text-foreground/45 dark:text-white/45 truncate max-w-[100px]">
@@ -416,7 +416,7 @@ export default function Shop() {
 
                           <Link
                             href={`/product/${product.id}`}
-                            className="block text-xs sm:text-sm font-bold text-amethyst dark:text-white hover:text-brand-magenta dark:hover:text-[#E056FD] transition-colors line-clamp-1 font-elegant"
+                            className="block text-xs sm:text-sm font-bold text-foreground hover:text-brand-magenta transition-colors line-clamp-1 font-elegant"
                           >
                             {product.title}
                           </Link>
@@ -439,14 +439,14 @@ export default function Shop() {
                     </div>
 
                     {/* Pricing and Quick Add to Bag CTA */}
-                    <div className="p-4 sm:p-5 pt-0 border-t border-brand-rose/10 dark:border-[#C77DFF]/10 flex items-center justify-between">
+                    <div className="p-4 sm:p-5 pt-0 border-t border-brand-rose/40 flex items-center justify-between">
                       <div>
                         {product.mrp > product.price && (
                           <span className="text-[10px] text-foreground/45 dark:text-white/45 line-through">
                             ₹{product.mrp}
                           </span>
                         )}
-                        <span className="text-sm sm:text-base font-bold text-amethyst dark:text-white block -mt-1 font-sans">
+                        <span className="text-sm sm:text-base font-bold text-foreground block -mt-1 font-sans">
                           ₹{product.price}
                         </span>
                       </div>

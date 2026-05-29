@@ -161,7 +161,7 @@ export default function ProductDetails({ params }: ProductPageProps) {
   };
 
   const copyUpiId = () => {
-    navigator.clipboard.writeText("sayanita@upi");
+    navigator.clipboard.writeText("sayanitapayra-1@okicici");
     setCopiedUpi(true);
     setTimeout(() => setCopiedUpi(false), 2000);
   };
@@ -176,6 +176,9 @@ export default function ProductDetails({ params }: ProductPageProps) {
     { name: "Priyanjali D.", rating: 5, date: "2026-05-12", comment: "So happy I found Glow Addict! Laneige Lip Sleeping Mask Berry is my absolute favorite, and getting the free scrunchies with the order was such a treat. Will order again soon!" },
     { name: "Sushmita R.", rating: 5, date: "2026-05-04", comment: "Fast shipping and tamper-proof packing. The Cosrx Essence is exactly the original formula. Thank you, Sayanita, for making premium skincare affordable!" }
   ];
+
+  const upiUrl = `upi://pay?pa=sayanitapayra-1@okicici&pn=Glow%20Addict%20by%20Sayanita&am=${product.price * quantity}&cu=INR`;
+  const dynamicQrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
 
   return (
     <div className="min-h-screen flex flex-col bg-[#120018] text-white">
@@ -670,16 +673,22 @@ export default function ProductDetails({ params }: ProductPageProps) {
               </button>
             </div>
 
-            {/* UPI QR Code mock layout */}
-            <div className="bg-white p-4.5 rounded-2xl w-44 h-44 mx-auto flex flex-col items-center justify-center shadow-md relative group border border-[#C77DFF]/15">
-              <QrCode size={120} className="text-black" />
-              <div className="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+            {/* UPI QR Code real image layout */}
+            <div className="bg-white p-2 rounded-2xl w-44 h-44 mx-auto flex flex-col items-center justify-center shadow-md relative overflow-hidden group border border-[#C77DFF]/15">
+              <Image
+                src="/payment_qr.jpg"
+                alt="Sayanita UPI payment QR"
+                fill
+                className="object-contain p-2"
+                unoptimized
+              />
+              <div className="absolute inset-0 bg-black/5 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity z-10">
                 <span className="text-[9px] font-extrabold bg-[#1B0124] px-2 py-1 rounded text-white shadow">Scan QR</span>
               </div>
             </div>
 
             <div className="space-y-1">
-              <p className="text-xs font-bold text-white">Sayanita UPI ID: sayanita@upi</p>
+              <p className="text-xs font-bold text-white">Sayanita UPI ID: sayanitapayra-1@okicici</p>
               <p className="text-[10px] text-orchid-text-muted leading-relaxed">
                 Scan QR code above with any UPI app (GPay, PhonePe, Paytm) to complete transfer, then upload screenshot in orders.
               </p>

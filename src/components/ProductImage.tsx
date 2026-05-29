@@ -45,15 +45,15 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
     return brand.slice(0, 2).toUpperCase() || "GA";
   }, [brand]);
 
-  // Premium background colors tailored to brand initials
+  // Premium background colors tailored to brand initials - rebranded to light peach/pink
   const gradientClass = useMemo(() => {
     const chars = initials.split("");
     const sum = (chars[0]?.charCodeAt(0) || 0) + (chars[1]?.charCodeAt(0) || 0);
     const options = [
-      "from-[#2A093D] via-[#1B0124] to-[#120018]",
-      "from-[#34114A] via-[#1B0124] to-[#120018]",
-      "from-[#120018] via-[#2A093D] to-[#34114A]",
-      "from-[#1B0124] via-[#34114A] to-[#2A093D]"
+      "from-[#FFF0F5] via-[#FFF5F7] to-white",
+      "from-[#FFF5F7] via-[#FFF0F5] to-white",
+      "from-white via-[#FFF0F5] to-[#FFF5F7]",
+      "from-[#FFF5F7] via-white to-[#FFF0F5]"
     ];
     return options[sum % options.length];
   }, [initials]);
@@ -75,23 +75,23 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
     }
   };
 
-  // 1. Shimmer/Loading skeleton state
+  // 1. Shimmer/Loading skeleton state - light themed
   const loadingPlaceholder = (
-    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#2A093D]/50 to-[#1B0124]/50 flex items-center justify-center overflow-hidden">
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#C77DFF]/10 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
-      <Sparkles size={16} className="text-[#C77DFF]/40 animate-pulse" />
+    <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-[#FFF5F7] to-[#FFF0F5] flex items-center justify-center overflow-hidden">
+      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-[#FC2779]/10 to-transparent -translate-x-full animate-[shimmer_1.5s_infinite]" />
+      <Sparkles size={16} className="text-brand-magenta/30 animate-pulse" />
     </div>
   );
 
-  // 2. Luxury initials fallback monogram
+  // 2. Luxury initials fallback monogram - light themed
   const luxuryFallback = (
-    <div className={`w-full h-full bg-gradient-to-br ${gradientClass} border border-[#C77DFF]/15 flex flex-col items-center justify-center relative p-6 select-none text-center transition-all duration-500`}>
-      <div className="absolute inset-0 bg-radial-gradient from-[#E056FD]/5 via-transparent to-transparent pointer-events-none" />
-      <div className="w-16 h-16 rounded-full bg-gradient-to-b from-[#2A093D] to-[#120018] border border-[#C77DFF]/30 flex items-center justify-center shadow-lg shadow-black/60 text-2xl font-black text-[#FF8DC7] font-elegant tracking-wider z-10 hover:scale-105 transition-transform duration-300">
+    <div className={`w-full h-full bg-gradient-to-br ${gradientClass} border border-brand-rose flex flex-col items-center justify-center relative p-6 select-none text-center transition-all duration-500`}>
+      <div className="absolute inset-0 bg-radial-gradient from-brand-rose/20 via-transparent to-transparent pointer-events-none" />
+      <div className="w-14 h-14 rounded-full bg-gradient-to-b from-white to-[#FFF5F7] border border-brand-rose flex items-center justify-center shadow-md text-xl font-black text-brand-magenta font-elegant tracking-wider z-10 hover:scale-105 transition-transform duration-300">
         {initials}
       </div>
-      <span className="text-[9.5px] font-black text-[#D8B4FE]/80 uppercase tracking-widest z-10 mt-3.5 flex items-center gap-1">
-        <Sparkles size={9} className="text-[#FF8DC7]" />
+      <span className="text-[9px] font-black text-brand-magenta uppercase tracking-widest z-10 mt-3 flex items-center gap-1">
+        <Sparkles size={8} className="text-brand-magenta" />
         {brand || "GLOW ADDICT"}
       </span>
     </div>
@@ -100,7 +100,7 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
   // Before hydration, render loading placeholder to prevent layout shift & hydration mismatch
   if (!mounted) {
     return (
-      <div className="relative w-full h-full aspect-square bg-[#2A093D]/20 overflow-hidden">
+      <div className="relative w-full h-full aspect-square bg-[#FFF5F7] overflow-hidden">
         {loadingPlaceholder}
       </div>
     );
@@ -111,7 +111,7 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
   }
 
   return (
-    <div className="relative w-full h-full bg-[#2A093D]/10 overflow-hidden select-none aspect-square">
+    <div className="relative w-full h-full bg-[#FFF5F7] overflow-hidden select-none aspect-square">
       
       {/* Skeleton displays only when loading */}
       {loading && loadingPlaceholder}

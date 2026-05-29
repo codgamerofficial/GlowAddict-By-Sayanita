@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useShop } from "@/context/ShopContext";
 import { X, Trash2, Plus, Minus, Gift, ShoppingCart, Truck } from "lucide-react";
+import ProductImage from "./ProductImage";
 
 export const CartDrawer: React.FC = () => {
   const {
@@ -42,7 +43,7 @@ export const CartDrawer: React.FC = () => {
       <div className="absolute inset-0 bg-black/40 backdrop-blur-xs transition-opacity" onClick={() => setCartOpen(false)} />
 
       <div className="absolute inset-y-0 right-0 max-w-full flex pl-10">
-        <div className="w-screen max-w-md transform transition-all duration-500 ease-in-out bg-white dark:bg-[#12051d] shadow-2xl flex flex-col h-full">
+        <div className="w-screen max-w-md transform transition-all duration-500 ease-in-out bg-white shadow-2xl flex flex-col h-full">
           
           {/* Header */}
           <div className="px-6 py-5 border-b border-brand-rose/20 bg-brand-cream flex items-center justify-between">
@@ -202,13 +203,11 @@ export const CartDrawer: React.FC = () => {
                     className="flex gap-4 p-4 rounded-xl border border-brand-rose/25 bg-white glow-card"
                   >
                     {/* Item Image */}
-                    <div className="relative w-20 h-20 overflow-hidden rounded-lg bg-gray-100 flex-shrink-0">
-                      <Image
+                    <div className="relative w-20 h-20 overflow-hidden rounded-lg bg-brand-cream/50 flex-shrink-0 border border-brand-rose/40">
+                      <ProductImage
                         src={item.product.image}
                         alt={item.product.title}
-                        fill
-                        sizes="80px"
-                        className="object-cover"
+                        brand={item.product.brand}
                       />
                     </div>
 
@@ -298,7 +297,7 @@ export const CartDrawer: React.FC = () => {
                 </div>
 
                 {/* Freebies summary block */}
-                <div className="bg-white/80 dark:bg-[#12051d]/80 p-3 rounded-xl border border-brand-rose/20 dark:border-brand-rose/5 space-y-1">
+                <div className="bg-white/80 p-3 rounded-xl border border-brand-rose/20 space-y-1">
                   <p className="text-[10px] font-bold text-brand-magenta uppercase tracking-wider flex items-center gap-1">
                     <Gift size={12} /> Unlocked Freebies:
                   </p>

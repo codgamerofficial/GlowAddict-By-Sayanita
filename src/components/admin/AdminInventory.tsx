@@ -134,7 +134,7 @@ function AdminInventoryInner() {
   }, [products, adminRemoveProduct, toast]);
 
   const statCards = [
-    { label: "Total Products", value: stats.total, icon: Package, glowClass: "admin-glow-purple", iconColor: "text-[#A855F7]" },
+    { label: "Total Products", value: stats.total, icon: Package, glowClass: "admin-glow-purple", iconColor: "text-amethyst" },
     { label: "Active Products", value: stats.active, icon: TrendingUp, glowClass: "admin-glow-green", iconColor: "text-[#10B981]" },
     { label: "Low Stock", value: stats.lowStock, icon: AlertTriangle, glowClass: "admin-glow-amber", iconColor: "text-[#F59E0B]" },
     { label: "Out of Stock", value: stats.outOfStock, icon: PackageX, glowClass: "admin-glow-red", iconColor: "text-[#EF4444]" },
@@ -143,37 +143,37 @@ function AdminInventoryInner() {
   return (
     <>
       <div className="space-y-6 animate-slide-in text-left">
-        <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#D3B6FF] flex items-center gap-2">
-          <Sparkles size={16} className="text-[#D946EF]" />
+        <h2 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-foreground flex items-center gap-2">
+          <Sparkles size={16} className="text-amethyst" />
           AI-Powered Inventory Operating System
         </h2>
 
         {/* Admin API Key Surface */}
-        <div className="bg-[#1E0629] border border-white/8 rounded-2xl p-5 shadow-xl">
-          <label className="block text-[9px] font-bold uppercase tracking-wider text-[#9F7AC2] mb-1.5">
+        <div className="bg-brand-cream border border-brand-rose rounded-2xl p-5 shadow-sm">
+          <label className="block text-[9px] font-bold uppercase tracking-wider text-foreground/60 mb-1.5">
             Admin API Key Guard
           </label>
           <input type="password" value={adminApiKey} onChange={(e) => persistApiKey(e.target.value)}
             placeholder="Paste master API key to unlock Gemini Vision features…" aria-label="Admin API key"
             className="admin-glass-input" />
-          <p className="text-[9px] text-[#6E4E85] mt-2">Stored securely in session storage. Enables multi-engine label translation.</p>
+          <p className="text-[9px] text-foreground/50 mt-2">Stored securely in session storage. Enables multi-engine label translation.</p>
         </div>
 
         {/* AI Upload Zone — PRIMARY HERO SECTION */}
-        <div className="bg-gradient-to-br from-[#1E0629] to-[#2B083A] border border-white/8 rounded-3xl p-6 shadow-2xl relative overflow-hidden">
+        <div className="bg-gradient-to-br from-brand-cream to-brand-peach border border-brand-rose rounded-3xl p-6 shadow-md relative overflow-hidden">
           {/* Subtle decorative glow bubble */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-[#D946EF]/5 rounded-full blur-[80px] pointer-events-none" />
+          <div className="absolute top-0 right-0 w-64 h-64 bg-amethyst/5 rounded-full blur-[80px] pointer-events-none" />
           
           <div className="space-y-4 relative z-10">
             <div>
-              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D946EF]/10 border border-[#D946EF]/25 text-[#D946EF] text-[9px] font-extrabold uppercase tracking-widest mb-2.5 shadow-[0_0_10px_rgba(217,70,239,0.1)]">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-brand-rose border border-brand-rose text-amethyst text-[9px] font-extrabold uppercase tracking-widest mb-2.5 shadow-sm">
                 <Sparkles size={10} className="animate-pulse" />
                 Gemini Vision AI Processing Active
               </span>
-              <h3 className="text-base md:text-lg font-extrabold text-white tracking-tight flex items-center gap-2">
+              <h3 className="text-base md:text-lg font-extrabold text-foreground tracking-tight flex items-center gap-2">
                 Automated Cataloging Hero Dropzone
               </h3>
-              <p className="text-xs text-[#9F7AC2] leading-relaxed max-w-2xl mt-1">
+              <p className="text-xs text-foreground/75 leading-relaxed max-w-2xl mt-1">
                 Simply drop, select or paste an image URL. Our dual-engine classical OCR + vision pipeline scans package details, filters out generic hallucinations, and formats catalog listings in seconds.
               </p>
             </div>
@@ -185,13 +185,13 @@ function AdminInventoryInner() {
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
           {statCards.map((stat) => (
             <div key={stat.label}
-              className={`admin-stat-card bg-[#1E0629] border border-white/8 p-4 rounded-2xl ${stat.glowClass}`}>
+              className={`admin-stat-card bg-brand-cream border border-brand-rose p-4 rounded-2xl ${stat.glowClass} shadow-sm`}>
               <div className="flex items-center justify-between">
                 <div className="min-w-0">
-                  <span className="text-[9px] font-bold text-[#9F7AC2] uppercase tracking-widest block truncate">{stat.label}</span>
-                  <h3 className="text-xl md:text-2xl font-extrabold text-white mt-1 tracking-tight">{stat.value}</h3>
+                  <span className="text-[9px] font-bold text-foreground/60 uppercase tracking-widest block truncate">{stat.label}</span>
+                  <h3 className="text-xl md:text-2xl font-extrabold text-foreground mt-1 tracking-tight">{stat.value}</h3>
                 </div>
-                <div className={`p-2.5 rounded-xl bg-[#2B083A] border border-white/8 ${stat.iconColor} shrink-0`}>
+                <div className={`p-2.5 rounded-xl bg-background border border-brand-rose ${stat.iconColor} shrink-0 shadow-sm`}>
                   <stat.icon size={16} />
                 </div>
               </div>
@@ -201,7 +201,7 @@ function AdminInventoryInner() {
 
         {/* Product Table List */}
         <div className="space-y-3">
-          <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-[#D3B6FF]">
+          <h3 className="text-xs md:text-sm font-extrabold uppercase tracking-widest text-foreground">
             Catalog List Inventory ({products.length} Products)
           </h3>
           <ProductTable products={products} onEdit={handleEdit} onDuplicate={handleDuplicate}
