@@ -7,6 +7,7 @@ import { Header } from "@/components/Header";
 import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { useShop, Product } from "@/context/ShopContext";
+import ProductImage from "@/components/ProductImage";
 import { 
   Sparkles, Camera, Upload, ArrowRight, RefreshCw, 
   Droplet, Sliders, ShieldCheck, Heart, ShoppingBag, 
@@ -401,7 +402,7 @@ export default function AISkinTest() {
                           className="bg-[#2A093D]/20 border border-[#C77DFF]/12 p-3.5 rounded-2xl flex items-center gap-3.5 hover:border-[#C77DFF]/25 transition-all text-left group/prod ios-spring ios-spring-hover"
                         >
                           <div className="relative h-14 w-14 rounded-xl overflow-hidden border border-[#C77DFF]/15 bg-[#1B0124] shrink-0">
-                            <Image src={p.image} alt={p.title} fill className="object-cover" unoptimized />
+                            <ProductImage src={p.image} alt={p.title} brand={p.brand} />
                           </div>
                           
                           <div className="min-w-0 flex-1 flex flex-col justify-between">
