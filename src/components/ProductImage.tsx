@@ -24,7 +24,7 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
 
   // Reset loading and error when source changes
   useEffect(() => {
-    if (src) {
+    if (src && !src.startsWith("blob:")) {
       setLoading(true);
       setError(false);
       setRetryCount(0);
@@ -32,6 +32,13 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
       setError(true);
       setLoading(false);
     }
+  }, [src]);
+
+  // Synchronous check for expired/invalid local session blob URLs
+  const isInvalidSrc = useMemo(() => {
+    if (!src) return true;
+    if (typeof src === "string" && src.startsWith("blob:")) return true;
+    return false;
   }, [src]);
 
   // Compute initials fallback
@@ -106,7 +113,7 @@ export default function ProductImage({ src, alt, brand, priority = false }: Prod
     );
   }
 
-  if (error || !src) {
+  if (error || isInvalidSrc) {
     return luxuryFallback;
   }
 

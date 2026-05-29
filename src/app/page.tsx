@@ -338,7 +338,7 @@ export default function Home() {
 
                       {/* Aspect Ratio Image Container with hover zoom */}
                       <div className="relative aspect-square w-full overflow-hidden bg-brand-cream/30 border-b border-brand-rose/60">
-                        <div className="w-full h-full group-hover:scale-105 transition-transform duration-700">
+                        <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-700">
                           <ProductImage src={p.image} alt={p.title} brand={p.brand} />
                         </div>
                       </div>

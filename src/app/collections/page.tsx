@@ -288,7 +288,7 @@ export default function Collections() {
                     
                     {/* Image Section */}
                     <div className="relative aspect-square w-full bg-brand-cream/30 overflow-hidden border-b border-brand-rose/60">
-                      <div className="w-full h-full group-hover:scale-105 transition-transform duration-700">
+                      <div className="absolute inset-0 group-hover:scale-105 transition-transform duration-700">
                         <ProductImage
                           src={product.image}
                           alt={product.title}
