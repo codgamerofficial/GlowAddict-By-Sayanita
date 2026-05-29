@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { useShop, Order } from "@/context/ShopContext";
+import ProductImage from "@/components/ProductImage";
 import { Header } from "@/components/Header";
 import { ShieldCheck, Truck, CreditCard, Copy, Upload, CheckCircle2, Gift, ShieldAlert, RefreshCw, Lock, CheckCheck } from "lucide-react";
 
@@ -1007,11 +1008,10 @@ ${freebiesText}
                 <div key={idx} className="py-3 flex gap-3 items-center justify-between text-xs">
                   <div className="flex gap-2.5 items-center">
                     <div className="relative w-12 h-12 rounded-lg overflow-hidden bg-zinc-50 border border-brand-rose/10 flex-shrink-0">
-                      <Image
+                      <ProductImage
                         src={item.product.image}
                         alt={item.product.title}
-                        fill
-                        className="object-cover"
+                        brand={item.product.brand}
                       />
                     </div>
                     <div>
